@@ -1,5 +1,8 @@
 # MedCapture
 
+## Description
+
+MedCapture is a groundbreaking software system designed to empower medical professionals in their daily tasks. In the fast-paced world of healthcare, accurate documentation and effective communication are paramount. MedCapture addresses these critical needs by offering an intuitive touch interface that enables medical practitioners to efficiently identify, label, and highlight specific areas of concern during patient examinations.
 
 
 ## Getting started
