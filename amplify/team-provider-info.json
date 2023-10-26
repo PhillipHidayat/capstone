@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-emrapp-staging-173006-authRole",
+      "UnauthRoleArn": "arn:aws:iam::918201310918:role/amplify-emrapp-staging-173006-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::918201310918:role/amplify-emrapp-staging-173006-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-emrapp-staging-173006-deployment",
+      "UnauthRoleName": "amplify-emrapp-staging-173006-unauthRole",
+      "StackName": "amplify-emrapp-staging-173006",
+      "StackId": "arn:aws:cloudformation:us-west-2:918201310918:stack/amplify-emrapp-staging-173006/21946070-7330-11ed-bfd2-0ac036a99d09",
+      "AmplifyAppId": "dr6qa5vtvriu2"
+    },
+    "categories": {
+      "auth": {
+        "EMRApp": {}
+      }
+    }
+  }
+}
