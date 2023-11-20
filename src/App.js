@@ -12,6 +12,7 @@ import { withAuthenticator, Button, Flex, Heading, Image, Text } from '@aws-ampl
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from './aws-exports';
 import DroppableComponent from './components/DroppableComponent';
+// import { signOut } from '@aws-amplify/auth';
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
@@ -22,7 +23,7 @@ Amplify.configure(awsconfig);
 
 let i=0;
 
-function App() {
+function App(signOut) {
   // const [component, setComponent] = useState(<Droppable></Droppable>)
   const [reloadItems, setReloadItems] = useState(false);
   const [reloadObject, setReloadObject] = useState();
@@ -85,7 +86,7 @@ function App() {
       <div >
         {/* <ButtonComponent >OD</ButtonComponent>
         <ButtonComponent >OS</ButtonComponent> */}
-        <Button onClick={()=>setInput(`This is Awesome`)}>ClickMe</Button>
+        <Button onClick={()=>signOut()}>Sign Out</Button>
       </div>
 
       <div className="draw-area">
