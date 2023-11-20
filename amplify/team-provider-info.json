@@ -16,5 +16,23 @@
         "EMRApp": {}
       }
     }
+  },
+  "medcapture": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-emrapp-medcapture-202428-authRole",
+      "UnauthRoleArn": "arn:aws:iam::918201310918:role/amplify-emrapp-medcapture-202428-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::918201310918:role/amplify-emrapp-medcapture-202428-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-emrapp-medcapture-202428-deployment",
+      "UnauthRoleName": "amplify-emrapp-medcapture-202428-unauthRole",
+      "StackName": "amplify-emrapp-medcapture-202428",
+      "StackId": "arn:aws:cloudformation:us-east-2:918201310918:stack/amplify-emrapp-medcapture-202428/d20f2db0-84f8-11ee-a9d2-0664297477c3",
+      "AmplifyAppId": "d3tly9op2bybv0"
+    },
+    "categories": {
+      "auth": {
+        "EMRApp": {}
+      }
+    }
   }
 }
