@@ -30,6 +30,9 @@ function Examination() {
     selected: 0,
     mapping: 0
   });
+  const [lineColor, setLineColor] = useState("#000000");
+  const [brushSize, setLineWidth] = useState(10);
+  const [brushOpacity, setLineOpacity] = useState(1);
   const [MarkDown, setInput] = useState(`> Sample markdown that will be rendered as html 
 
   **Sample Headers**
@@ -75,13 +78,13 @@ function Examination() {
     // dropped outside the list
     setReloadItems(true);
     setReloadObject(result);
-  }
+}
   
-
+  
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <h1>Jorge + Tanner Demo</h1>
+      <h1>MedCapture</h1>
       <div >
         {/* <ButtonComponent >OD</ButtonComponent>
         <ButtonComponent >OS</ButtonComponent> */}
@@ -89,9 +92,8 @@ function Examination() {
       </div>
 
       <div className="draw-area">
-        <Menu
-
-        />
+        <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
+        brushSize={brushSize} brushOpacity={brushOpacity} />
         <div className="background-image" style={{
         backgroundImage: `url(${imgSource})`,
         backgroundSize: '1280px 1200px',
@@ -105,7 +107,7 @@ function Examination() {
           width={`1280px`}
           height={`1200px`}
         />     */}
-        <CanvasApp setObjectState={()=>method}></CanvasApp>
+        <CanvasApp setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
         </div>
       
       </div>
