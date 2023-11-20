@@ -23,7 +23,7 @@ Amplify.configure(awsconfig);
 
 let i=0;
 
-function App(signOut) {
+function App() {
   // const [component, setComponent] = useState(<Droppable></Droppable>)
   const [reloadItems, setReloadItems] = useState(false);
   const [reloadObject, setReloadObject] = useState();
@@ -86,7 +86,7 @@ function App(signOut) {
       <div >
         {/* <ButtonComponent >OD</ButtonComponent>
         <ButtonComponent >OS</ButtonComponent> */}
-        <Button onClick={()=>signOut()}>Sign Out</Button>
+        <Button onClick={()=>console.log("hello")}>Sign Out</Button>
       </div>
 
       <div className="draw-area">
