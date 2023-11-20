@@ -9,6 +9,7 @@ import * as React from 'react';
 import ReactMarkdown from 'react-markdown'
 import { Amplify, Storage } from 'aws-amplify';
 import { withAuthenticator, Button, Flex, Heading, Image, Text } from '@aws-amplify/ui-react';
+import type { WithAuthenticatorProps } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from './aws-exports';
 import DroppableComponent from './components/DroppableComponent';
@@ -22,7 +23,7 @@ Amplify.configure(awsconfig);
 
 let i=0;
 
-function App() {
+function App({ signOut, user }: WithAuthenticatorProps) {
   // const [component, setComponent] = useState(<Droppable></Droppable>)
   const [reloadItems, setReloadItems] = useState(false);
   const [reloadObject, setReloadObject] = useState();
@@ -85,7 +86,7 @@ function App() {
       <div >
         {/* <ButtonComponent >OD</ButtonComponent>
         <ButtonComponent >OS</ButtonComponent> */}
-        <Button onClick={()=>setInput(`This is Awesome`)}>ClickMe</Button>
+        <Button onClick={()=>signOut()}>Sign Out</Button>
       </div>
 
       <div className="draw-area">
