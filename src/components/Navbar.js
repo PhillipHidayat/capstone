@@ -1,7 +1,9 @@
 import React from "react";
 import "./Navbar.css"
+// import { signOut } from '@aws-amplify/auth';
 
-function Navbar(){
+
+function Navbar(signOut, user){
     return (
         <div className="wrapper">
             <nav className="nav">
@@ -11,7 +13,10 @@ function Navbar(){
                         <a href="/examination">Examination</a>
                     </li>
                     <li>
-                        <a href="./login">Login</a>
+                        <a href="./">Hello {signOut.user?.attributes.email}</a>
+                    </li>
+                    <li>
+                        <a onClick={(e)=>{signOut.signOut()}}>SignOut</a>
                     </li>
                 </ul>
             </nav>

@@ -81,7 +81,7 @@ function App({ signOut, user }: WithAuthenticatorProps) {
     setReloadObject(result);
   }
 
-  let component
+  let component=<Home />
   switch (window.location.pathname) {
     case "/":
       component = <Home />
@@ -94,11 +94,12 @@ function App({ signOut, user }: WithAuthenticatorProps) {
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <Navbar />
+      <Navbar signOut={()=>{console.log("Hi");signOut()}} user={user}/>
       <div className="Container">
         {component}
       </div>
     </div>
+
   );
 }
   
