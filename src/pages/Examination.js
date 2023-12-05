@@ -85,12 +85,6 @@ function Examination() {
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <div >
-        {/* <ButtonComponent >OD</ButtonComponent>
-        <ButtonComponent >OS</ButtonComponent> */}
-        <Button onClick={()=>setInput(`This is Awesome`)}>ClickMe</Button>
-      </div>
-
       <div className="draw-area">
         <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
         brushSize={brushSize} brushOpacity={brushOpacity} />

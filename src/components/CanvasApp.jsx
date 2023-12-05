@@ -10,9 +10,12 @@ let count;
 let addNewLine = false;
   
 
-const CanvasApp = (setObjectState)=>{
-    // const canvasRef = useRef(null);
-    // const ctxRef = useRef(null);
+const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
+    
+    /* This is the old way that the annotations were stored,
+       now we are using an array of circles instead - Ben 
+    const canvasRef = useRef(null);
+    const ctxRef = useRef(null);
     const stageRef = React.useRef();
     const [lines, setLines] = React.useState([]);
     const [state, setState] = React.useState({
@@ -22,7 +25,27 @@ const CanvasApp = (setObjectState)=>{
       y: 50,
       lastLine: -1
     });
+    */
+    const [circles, setCircles] = useState([]);
+    const addCircle = (x, y) => {
+      const newCircle = {
+        x,
+        y,
+        color: lineColor,
+        size: brushSize,
+        opacity: brushOpacity,
+      };
+      setCircles([...circles, newCircle]);
+    };
 
+    const handleMouseDown = (e) => {
+      const stage = e.target.getStage();
+      const pointerPos = stage.getPointerPosition();
+      const { x, y } = pointerPos;
+      addCircle(x, y);
+    };
+
+    /* Old way of adding a new circle to the list of lines
     useEffect(()=>{
       count = lines.length
       if (addNewLine==true){
@@ -36,14 +59,15 @@ const CanvasApp = (setObjectState)=>{
         setState(tempState)
         addNewLine = false
       }
-      
     });
+    */
+
     // const canvas = document.querySelector("canvas");
     // const canvasRef = useRef(null);
     // const ctxRef = useRef(null);
 
   
-
+    /* Event handling for moving a point, utilized the old line array
       const handleMouseUp = (e) => {
         // state.isDragging=true;
         let Xevent = e.evt.offsetX;
@@ -66,11 +90,26 @@ const CanvasApp = (setObjectState)=>{
         setLines([...lines, { id: count, points: [Xevent, Yevent]}]);
         addNewLine = true;
       };
-      
-
+    */
     
-
     return(
+      <Stage width={1280} height={1200} onMouseDown={handleMouseDown}>
+      <Layer>
+        {circles.map((circle, index) => (
+          <Circle
+            key={index}
+            x={circle.x}
+            y={circle.y}
+            radius={circle.size}
+            fill={circle.color}
+            opacity={circle.opacity}
+            shadowBlur = {5}
+          />
+        ))}
+      </Layer>
+    </Stage>
+
+        /* Previous way that the dots were drawn, using old line array
         <Stage
             // onMouseUp={endDrawing}
             onMouseUp={handleMouseUp}
@@ -142,6 +181,7 @@ const CanvasApp = (setObjectState)=>{
           ))}
         </Layer>
         </Stage>
+        */
     );
 };
 export default CanvasApp;
