@@ -2,7 +2,7 @@ import React from "react";
 import "../App.css";
   
 const Menu = ({ setLineColor, setLineWidth, 
-setLineOpacity }) => {
+setLineOpacity, brushSize, brushOpacity }) => {
   return (
     <div className="Menu">
       <label>Brush Color </label>
@@ -17,6 +17,7 @@ setLineOpacity }) => {
         type="range"
         min="3"
         max="20"
+        value={brushSize}
         onChange={(e) => {
           setLineWidth(e.target.value);
         }}
@@ -26,6 +27,7 @@ setLineOpacity }) => {
         type="range"
         min="1"
         max="100"
+        value={brushOpacity * 100}
         onChange={(e) => {
           setLineOpacity(e.target.value / 100);
         }}

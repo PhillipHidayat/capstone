@@ -1,20 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import Menu from "./components/Menu";
-import "./App.css";
-import imgSource from "./images/my-image.jpg";
-import redDotImage from "./images/redDot.jpg";
-import CanvasApp from "./components/CanvasApp";
+import Menu from "../components/Menu";
+import "../App.css";
+import imgSource from "../images/my-image.jpg";
+import redDotImage from "../images/redDot.jpg";
+import CanvasApp from "../components/CanvasApp";
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown'
 import { Amplify, Storage } from 'aws-amplify';
 import { withAuthenticator, Button, Flex, Heading, Image, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import awsconfig from './aws-exports';
-import DroppableComponent from './components/DroppableComponent';
-import Navbar from "./Navbar.js";
-import Home from "./pages/Home.js";
-import Examination from "./pages/Examination.js";
+import awsconfig from '../aws-exports';
+import DroppableComponent from '../components/DroppableComponent';
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
@@ -25,7 +22,7 @@ Amplify.configure(awsconfig);
 
 let i=0;
 
-function App() {
+function Examination() {
   // const [component, setComponent] = useState(<Droppable></Droppable>)
   const [reloadItems, setReloadItems] = useState(false);
   const [reloadObject, setReloadObject] = useState();
@@ -33,6 +30,9 @@ function App() {
     selected: 0,
     mapping: 0
   });
+  const [lineColor, setLineColor] = useState("#000000");
+  const [brushSize, setLineWidth] = useState(10);
+  const [brushOpacity, setLineOpacity] = useState(1);
   const [MarkDown, setInput] = useState(`> Sample markdown that will be rendered as html 
 
   **Sample Headers**
@@ -78,28 +78,39 @@ function App() {
     // dropped outside the list
     setReloadItems(true);
     setReloadObject(result);
-  }
-
-  let component
-  switch (window.location.pathname) {
-    case "/":
-      component = <Home />
-      break
-    case "/examination":
-      component = <Examination />
-      break
-  }
-
+}
+  
+  
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <Navbar />
-      <div className="Container">
-        {component}
+      <h1>MedCapture</h1>
+      <div className="draw-area">
+        <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
+        brushSize={brushSize} brushOpacity={brushOpacity} />
+        <div className="background-image" style={{
+        backgroundImage: `url(${imgSource})`,
+        backgroundSize: '1280px 1200px',
+        height: '1200px'
+      }}>
+        {/* <canvas
+          onMouseDown={startDrawing}
+          onMouseUp={endDrawing}
+          onMouseMove={draw}
+          ref={canvasRef}
+          width={`1280px`}
+          height={`1200px`}
+        />     */}
+        <CanvasApp setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
+        </div>
+      
+      </div>
+      <div id="markdown-rectangle">
+        <DroppableComponent result= {reloadItems} e= {reloadObject}></DroppableComponent>
       </div>
     </div>
   );
 }
   
-export default withAuthenticator(App);
-// export default App;
+// export default withAuthenticator(App);
+export default Examination;
