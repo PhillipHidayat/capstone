@@ -13,7 +13,7 @@ import type { WithAuthenticatorProps } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from './aws-exports';
 import DroppableComponent from './components/DroppableComponent';
-import Navbar from "./Navbar.js";
+import Navbar from "./components/Navbar.js";
 import Home from "./pages/Home.js";
 import Examination from "./pages/Examination.js";
 Amplify.configure(awsconfig);

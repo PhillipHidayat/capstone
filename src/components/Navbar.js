@@ -3,7 +3,7 @@ import "./Navbar.css"
 
 function Navbar(){
     return (
-        <div>
+        <div className="wrapper">
             <nav className="nav">
                 <a className="site-title" href="/">MedCapture</a>
                 <ul>
