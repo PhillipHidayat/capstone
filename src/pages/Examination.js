@@ -12,6 +12,8 @@ import { withAuthenticator, Button, Flex, Heading, Image, Text } from '@aws-ampl
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from '../aws-exports';
 import DroppableComponent from '../components/DroppableComponent';
+import DiagnosisPopup from "../components/DiagnosisPopup.jsx";
+
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
@@ -33,6 +35,7 @@ function Examination() {
   const [lineColor, setLineColor] = useState("#000000");
   const [brushSize, setLineWidth] = useState(10);
   const [brushOpacity, setLineOpacity] = useState(1);
+  const [popupVisible, setPopupVisible] = useState(false)
   const [MarkDown, setInput] = useState(`> Sample markdown that will be rendered as html 
 
   **Sample Headers**
@@ -85,9 +88,10 @@ function Examination() {
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <div className="draw-area">
-        <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
-        brushSize={brushSize} brushOpacity={brushOpacity} />
+      <DiagnosisPopup trigger= {popupVisible} setTrigger= {setPopupVisible}></DiagnosisPopup>
+      <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
+      brushSize={brushSize} brushOpacity={brushOpacity} />
+      <div className="draw-area" onClick= {() => setPopupVisible(true)} >
         <div className="background-image" style={{
         backgroundImage: `url(${imgSource})`,
         backgroundSize: '1280px 1200px',

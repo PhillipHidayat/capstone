@@ -1,0 +1,53 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+  
+  /* Style for the inner content of the popup */
+  .popup-inner {
+    background: #fff; /* White background */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 450px;
+    width: 100%;
+  }
+  
+  /* Style for the heading inside the popup */
+  .popup-inner h3 {
+    color: #333; /* Dark gray text color */
+  }
+  
+  /* Style for the textarea */
+  .popup-inner textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px;
+    resize: vertical;
+  }
+  
+  /* Style for the Done button */
+  .popup-inner .done-button {
+    background: #4caf50; /* Green background color */
+    color: #fff; /* White text color */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  /* Hover effect for the Done button */
+  .popup-inner .done-button:hover {
+    background: #45a049; /* Darker green on hover */
+  }
