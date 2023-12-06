@@ -105,7 +105,7 @@ function Examination() {
           width={`1280px`}
           height={`1200px`}
         />     */}
-        <CanvasApp setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
+        <CanvasApp popup = {setPopupVisible} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
         </div>
       
       </div>

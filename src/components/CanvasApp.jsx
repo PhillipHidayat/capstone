@@ -13,7 +13,7 @@ let addNewLine = false;
 const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
     
     /* This is the old way that the annotations were stored,
-       now we are using an array of circles instead - Ben 
+       now we are using an array of circles instead - Ben */
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const stageRef = React.useRef();
@@ -25,27 +25,32 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
       y: 50,
       lastLine: -1
     });
-    */
-    const [circles, setCircles] = useState([]);
-    const addCircle = (x, y) => {
-      const newCircle = {
-        x,
-        y,
-        color: lineColor,
-        size: brushSize,
-        opacity: brushOpacity,
-      };
-      setCircles([...circles, newCircle]);
-    };
+    
 
-    const handleMouseDown = (e) => {
-      const stage = e.target.getStage();
-      const pointerPos = stage.getPointerPosition();
-      const { x, y } = pointerPos;
-      addCircle(x, y);
-    };
+   //Ben's Code
+   // --------------------------------------------------
+    // const [circles, setCircles] = useState([]);
+    // const addCircle = (x, y) => {
+    //   const newCircle = {
+    //     x,
+    //     y,
+    //     color: lineColor,
+    //     size: brushSize,
+    //     opacity: brushOpacity,
+    //   };
+    //   setCircles([...circles, newCircle]);
+    // };
 
-    /* Old way of adding a new circle to the list of lines
+    // const handleMouseDown = (e) => {
+    //   const stage = e.target.getStage();
+    //   const pointerPos = stage.getPointerPosition();
+    //   const { x, y } = pointerPos;
+    //   addCircle(x, y);
+    // };
+//End of Ben's Code
+// -------------------------------------------
+
+    /* Old way of adding a new circle to the list of lines*/
     useEffect(()=>{
       count = lines.length
       if (addNewLine==true){
@@ -60,14 +65,14 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
         addNewLine = false
       }
     });
-    */
+    
 
     // const canvas = document.querySelector("canvas");
     // const canvasRef = useRef(null);
     // const ctxRef = useRef(null);
 
   
-    /* Event handling for moving a point, utilized the old line array
+    /* Event handling for moving a point, utilized the old line array*/
       const handleMouseUp = (e) => {
         // state.isDragging=true;
         let Xevent = e.evt.offsetX;
@@ -90,26 +95,29 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
         setLines([...lines, { id: count, points: [Xevent, Yevent]}]);
         addNewLine = true;
       };
-    */
+    
     
     return(
-      <Stage width={1280} height={1200} onMouseDown={handleMouseDown}>
-      <Layer>
-        {circles.map((circle, index) => (
-          <Circle
-            key={index}
-            x={circle.x}
-            y={circle.y}
-            radius={circle.size}
-            fill={circle.color}
-            opacity={circle.opacity}
-            shadowBlur = {5}
-          />
-        ))}
-      </Layer>
-    </Stage>
-
-        /* Previous way that the dots were drawn, using old line array
+      // Start of Ben's Code
+      //-------------------------------------------------
+    //   <Stage width={1280} height={1200} onMouseDown={handleMouseDown}>
+    //   <Layer>
+    //     {circles.map((circle, index) => (
+    //       <Circle
+    //         key={index}
+    //         x={circle.x}
+    //         y={circle.y}
+    //         radius={circle.size}
+    //         fill={circle.color}
+    //         opacity={circle.opacity}
+    //         shadowBlur = {5}
+    //       />
+    //     ))}
+    //   </Layer>
+    // </Stage>
+// End of Ben's Code
+//---------------------------------------------------
+        /* Previous way that the dots were drawn, using old line array*/
         <Stage
             // onMouseUp={endDrawing}
             onMouseUp={handleMouseUp}
@@ -181,7 +189,7 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
           ))}
         </Layer>
         </Stage>
-        */
+        
     );
 };
 export default CanvasApp;
