@@ -3,6 +3,8 @@ import './DiagnosisPopup.css'
 import DiagnosisList from "./DiagnosisList"
 
 function DiagnosisPopup(props) {
+  // console.log(props.delete_circle)
+  // console.log(props.circle_key)
   return ( props.trigger) ? (
     <div className="popup">
       <div className="popup-inner">
@@ -13,6 +15,11 @@ function DiagnosisPopup(props) {
         <br/>
         <br/>
         <button className="done-button" onClick= {() => props.setTrigger(false)}>Done</button>
+        <button className="delete-button" onClick= {() => {
+          // console.log(props.delete_circle);
+          // console.log(props.circle_key);
+          props.setTrigger(false); 
+          props.delete_circle(props.circle_key)}}>Delete</button>
       </div>
     </div>
   ) : ""

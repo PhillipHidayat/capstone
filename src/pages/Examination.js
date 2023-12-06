@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Menu from "../components/Menu";
 import "../App.css";
-import imgSource from "../images/my-image.jpg";
+import imgSource from "../images/left-eye.png";
 import redDotImage from "../images/redDot.jpg";
 import CanvasApp from "../components/CanvasApp";
 import * as React from 'react';
@@ -64,8 +64,13 @@ function Examination() {
   \`\`\`
   
   > Complete`);
+// setting delete function and key for popup
+const [key, setKey] = useState(0);
+const [delete_circle, set_delete_circle] = useState();
+
+
   useEffect(()=>{
-    console.log(objectState);
+    // console.log(objectState);
   });
 
   var method = setObjectState
@@ -82,20 +87,29 @@ function Examination() {
     setReloadItems(true);
     setReloadObject(result);
 }
+// let deleteFunction = 0;
+// let key=0;
+const handleSetPopUp = (value,delete_function,key)=> {
+  // console.log(delete_function)
+  // console.log(key)
+  set_delete_circle(()=>delete_function);
+  setKey(key);
+  setPopupVisible(value);
+}
   
   
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <DiagnosisPopup trigger= {popupVisible} setTrigger= {setPopupVisible}></DiagnosisPopup>
-      <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
-      brushSize={brushSize} brushOpacity={brushOpacity} />
-      <div className="draw-area" onClick= {() => setPopupVisible(true)} >
+      <DiagnosisPopup trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}></DiagnosisPopup>
+      {/* <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity} */}
+      {/* brushSize={brushSize} brushOpacity={brushOpacity} /> */}
+      <div className="draw-area" >
         <div className="background-image" style={{
         backgroundImage: `url(${imgSource})`,
-        backgroundSize: '1280px 1200px',
-        height: '1200px'
+        backgroundSize: '1280px 1000px',
+        height: '1000px'
       }}>
         {/* <canvas
           onMouseDown={startDrawing}
@@ -105,12 +119,13 @@ function Examination() {
           width={`1280px`}
           height={`1200px`}
         />     */}
-        <CanvasApp popup = {setPopupVisible} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
+        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
         </div>
       
       </div>
       <div id="markdown-rectangle">
-        <DroppableComponent result= {reloadItems} e= {reloadObject}></DroppableComponent>
+        {/* <DroppableComponent result= {reloadItems} e= {reloadObject}></DroppableComponent> */}
+        <h1 style={{textAlign:"center"}}>TBD PDF</h1>
       </div>
     </div>
   );

@@ -49,5 +49,22 @@
   
   /* Hover effect for the Done button */
   .popup-inner .done-button:hover {
-    background: #45a049; /* Darker green on hover */
+    background: #39843d; /* Darker green on hover */
+  }
+
+  /* Style for the Done button */
+  .popup-inner .delete-button {
+    background: #de1529; /* Green background color */
+    color: #fff; /* White text color */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    float:right;
+  }
+
+  /* Hover effect for the Done button */
+  .popup-inner .delete-button:hover {
+    background: #b61626; /* Darker green on hover */
   }

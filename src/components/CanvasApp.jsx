@@ -10,8 +10,7 @@ let count;
 let addNewLine = false;
   
 
-const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
-    
+const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity })=>{
     /* This is the old way that the annotations were stored,
        now we are using an array of circles instead - Ben */
     const canvasRef = useRef(null);
@@ -75,9 +74,11 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
     /* Event handling for moving a point, utilized the old line array*/
       const handleMouseUp = (e) => {
         // state.isDragging=true;
+        // popup(true)
+        // console.log("Mouse Up")
         let Xevent = e.evt.offsetX;
         let Yevent = e.evt.offsetY;
-        console.log(lines);
+        // console.log(lines);
         for (let i=0; i< lines.length; i++){
             let line = lines[i];
             // console.log(line);
@@ -90,10 +91,16 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
                 return
             }
         }
+        // console.log("reloading")
         addNewLine = true;
         const pos = e.target.getStage().getPointerPosition();
         setLines([...lines, { id: count, points: [Xevent, Yevent]}]);
-        addNewLine = true;
+        // addNewLine = true;
+      };
+
+      const deleteLine = (idToDelete) => {
+        const updatedLines = lines.filter(line => line.id !== idToDelete);
+        setLines(updatedLines);
       };
     
     
@@ -121,9 +128,11 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
         <Stage
             // onMouseUp={endDrawing}
             onMouseUp={handleMouseUp}
+            // oncontextmenu={()=>{console.log("hi")}}
             // ref={canvasRef}
-            width={1280}
-            height={1200}
+            // style={{flex: 1}}
+            width={width}
+            height={height}
             ref={stageRef}
         >
             <Layer>
@@ -141,9 +150,10 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
               stroke = {state.lastLine.id == i ? 'yellow':'black'}
               shadowBlur = {5}
               draggable
+              onClick={()=>{popup(true, deleteLine, i)}}
 
               onMouseDown={()=>{
-                console.log("mouse down")
+                // console.log("mouse down")
                 let tempState = {
                   id: i,
                   isDragging: false,
@@ -151,9 +161,9 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
                   y: state.y,
                   lastLine: line
                 }
-                console.log(line);
+                // console.log(line);
                 setState(tempState);
-                console.log(setObjectState);
+                // console.log(setObjectState);
                 setObjectState();
                 // setObjectState({
                 //   state: tempState
@@ -161,7 +171,7 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
               }}
               
               onDragStart={() => {
-                console.log("drag started")
+                // console.log("drag started")
                 let tempState = {
                   id: i,
                   isDragging: true,
@@ -172,7 +182,7 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
                 setState(tempState);
               }}
               onDragEnd={(e) => {
-                console.log(e)
+                // console.log("Drag End")
                 let tempState = {
                   id: -1,
                   isDragging: false,
@@ -182,7 +192,7 @@ const CanvasApp = ({ setObjectState, lineColor, brushSize, brushOpacity })=>{
                 }
                 setState(tempState);
                 line.points = [tempState.x, tempState.y]
-                console.log(tempState)
+                // console.log(tempState)
               
               }}
             />
