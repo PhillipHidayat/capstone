@@ -25,6 +25,7 @@ body {
 }
 .nav a {
     color: inherit;
+    text-decoration: none;
 }
 
 .nav ul {
@@ -41,4 +42,8 @@ body {
 
 .nav li:hover {
     background-color: #777;
+}
+
+.menu {
+    color: black;
 }
