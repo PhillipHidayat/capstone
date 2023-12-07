@@ -1,6 +1,6 @@
 import React from "react";
 import "./Navbar.css"
-import { Menu, MenuButton, MenuItem} from '@aws-amplify/ui-react';
+import { Menu, MenuButton, MenuItem, Divider} from '@aws-amplify/ui-react';
 // import { signOut } from '@aws-amplify/auth';
 
 
@@ -8,17 +8,19 @@ function Navbar(signOut, user){
     return (
         <div className="wrapper">
             <nav className="nav">
-                {/* <a className="site-title" href="/">MedCapture</a> */}
-                <Menu
+                <Menu className="menu"
                     trigger={
-                    <MenuButton variation="primary" size="medium" width="10%">
+                    <MenuButton variation="primary" size="large" width="10%">
                         MedCapture
                     </MenuButton>
                     }
-                >
-                    <MenuItem as="a" href="/" color={"black"}> Home </MenuItem>
-                    <MenuItem as="a" href="/examination" color={"black"}> Examination </MenuItem>
-                    <MenuItem as="a" href="#" color={"black"}> View PDF </MenuItem>
+                >   
+                    <MenuItem as="a" href="/" > Home </MenuItem>
+                    <Divider />
+                    <MenuItem as="a" href="/examination"> Examination </MenuItem>
+                    <Divider />
+                    <MenuItem as="a" href="#"> View PDF </MenuItem>
+                    
                 </Menu>
                 <ul>
                     <li>
