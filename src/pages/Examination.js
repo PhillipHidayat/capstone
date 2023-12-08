@@ -103,8 +103,8 @@ const handleSetPopUp = (value,delete_function,key)=> {
     <div className="App" >
       <h1>MedCapture</h1>
       <DiagnosisPopup trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}></DiagnosisPopup>
-      {/* <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity} */}
-      {/* brushSize={brushSize} brushOpacity={brushOpacity} /> */}
+      <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
+      brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="draw-area" >
         <div className="background-image" style={{
         backgroundImage: `url(${imgSource})`,

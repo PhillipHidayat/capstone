@@ -94,7 +94,7 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         // console.log("reloading")
         addNewLine = true;
         const pos = e.target.getStage().getPointerPosition();
-        setLines([...lines, { id: count, points: [Xevent, Yevent]}]);
+        setLines([...lines, { id: count, points: [Xevent, Yevent], bColor: lineColor, bSize: brushSize, bOpacity: brushOpacity}]);
         // addNewLine = true;
       };
 
@@ -148,7 +148,6 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
             <Layer>
           <Text
             
-            
           />
           {lines.map((line, i) => (
             <Circle
@@ -156,9 +155,10 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
               points={line.points}
               x={line.points[0]}
               y={line.points[1]}
-              radius={10} fill={state.isDragging && state.id ==i ? 'green' : 'black'}
+              radius={line.bSize} fill={state.isDragging && state.id ==i ? 'green' : line.bColor}
               stroke = {state.lastLine.id == i ? 'yellow':'black'}
               shadowBlur = {5}
+              opacity={line.bOpacity}
               draggable
               onClick={()=>{popup(true, deleteLine, i)}}
 
