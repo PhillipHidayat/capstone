@@ -68,3 +68,35 @@
   .popup-inner .delete-button:hover {
     background: #b61626; /* Darker green on hover */
   }
+
+
+  /* Style for the dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Style for the select element */
+.form-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Style for the dropdown arrow */
+.form-select::after {
+  content: "\25BC"; /* Unicode character for down arrow */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Style for the options in the dropdown */
+.form-select option {
+  background-color: #fff;
+  color: #333;
+}

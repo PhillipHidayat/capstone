@@ -2,7 +2,7 @@ import React from 'react'
 import './DiagnosisList.css'
 import { useState } from 'react'
 
-function DiagnosisList() {
+function DiagnosisList(props) {
     const options = [
         {label: "item 0", value: 0},
         {label: "item 1", value: 1},
@@ -20,7 +20,7 @@ function DiagnosisList() {
     
     return (
         <div className= "dropdown">
-            <select className= "form-select" value = {diagnosis} onChange={e => setDiagnosis(e.target.value)}>
+            <select className= "form-select" value = {props.display/*diagnosis*/} onChange={e => setDiagnosis(e.target.value)}>
                 {options.map(option => (
                     <option value= {option.value}>{option.label}</option>
                 ))}
