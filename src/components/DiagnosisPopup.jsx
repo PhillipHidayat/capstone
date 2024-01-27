@@ -13,7 +13,8 @@ function DiagnosisPopup(props) {
   const vessels = ["Arteriolar narrowing", "AV nicking", "Dilation", "Embolus", "Macroaneurysm", 
   "Periarterial plaques", "Periarteritis", "Periphlebitis", "Retinopathy", "Sheathing", 
   "Telangiectasia", "Tortuous", "Vascular attenuation"]; 
-  const iris = ["iris 1", "iris 2", "iris 3", "iris 4", "iris 5"]
+  const iris = ["Anterior synechiae", "Iris atrophy", "Irregular pupil", "Neovascularization", "Nevus", "Nodules", 
+  "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"]
   const empty = ["Select..."]
 
   const [comments, setComments] = useState(new Map());
