@@ -105,12 +105,12 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         console.log(updatedLines)
         // let update = lines.length-idToDelete;
         // new_lines=[]
-        console.log(updatedLines.length)
+        // console.log(updatedLines.length)
         for (let i =idToDelete; i<updatedLines.length;i++){
           updatedLines[i].id = updatedLines[i].id -1;
         }
         setLines(updatedLines);
-        console.log(updatedLines)
+        // console.log(updatedLines)
       };
     
     
