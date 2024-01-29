@@ -1,0 +1,11 @@
+.patientList {
+    display: flex;
+    flex-direction: column;
+}
+
+.patientData {
+    display: flex;
+    justify-content: space-around;
+    padding: 5px;
+}
+

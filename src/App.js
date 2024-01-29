@@ -16,6 +16,7 @@ import DroppableComponent from './components/DroppableComponent';
 import Navbar from "./components/Navbar.js";
 import Home from "./pages/Home.js";
 import Examination from "./pages/Examination.js";
+import Dashboard from "./pages/Dashboard.js";
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
@@ -88,6 +89,9 @@ function App({ signOut, user }: WithAuthenticatorProps) {
       break
     case "/examination":
       component = <Examination />
+      break
+    case "/dashboard":
+      component = <Dashboard />
       break
   }
 
