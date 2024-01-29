@@ -36,6 +36,8 @@ function Examination() {
   const [brushSize, setLineWidth] = useState(10);
   const [brushOpacity, setLineOpacity] = useState(1);
   const [popupVisible, setPopupVisible] = useState(false)
+  const [xCoord, setXCoord] = useState(0);
+  const [yCoord, setYCoord] = useState(0);
   const [MarkDown, setInput] = useState(`> Sample markdown that will be rendered as html 
 
   **Sample Headers**
@@ -96,13 +98,18 @@ const handleSetPopUp = (value,delete_function,key)=> {
   setKey(key);
   setPopupVisible(value);
 }
+
+const handleCoords = (x, y) => {
+  setXCoord(x);
+  setYCoord(y);
+};
   
   
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <DiagnosisPopup trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}></DiagnosisPopup>
+      <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="draw-area" >
@@ -119,7 +126,7 @@ const handleSetPopUp = (value,delete_function,key)=> {
           width={`1280px`}
           height={`1200px`}
         />     */}
-        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
+        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} returnCoords = {handleCoords}/>
         </div>
       
       </div>

@@ -20,6 +20,8 @@ function DiagnosisPopup(props) {
   const [comments, setComments] = useState(new Map());
   const [diagnoses, setDiagnoses] = useState(new Map());
   const [locations, setLocations] = useState(new Map());
+  const irisRadius = 195;
+  const irisCenter = 590;
 
   let type = null;
   let options = ["Select..."];
@@ -52,6 +54,9 @@ function DiagnosisPopup(props) {
     } else if (locations.get(props.circle_key) === "Iris") { 
       type = iris;
     }
+  } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
+    type = iris;
+    locations.set(props.circle_key, "Iris");
   } else {
     type = null;
   }

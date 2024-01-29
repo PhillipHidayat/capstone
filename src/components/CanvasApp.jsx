@@ -10,7 +10,7 @@ let count;
 let addNewLine = false;
   
 
-const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity })=>{
+const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords })=>{
     /* This is the old way that the annotations were stored,
        now we are using an array of circles instead - Ben */
     const canvasRef = useRef(null);
@@ -78,6 +78,7 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         // console.log("Mouse Up")
         let Xevent = e.evt.offsetX;
         let Yevent = e.evt.offsetY;
+        returnCoords(Xevent, Yevent);
         // console.log(lines);
         for (let i=0; i< lines.length; i++){
             let line = lines[i];
