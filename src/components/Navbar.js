@@ -17,6 +17,8 @@ function Navbar(signOut, user){
                 >   
                     <MenuItem as="a" href="/" > Home </MenuItem>
                     <Divider />
+                    <MenuItem as="a" href="/dashboard"> Dashboard </MenuItem>
+                    <Divider />
                     <MenuItem as="a" href="/examination"> Examination </MenuItem>
                     <Divider />
                     <MenuItem as="a" href="#"> View PDF </MenuItem>

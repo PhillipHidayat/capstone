@@ -36,7 +36,9 @@ function Examination() {
   const [lineColor, setLineColor] = useState("#000000");
   const [brushSize, setLineWidth] = useState(10);
   const [brushOpacity, setLineOpacity] = useState(1);
-  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false)
+  const [xCoord, setXCoord] = useState(0);
+  const [yCoord, setYCoord] = useState(0);
   const [MarkDown, setInput] = useState("");
 // setting delete function and key for popup
 const [key, setKey] = useState(0);
@@ -72,6 +74,13 @@ const handleSetPopUp = (value,delete_function,key)=> {
   setPopupVisible(value);
 }
 
+const handleCoords = (x, y) => {
+  setXCoord(x);
+  setYCoord(y);
+};
+  
+  
+
 const reloadPDF = (map) => {
   var s = "<table>";
   map.forEach((values, keys) => {
@@ -89,9 +98,9 @@ const reloadPDF = (map) => {
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <DiagnosisPopup trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key} onSave={reloadPDF}></DiagnosisPopup>
-      {/* <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity} */}
-      {/* brushSize={brushSize} brushOpacity={brushOpacity} /> */}
+      <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key} onSave={reloadPDF}></DiagnosisPopup>
+      <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
+      brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="draw-area" >
         <div className="background-image" style={{
         backgroundImage: `url(${imgSource})`,
@@ -106,7 +115,7 @@ const reloadPDF = (map) => {
           width={`1280px`}
           height={`1200px`}
         />     */}
-        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} />
+        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} returnCoords = {handleCoords}/>
         </div>
       
       </div>
