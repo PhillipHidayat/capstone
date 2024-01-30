@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aws-amplify/ui-react": "^4.3.5",
+    "@aws-amplify/ui-react": "^5.3.3",
     "@syncfusion/ej2-react-buttons": "^20.4.44",
     "@syncfusion/ej2-react-documenteditor": "^20.4.44",
     "@testing-library/jest-dom": "^5.16.5",
