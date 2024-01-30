@@ -10,7 +10,7 @@ let count;
 let addNewLine = false;
   
 
-const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity })=>{
+const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords })=>{
     /* This is the old way that the annotations were stored,
        now we are using an array of circles instead - Ben */
     const canvasRef = useRef(null);
@@ -78,6 +78,7 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         // console.log("Mouse Up")
         let Xevent = e.evt.offsetX;
         let Yevent = e.evt.offsetY;
+        returnCoords(Xevent, Yevent);
         // console.log(lines);
         for (let i=0; i< lines.length; i++){
             let line = lines[i];
@@ -94,7 +95,7 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         // console.log("reloading")
         addNewLine = true;
         const pos = e.target.getStage().getPointerPosition();
-        setLines([...lines, { id: count, points: [Xevent, Yevent]}]);
+        setLines([...lines, { id: count, points: [Xevent, Yevent], bColor: lineColor, bSize: brushSize, bOpacity: brushOpacity}]);
         // addNewLine = true;
       };
 
@@ -105,12 +106,12 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         console.log(updatedLines)
         // let update = lines.length-idToDelete;
         // new_lines=[]
-        console.log(updatedLines.length)
+        // console.log(updatedLines.length)
         for (let i =idToDelete; i<updatedLines.length;i++){
           updatedLines[i].id = updatedLines[i].id -1;
         }
         setLines(updatedLines);
-        console.log(updatedLines)
+        // console.log(updatedLines)
       };
     
     
@@ -148,7 +149,6 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
             <Layer>
           <Text
             
-            
           />
           {lines.map((line, i) => (
             <Circle
@@ -156,9 +156,10 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
               points={line.points}
               x={line.points[0]}
               y={line.points[1]}
-              radius={10} fill={state.isDragging && state.id ==i ? 'green' : 'black'}
+              radius={line.bSize} fill={state.isDragging && state.id ==i ? 'green' : line.bColor}
               stroke = {state.lastLine.id == i ? 'yellow':'black'}
               shadowBlur = {5}
+              opacity={line.bOpacity}
               draggable
               onClick={()=>{popup(true, deleteLine, i)}}
 
