@@ -93,6 +93,9 @@ function DiagnosisPopup(props) {
         <br/>
         <button className="done-button" onClick= {() => {
           props.setTrigger(false);
+          props.onSave(comments);
+          // if(props.circle_key + 1 == comments.length) {
+          // setComments(...comments, !!VALUE_IN_TEXTAREA!! )
           }
         }>Done</button>
         <button className="delete-button" onClick= {() => {
