@@ -7,10 +7,9 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import { Patient } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { API } from "aws-amplify";
-import { getPatient } from "../graphql/queries";
-import { updatePatient } from "../graphql/mutations";
+import { DataStore } from "aws-amplify";
 export default function PatientUpdateForm(props) {
   const {
     id: idProp,
@@ -27,7 +26,6 @@ export default function PatientUpdateForm(props) {
     First_Name: "",
     Last_Name: "",
     Age: "",
-    untitledfield: "",
     Date_Of_Birth: "",
     Sex: "",
     Address: "",
@@ -38,9 +36,6 @@ export default function PatientUpdateForm(props) {
   const [First_Name, setFirst_Name] = React.useState(initialValues.First_Name);
   const [Last_Name, setLast_Name] = React.useState(initialValues.Last_Name);
   const [Age, setAge] = React.useState(initialValues.Age);
-  const [untitledfield, setUntitledfield] = React.useState(
-    initialValues.untitledfield
-  );
   const [Date_Of_Birth, setDate_Of_Birth] = React.useState(
     initialValues.Date_Of_Birth
   );
@@ -57,7 +52,6 @@ export default function PatientUpdateForm(props) {
     setFirst_Name(cleanValues.First_Name);
     setLast_Name(cleanValues.Last_Name);
     setAge(cleanValues.Age);
-    setUntitledfield(cleanValues.untitledfield);
     setDate_Of_Birth(cleanValues.Date_Of_Birth);
     setSex(cleanValues.Sex);
     setAddress(cleanValues.Address);
@@ -70,12 +64,7 @@ export default function PatientUpdateForm(props) {
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? (
-            await API.graphql({
-              query: getPatient.replaceAll("__typename", ""),
-              variables: { id: idProp },
-            })
-          )?.data?.getPatient
+        ? await DataStore.query(Patient, idProp)
         : patientModelProp;
       setPatientRecord(record);
     };
@@ -83,16 +72,15 @@ export default function PatientUpdateForm(props) {
   }, [idProp, patientModelProp]);
   React.useEffect(resetStateValues, [patientRecord]);
   const validations = {
-    First_Name: [],
-    Last_Name: [],
-    Age: [],
-    untitledfield: [],
-    Date_Of_Birth: [],
-    Sex: [],
-    Address: [],
-    Phone: [{ type: "Phone" }],
-    Email: [{ type: "Email" }],
-    Provider: [],
+    First_Name: [{ type: "Required" }],
+    Last_Name: [{ type: "Required" }],
+    Age: [{ type: "Required" }],
+    Date_Of_Birth: [{ type: "Required" }],
+    Sex: [{ type: "Required" }],
+    Address: [{ type: "Required" }],
+    Phone: [{ type: "Required" }, { type: "Phone" }],
+    Email: [{ type: "Required" }, { type: "Email" }],
+    Provider: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -120,16 +108,15 @@ export default function PatientUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          First_Name: First_Name ?? null,
-          Last_Name: Last_Name ?? null,
-          Age: Age ?? null,
-          untitledfield: untitledfield ?? null,
-          Date_Of_Birth: Date_Of_Birth ?? null,
-          Sex: Sex ?? null,
-          Address: Address ?? null,
-          Phone: Phone ?? null,
-          Email: Email ?? null,
-          Provider: Provider ?? null,
+          First_Name,
+          Last_Name,
+          Age,
+          Date_Of_Birth,
+          Sex,
+          Address,
+          Phone,
+          Email,
+          Provider,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -159,22 +146,17 @@ export default function PatientUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          await API.graphql({
-            query: updatePatient.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                id: patientRecord.id,
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(
+            Patient.copyOf(patientRecord, (updated) => {
+              Object.assign(updated, modelFields);
+            })
+          );
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}
@@ -183,7 +165,7 @@ export default function PatientUpdateForm(props) {
     >
       <TextField
         label="First name"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={First_Name}
         onChange={(e) => {
@@ -193,7 +175,6 @@ export default function PatientUpdateForm(props) {
               First_Name: value,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address,
@@ -216,7 +197,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Last name"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={Last_Name}
         onChange={(e) => {
@@ -226,7 +207,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name: value,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address,
@@ -249,7 +229,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Age"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         type="number"
         step="any"
@@ -263,7 +243,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age: value,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address,
@@ -285,41 +264,8 @@ export default function PatientUpdateForm(props) {
         {...getOverrideProps(overrides, "Age")}
       ></TextField>
       <TextField
-        label="Untitledfield"
-        isRequired={false}
-        isReadOnly={false}
-        value={untitledfield}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              First_Name,
-              Last_Name,
-              Age,
-              untitledfield: value,
-              Date_Of_Birth,
-              Sex,
-              Address,
-              Phone,
-              Email,
-              Provider,
-            };
-            const result = onChange(modelFields);
-            value = result?.untitledfield ?? value;
-          }
-          if (errors.untitledfield?.hasError) {
-            runValidationTasks("untitledfield", value);
-          }
-          setUntitledfield(value);
-        }}
-        onBlur={() => runValidationTasks("untitledfield", untitledfield)}
-        errorMessage={errors.untitledfield?.errorMessage}
-        hasError={errors.untitledfield?.hasError}
-        {...getOverrideProps(overrides, "untitledfield")}
-      ></TextField>
-      <TextField
         label="Date of birth"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         type="date"
         value={Date_Of_Birth}
@@ -330,7 +276,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth: value,
               Sex,
               Address,
@@ -353,7 +298,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Sex"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={Sex}
         onChange={(e) => {
@@ -363,7 +308,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex: value,
               Address,
@@ -386,7 +330,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Address"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={Address}
         onChange={(e) => {
@@ -396,7 +340,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address: value,
@@ -419,7 +362,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Phone"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         type="tel"
         value={Phone}
@@ -430,7 +373,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address,
@@ -453,7 +395,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Email"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={Email}
         onChange={(e) => {
@@ -463,7 +405,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address,
@@ -486,7 +427,7 @@ export default function PatientUpdateForm(props) {
       ></TextField>
       <TextField
         label="Provider"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={Provider}
         onChange={(e) => {
@@ -496,7 +437,6 @@ export default function PatientUpdateForm(props) {
               First_Name,
               Last_Name,
               Age,
-              untitledfield,
               Date_Of_Birth,
               Sex,
               Address,

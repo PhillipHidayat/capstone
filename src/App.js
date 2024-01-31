@@ -99,7 +99,7 @@ function App({ signOut, user }: WithAuthenticatorProps) {
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <Navbar signOut={()=>{console.log("Hi");signOut()}} user={user}/>
-      <div className="Container">
+      <div className="Container" style={{width:'100%'}}>
         {component}
       </div>
     </div>

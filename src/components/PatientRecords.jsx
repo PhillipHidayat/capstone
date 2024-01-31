@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { DataStore } from '@aws-amplify/datastore';
+import {Patient} from '../models'
+import { Button } from "@aws-amplify/ui-react";
+import CreatPatientPopup from './CreatePatientPopup';
 import './PatientRecords.css'
 
 function PatientRecords() {
   const [patientList, setPatientList] = useState(["Katy", "Jason", "Kyle"]);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [popupVisible, setPopupVisible] = useState(false)
 
   useEffect(() => {
     // Fetch list of patients 
@@ -15,6 +20,12 @@ function PatientRecords() {
 
   async function fetchPatients() {
     // API call to get patients
+    try {
+      const posts = await DataStore.query(Patient);
+      console.log('Posts retrieved successfully!', posts);
+    } catch (error) {
+      console.log('Error retrieving posts', error);
+    }
     return ['John Doe', 'Jane Smith', 'Bob Wilson'] 
   }
 
@@ -25,10 +36,14 @@ function PatientRecords() {
   
   return (
     <div className="patient-list">
+      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible}></CreatPatientPopup>
         <p>Hello</p>
+        <Button onClick={()=>{
+          setPopupVisible(true)
+        }}>Add New Patient</Button>
       <ul>
         {patientList.map(patient => (
-          <li onClick={() => handlePatientClick(patient)}>
+          <li key={patient} onClick={() => handlePatientClick(patient)}>
             {patient}  
           </li>
         ))}

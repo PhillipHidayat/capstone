@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { Patient } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -25,7 +26,6 @@ export declare type PatientUpdateFormInputValues = {
     First_Name?: string;
     Last_Name?: string;
     Age?: number;
-    untitledfield?: string;
     Date_Of_Birth?: string;
     Sex?: string;
     Address?: string;
@@ -37,7 +37,6 @@ export declare type PatientUpdateFormValidationValues = {
     First_Name?: ValidationFunction<string>;
     Last_Name?: ValidationFunction<string>;
     Age?: ValidationFunction<number>;
-    untitledfield?: ValidationFunction<string>;
     Date_Of_Birth?: ValidationFunction<string>;
     Sex?: ValidationFunction<string>;
     Address?: ValidationFunction<string>;
@@ -51,7 +50,6 @@ export declare type PatientUpdateFormOverridesProps = {
     First_Name?: PrimitiveOverrideProps<TextFieldProps>;
     Last_Name?: PrimitiveOverrideProps<TextFieldProps>;
     Age?: PrimitiveOverrideProps<TextFieldProps>;
-    untitledfield?: PrimitiveOverrideProps<TextFieldProps>;
     Date_Of_Birth?: PrimitiveOverrideProps<TextFieldProps>;
     Sex?: PrimitiveOverrideProps<TextFieldProps>;
     Address?: PrimitiveOverrideProps<TextFieldProps>;
@@ -63,7 +61,7 @@ export declare type PatientUpdateFormProps = React.PropsWithChildren<{
     overrides?: PatientUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    patient?: any;
+    patient?: Patient;
     onSubmit?: (fields: PatientUpdateFormInputValues) => PatientUpdateFormInputValues;
     onSuccess?: (fields: PatientUpdateFormInputValues) => void;
     onError?: (fields: PatientUpdateFormInputValues, errorMessage: string) => void;

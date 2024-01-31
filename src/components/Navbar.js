@@ -10,7 +10,7 @@ function Navbar(signOut, user){
             <nav className="nav">
                 <Menu className="menu"
                     trigger={
-                    <MenuButton variation="primary" size="large" width="10%">
+                    <MenuButton variation="primary" size="large">
                         MedCapture
                     </MenuButton>
                     }
@@ -20,6 +20,8 @@ function Navbar(signOut, user){
                     <MenuItem as="a" href="/examination"> Examination </MenuItem>
                     <Divider />
                     <MenuItem as="a" href="#"> View PDF </MenuItem>
+                    <Divider />
+                    <MenuItem as="a" href="/records"> Patients </MenuItem>
                     
                 </Menu>
                 <ul>

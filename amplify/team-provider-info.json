@@ -14,6 +14,9 @@
     "categories": {
       "auth": {
         "EMRApp": {}
+      },
+      "api": {
+        "EMRApp": {}
       }
     }
   },

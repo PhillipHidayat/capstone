@@ -25,7 +25,6 @@ export declare type PatientCreateFormInputValues = {
     First_Name?: string;
     Last_Name?: string;
     Age?: number;
-    untitledfield?: string;
     Date_Of_Birth?: string;
     Sex?: string;
     Address?: string;
@@ -37,7 +36,6 @@ export declare type PatientCreateFormValidationValues = {
     First_Name?: ValidationFunction<string>;
     Last_Name?: ValidationFunction<string>;
     Age?: ValidationFunction<number>;
-    untitledfield?: ValidationFunction<string>;
     Date_Of_Birth?: ValidationFunction<string>;
     Sex?: ValidationFunction<string>;
     Address?: ValidationFunction<string>;
@@ -51,7 +49,6 @@ export declare type PatientCreateFormOverridesProps = {
     First_Name?: PrimitiveOverrideProps<TextFieldProps>;
     Last_Name?: PrimitiveOverrideProps<TextFieldProps>;
     Age?: PrimitiveOverrideProps<TextFieldProps>;
-    untitledfield?: PrimitiveOverrideProps<TextFieldProps>;
     Date_Of_Birth?: PrimitiveOverrideProps<TextFieldProps>;
     Sex?: PrimitiveOverrideProps<TextFieldProps>;
     Address?: PrimitiveOverrideProps<TextFieldProps>;
