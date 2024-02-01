@@ -82,12 +82,18 @@ const handleCoords = (x, y) => {
   
 
 const reloadPDF = (map) => {
-  var s = "<table>";
+  var s = "<html>\n" +
+  "<head>\n" + 
+  "<style>\n" + 
+  "body { margin: auto; }\n" + 
+  "table, th, td {\n" + 
+  "border: 1px solid black;\nborder-collapse: collapse;\n}\n" + "table.center{\nmargin-left: auto;\nmargin-right: auto;\n}" + 
+  "</style>\n</head>\n<body>\n<h4 style=\"margin-left: 50px;\">John Doe<br>1234 Willow Lane, Ogden UT<br>Date of Birth: 01/01/2000<br>Phone Number: 801-345-6789</h4>\n<table class=\"center\"style=\"table-layout:fixed\"width=\"50%\" border=\"1\">";
   map.forEach((values, keys) => {
     console.log(values + " " + keys);
     s +="\n<tr><td>" + values + "</td><td>" + keys + "</td></tr>";
   })
-  s += "\n</table>";
+  s += "\n</table>\n</body>\n</html>";
   console.log(s);
   html2pdf().from(s).outputPdf().then(function(pdf) {
         setPDF(btoa(pdf));
