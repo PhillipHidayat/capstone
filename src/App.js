@@ -99,6 +99,9 @@ function App({ signOut, user }: WithAuthenticatorProps) {
     case "/examination":
       component = <Examination />
       break
+    case "/records":
+      component = <PatientRecords />
+      break
   }
 
   return (
