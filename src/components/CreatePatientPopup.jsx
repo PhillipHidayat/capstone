@@ -21,7 +21,10 @@ function CreatPatientPopup(props) {
         <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
             props.setTrigger(false);
         }}> x </Button>
-        <PatientCreateForm overrides={overrides}></PatientCreateForm>
+        <PatientCreateForm overrides={overrides} onSuccess={()=>{
+            props.setTrigger(false);
+            props.refreshPatientList()
+        }}></PatientCreateForm>
       </div>
     </div>
   ) : ""

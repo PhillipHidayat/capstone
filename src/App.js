@@ -17,11 +17,20 @@ import Navbar from "./components/Navbar.js";
 import Home from "./pages/Home.js";
 import Examination from "./pages/Examination.js";
 import PatientRecords from "./components/PatientRecords.jsx";
+import { fetchUserAttributes } from 'aws-amplify/auth';
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
 
-
+async function handleFetchUserAttributes() {
+  try {
+    const userAttributes = await fetchUserAttributes();
+    return userAttributes
+  } catch (error) {
+    console.log(error);
+  }
+}
+let attributes = await handleFetchUserAttributes()
 
 // DocumentEditorComponent.Inject(Print, SfdtExport, WordExport, TextExport, Selection, Search, Editor, ImageResizer, EditorHistory, ContextMenu, OptionsPane, HyperlinkDialog, TableDialog, BookmarkDialog, TableOfContentsDialog, PageSetupDialog, StyleDialog, ListDialog, ParagraphDialog, BulletsAndNumberingDialog, FontDialog, TablePropertiesDialog, BordersAndShadingDialog, TableOptionsDialog, CellOptionsDialog, StylesDialog);
 
@@ -98,7 +107,7 @@ function App({ signOut, user }: WithAuthenticatorProps) {
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <Navbar signOut={()=>{console.log("Hi");signOut()}} user={user}/>
+      <Navbar signOut={signOut} user={attributes}/>
       <div className="Container" style={{width:'100%'}}>
         {component}
       </div>
