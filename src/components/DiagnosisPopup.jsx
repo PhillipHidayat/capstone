@@ -42,6 +42,9 @@ function DiagnosisPopup(props) {
     const updatedLocations= new Map(locations);
     updatedLocations.set(props.circle_key, e.target.value);
     setLocations(updatedLocations);
+    if(diagnoses.has(props.circle_key)){
+      diagnoses.delete(props.circle_key);
+    }
   }
 
   if (locations.has(props.circle_key)){
@@ -65,6 +68,7 @@ function DiagnosisPopup(props) {
   if (type) { 
     options = type.map((el) => <option key={el}>{el}</option>); 
   } else {
+    locations.set(props.circle_key, "Select...")
     options = empty.map((el) => <option key={el}>{el}</option>); 
   }
 
@@ -93,7 +97,8 @@ function DiagnosisPopup(props) {
         <br/>
         <button className="done-button" onClick= {() => {
           props.setTrigger(false);
-          props.onSave(comments);
+          console.log(diagnoses);
+          props.onSave(comments, diagnoses, locations);
           // if(props.circle_key + 1 == comments.length) {
           // setComments(...comments, !!VALUE_IN_TEXTAREA!! )
           }
