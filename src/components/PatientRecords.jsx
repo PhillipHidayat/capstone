@@ -183,6 +183,8 @@ function PatientProfile(props,{patient}) {
         <Text></Text>
         <Text fontSize="20px">Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
         <Text></Text>
+        <Button>Delete User</Button>
+        <Button>Create Exam</Button>
       </Grid>
       {/* Patient record details */}
     </div>

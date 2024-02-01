@@ -1,6 +1,6 @@
 import React from "react";
 import PatientTable from "../components/PatientTable";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 
 
 
