@@ -16,6 +16,8 @@ import DroppableComponent from './components/DroppableComponent';
 import Navbar from "./components/Navbar.js";
 import Home from "./pages/Home.js";
 import Examination from "./pages/Examination.js";
+import PatientRecords from "./components/PatientRecords.jsx";
+import { fetchUserAttributes } from 'aws-amplify/auth';
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
