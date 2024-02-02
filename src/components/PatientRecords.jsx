@@ -184,7 +184,7 @@ function PatientProfile(props,{patient}) {
         <Text fontSize="20px">Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
         <Text></Text>
         <Button width="200px">Delete User</Button>
-        <Button width="200px">Create Exam</Button>
+        <Button width="200px" as="a" href={"/examination/"+patient.id}>Create Exam</Button>
       </Grid>
       {/* Patient record details */}
     </div>

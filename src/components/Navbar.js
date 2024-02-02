@@ -20,7 +20,7 @@ async function currentAuthenticatedUser() {
 
 
 function Navbar(props){
-    console.log(props)
+    // console.log(props)
     return (
         <div className="wrapper">
             <nav className="nav">
