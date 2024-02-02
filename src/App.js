@@ -107,6 +107,11 @@ function App({ signOut, user }: WithAuthenticatorProps) {
       component = <Dashboard />
       break
   }
+  if (window.location.pathname.includes("/examination/")){
+    // console.log(window.location.pathname);
+    let patient = window.location.pathname.replace("/examination/",""); // essentially removes pre stuff to get patient id
+    component = <Examination patient={patient}/>
+  }
 
   return (
     //style={{backgroundImage: `url(${imgSource})`}}

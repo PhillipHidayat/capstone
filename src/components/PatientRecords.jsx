@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DataStore, Predicates } from '@aws-amplify/datastore';
 import {Patient} from '../models'
-import { Button, Grid, Text, Accordion } from "@aws-amplify/ui-react";
+import { Button, Grid, Text, Accordion, SelectField } from "@aws-amplify/ui-react";
 import CreatPatientPopup from './CreatePatientPopup';
 import { SearchField } from '@aws-amplify/ui-react';
 import './PatientRecords.css'
@@ -12,6 +12,7 @@ function PatientRecords() {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false)
   const [search, setSearch] = React.useState('');
+  const [searchBy, setSearchBy] = React.useState("firstName");
 
   useEffect(() => {
     // Fetch list of patients 
@@ -84,7 +85,22 @@ function PatientRecords() {
           if (patients[i].createdAt!=null && search==""){
             tempPatients.push(patients[i]);
           }
-          else if (patients[i].createdAt!=null && patients[i].First_Name.toLowerCase()==search.toLowerCase()){
+          // by first name
+          else if (patients[i].createdAt!=null && patients[i].First_Name.toLowerCase().includes(search.toLowerCase()) && searchBy == "firstName"){
+            console.log(patients[i])
+            tempPatients.push(patients[i]);
+          }
+          // by last name
+          else if (patients[i].createdAt!=null && patients[i].Last_Name.toLowerCase().includes(search.toLowerCase()) && searchBy == "lastName"){
+            console.log(patients[i])
+            tempPatients.push(patients[i]);
+          }
+          else if (patients[i].createdAt!=null && patients[i].Age==search && searchBy == "age"){
+            console.log(patients[i])
+            tempPatients.push(patients[i]);
+          }
+          // by provider
+          else if (patients[i].createdAt!=null && patients[i].Provider.toLowerCase().includes(search.toLowerCase()) && searchBy == "provider"){
             console.log(patients[i])
             tempPatients.push(patients[i]);
           }
@@ -106,7 +122,27 @@ function PatientRecords() {
           onClear={onClear}
           onSubmit={onSearch}
           value={search}
+          // children={<SelectField
+          //             label = "Search By"
+          //             value = {searchBy}
+          //             onChange={(e) => setSearchBy(e.target.value)}
+          //           >
+          //             <option value="firstName">First Name</option>
+          //             <option value="lastName">Last Name</option>
+          //             <option value="age">Age</option>
+          //           </SelectField>}
         />
+        <br />
+        <SelectField
+                      label = "Search By :"
+                      value = {searchBy}
+                      onChange={(e) => setSearchBy(e.target.value)}
+                    >
+                      <option value="firstName">First Name</option>
+                      <option value="lastName">Last Name</option>
+                      <option value="age">Age</option>
+                      <option value="provider">Provider</option>
+                    </SelectField>
         {/* <Button onClick={async ()=>{
           await DataStore.delete(Patient, Predicates.ALL);
         }}>Delete All Records</Button> */}
@@ -183,8 +219,8 @@ function PatientProfile(props,{patient}) {
         <Text></Text>
         <Text fontSize="20px">Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
         <Text></Text>
-        <Button>Delete User</Button>
-        <Button>Create Exam</Button>
+        <Button width="200px">Delete User</Button>
+        <Button width="200px" as="a" href={"/examination/"+patient.id}>Create Exam</Button>
       </Grid>
       {/* Patient record details */}
     </div>
