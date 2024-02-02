@@ -103,13 +103,68 @@ const handleCoords = (x, y) => {
   
   
 
-const reloadPDF = (map) => {
-  var s = "<table>";
-  map.forEach((values, keys) => {
-    console.log(values + " " + keys);
-    s +="\n<tr><td>" + values + "</td><td>" + keys + "</td></tr>";
-  })
-  s += "\n</table>";
+const reloadPDF = (comments, diagnoses, locations) => {
+  if (!comments || !diagnoses || !locations) {
+    if(!comments){
+      console.error("Comments are undefined.");
+    }
+    if(!diagnoses){
+      console.error("Diagnoses are undefined.");
+    }
+    if(!locations){
+      console.error("Locations are undefined.");
+    }
+    return;
+  }
+  var s = "<html>\n" +
+  "<head>\n" + 
+  "<style>\n" + 
+  "body { margin: auto; }\n" + 
+  "table, th, td {\n" + 
+  "border: 1px solid black;\nborder-collapse: collapse;\n}\n" + "table.center{\nmargin-left: auto;\nmargin-right: auto;\n}" + 
+  "</style>\n</head>\n<body>\n<h4 style=\"margin-left: 50px;\">John Doe<br>1234 Willow Lane, Ogden UT<br>Date of Birth: 01/01/2000<br>Phone Number: 801-345-6789</h4>\n<table class=\"center\"style=\"table-layout:fixed\"width=\"80%\" border=\"1\">";
+  // comments.forEach((values, keys) => {
+  //   console.log(values + " " + keys);
+  //   s +="\n<tr><td>" + values + "</td><td>" + keys + "</td></tr>";
+  // })
+  var locationList = ["Iris", "Vessels", "Macula", "Disc", "Select..."]
+  locationList.forEach((category) => {
+    var isFirst = true;
+    var diagnosesAdded = false;
+    s +="\n<tr><td>" + category+ "</td><td>Diagnoses: ";
+    locations.forEach((values, keys) => {
+      if(values == category){
+        if(diagnoses.has(keys)){
+          diagnosesAdded = true;
+          if(isFirst){
+            s+= " " + diagnoses.get(keys);
+            isFirst = false;
+          }
+          else{
+          s += ", " + diagnoses.get(keys);
+          }
+        }
+      }
+      });
+      if(!diagnosesAdded){s += " Normal"}
+    isFirst = true;
+    s += "<br>Comments: ";
+    locations.forEach((values, keys) => {
+      if(values == category){
+        if(comments.has(keys)){
+          if(isFirst){
+            s+= " " + comments.get(keys);
+            isFirst = false;
+          }
+          else{
+          s += ", " + comments.get(keys);
+          }
+        }
+      }
+      });
+    s += "</td></tr>";
+   });
+  s += "\n</table>\n</body>\n</html>";
   console.log(s);
   html2pdf().from(s).outputPdf().then(function(pdf) {
         setPDF(btoa(pdf));
