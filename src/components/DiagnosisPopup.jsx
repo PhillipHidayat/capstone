@@ -4,16 +4,16 @@ import { useState } from "react"
 
 function DiagnosisPopup(props) {
 
-  const disc = ["Absent spontaneous venous pulsation", "Atrophy", "Cotton wool spots", "Drusen", 
+  const disc = ["Normal", "Absent spontaneous venous pulsation", "Atrophy", "Cotton wool spots", "Drusen", 
   "Edema", "Hemorrhage", "Hypoplasia", "Neovascularization", "Optic neuritis", "Pallor", 
   "Peripapillary atrophy", "Thin rim", "Tilted cup", "Tilted disc"]; 
-  const macula = ["ARMD", "Atrophy", "Choroidal nevus", "CSME", "Cystoid macular edema", "Disciform scar", 
+  const macula = ["Normal", "ARMD", "Atrophy", "Choroidal nevus", "CSME", "Cystoid macular edema", "Disciform scar", 
   "Drusen", "Edudates", "Foveal hypoplasia", "Hemorrhage", "Lesion", "Macular hole", "Macular thickening", 
   "Membrane", "Microaneurysms", "Mottling", "Retinal pigment epithelial detatchment", "Subretinal fibrosis"]; 
-  const vessels = ["Arteriolar narrowing", "AV nicking", "Dilation", "Embolus", "Macroaneurysm", 
+  const vessels = ["Normal", "Arteriolar narrowing", "AV nicking", "Dilation", "Embolus", "Macroaneurysm", 
   "Periarterial plaques", "Periarteritis", "Periphlebitis", "Retinopathy", "Sheathing", 
   "Telangiectasia", "Tortuous", "Vascular attenuation"]; 
-  const iris = ["Anterior synechiae", "Iris atrophy", "Irregular pupil", "Neovascularization", "Nevus", "Nodules", 
+  const iris = ["Normal", "Anterior synechiae", "Iris atrophy", "Irregular pupil", "Neovascularization", "Nevus", "Nodules", 
   "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"]
   const empty = ["Select..."]
 
