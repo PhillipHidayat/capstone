@@ -62,3 +62,18 @@ h1 {
   border: 5px solid black;
   box-shadow: 5px grey;
 }
+
+.button-container button {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-right: 10px;
+  background-color: rgb(133, 221, 221);
+  color: white;
+  border-radius: 8px;
+  transition: background-color 0.1s;
+}
+
+.button-container button:active {
+  background-color: #4682B4;
+  /* You can add more styles for the active state as needed */
+}
