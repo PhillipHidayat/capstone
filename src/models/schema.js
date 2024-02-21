@@ -141,13 +141,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "Age": {
-                    "name": "Age",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "Date_Of_Birth": {
                     "name": "Date_Of_Birth",
                     "isArray": false,
@@ -252,5 +245,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "b7847b24fecb3cada2e70398ebd7cb9f"
+    "version": "15639fc20740f0fb044159f5769b1c7c"
 };

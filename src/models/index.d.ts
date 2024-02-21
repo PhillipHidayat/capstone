@@ -56,7 +56,6 @@ type EagerPatient = {
   readonly id: string;
   readonly First_Name: string;
   readonly Last_Name: string;
-  readonly Age: number;
   readonly Date_Of_Birth: string;
   readonly Sex: string;
   readonly Address: string;
@@ -76,7 +75,6 @@ type LazyPatient = {
   readonly id: string;
   readonly First_Name: string;
   readonly Last_Name: string;
-  readonly Age: number;
   readonly Date_Of_Birth: string;
   readonly Sex: string;
   readonly Address: string;

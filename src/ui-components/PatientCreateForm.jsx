@@ -24,7 +24,6 @@ export default function PatientCreateForm(props) {
   const initialValues = {
     First_Name: "",
     Last_Name: "",
-    Age: "",
     Date_Of_Birth: "",
     Sex: "",
     Address: "",
@@ -34,7 +33,6 @@ export default function PatientCreateForm(props) {
   };
   const [First_Name, setFirst_Name] = React.useState(initialValues.First_Name);
   const [Last_Name, setLast_Name] = React.useState(initialValues.Last_Name);
-  const [Age, setAge] = React.useState(initialValues.Age);
   const [Date_Of_Birth, setDate_Of_Birth] = React.useState(
     initialValues.Date_Of_Birth
   );
@@ -47,7 +45,6 @@ export default function PatientCreateForm(props) {
   const resetStateValues = () => {
     setFirst_Name(initialValues.First_Name);
     setLast_Name(initialValues.Last_Name);
-    setAge(initialValues.Age);
     setDate_Of_Birth(initialValues.Date_Of_Birth);
     setSex(initialValues.Sex);
     setAddress(initialValues.Address);
@@ -59,7 +56,6 @@ export default function PatientCreateForm(props) {
   const validations = {
     First_Name: [{ type: "Required" }],
     Last_Name: [{ type: "Required" }],
-    Age: [{ type: "Required" }],
     Date_Of_Birth: [{ type: "Required" }],
     Sex: [{ type: "Required" }],
     Address: [{ type: "Required" }],
@@ -95,7 +91,6 @@ export default function PatientCreateForm(props) {
         let modelFields = {
           First_Name,
           Last_Name,
-          Age,
           Date_Of_Birth,
           Sex,
           Address,
@@ -158,7 +153,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name: value,
               Last_Name,
-              Age,
               Date_Of_Birth,
               Sex,
               Address,
@@ -190,7 +184,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name: value,
-              Age,
               Date_Of_Birth,
               Sex,
               Address,
@@ -212,42 +205,6 @@ export default function PatientCreateForm(props) {
         {...getOverrideProps(overrides, "Last_Name")}
       ></TextField>
       <TextField
-        label="Age"
-        isRequired={true}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={Age}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              First_Name,
-              Last_Name,
-              Age: value,
-              Date_Of_Birth,
-              Sex,
-              Address,
-              Phone,
-              Email,
-              Provider,
-            };
-            const result = onChange(modelFields);
-            value = result?.Age ?? value;
-          }
-          if (errors.Age?.hasError) {
-            runValidationTasks("Age", value);
-          }
-          setAge(value);
-        }}
-        onBlur={() => runValidationTasks("Age", Age)}
-        errorMessage={errors.Age?.errorMessage}
-        hasError={errors.Age?.hasError}
-        {...getOverrideProps(overrides, "Age")}
-      ></TextField>
-      <TextField
         label="Date of birth"
         isRequired={true}
         isReadOnly={false}
@@ -259,7 +216,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name,
-              Age,
               Date_Of_Birth: value,
               Sex,
               Address,
@@ -291,7 +247,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name,
-              Age,
               Date_Of_Birth,
               Sex: value,
               Address,
@@ -323,7 +278,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name,
-              Age,
               Date_Of_Birth,
               Sex,
               Address: value,
@@ -356,7 +310,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name,
-              Age,
               Date_Of_Birth,
               Sex,
               Address,
@@ -388,7 +341,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name,
-              Age,
               Date_Of_Birth,
               Sex,
               Address,
@@ -420,7 +372,6 @@ export default function PatientCreateForm(props) {
             const modelFields = {
               First_Name,
               Last_Name,
-              Age,
               Date_Of_Birth,
               Sex,
               Address,
