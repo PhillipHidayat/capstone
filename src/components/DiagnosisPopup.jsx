@@ -1,6 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './DiagnosisPopup.css'
 import { useState } from "react"
+
+// Define a class to represent your data
+class annotation {
+  constructor(comment, diagnosis, location) {
+    this.comment = comment;
+    this.diagnosis = diagnosis;
+    this.location = location;
+  }
+}
 
 function DiagnosisPopup(props) {
 
@@ -14,62 +23,97 @@ function DiagnosisPopup(props) {
   "Periarterial plaques", "Periarteritis", "Periphlebitis", "Retinopathy", "Sheathing", 
   "Telangiectasia", "Tortuous", "Vascular attenuation"]; 
   const iris = ["Normal", "Anterior synechiae", "Iris atrophy", "Irregular pupil", "Neovascularization", "Nevus", "Nodules", 
-  "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"]
-  const empty = ["Select..."]
+  "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"];
+  const empty = ["Select..."];
 
-  const [comments, setComments] = useState(new Map());
-  const [diagnoses, setDiagnoses] = useState(new Map());
-  const [locations, setLocations] = useState(new Map());
+  const [imgAnnotations, setImgAnnotations] = useState(new Map());
+  const [annotations, setAnnontations] = useState(new Map());
+  const [comment, setComment] = useState("");
+  const [diagnosis, setDiagnosis] = useState("Select...");
+  const [location, setLocation] = useState("Select...");
   const irisRadius = 195;
   const irisCenter = 590;
+  var image_type = "";
+
+  if(props.image.includes("inner")){ image_type= "inner"; }
+  if(props.image.includes("left")){ image_type= "left"; }
+  if(props.image.includes("right")){ image_type= "right"; }
 
   let type = null;
   let options = ["Select..."];
 
   function handleComment(e) {
-    const updatedComments = new Map(comments);
-    updatedComments.set(props.circle_key, e.target.value);
-    setComments(updatedComments);
+    const newComment = e.target.value.slice(0);
+    setComment(newComment);
   }
 
   function handleDiagnosis(e) {
-    const updatedDiagnoses= new Map(diagnoses);
-    updatedDiagnoses.set(props.circle_key, e.target.value);
-    setDiagnoses(updatedDiagnoses);
+    setDiagnosis(e.target.value);
   }
 
   function handleLocation(e) {
-    const updatedLocations= new Map(locations);
-    updatedLocations.set(props.circle_key, e.target.value);
-    setLocations(updatedLocations);
-    if(diagnoses.has(props.circle_key)){
-      diagnoses.delete(props.circle_key);
+    const newLocation = e.target.value.slice(0);
+    setLocation(newLocation);
+    switch(e.target.value){
+      case "Disc":
+        type = disc;
+        break;
+      case "Iris":
+        type = iris;
+        break;
+      case "Macula":
+        type = macula;
+        break;
+      case "Vessels":
+        type = vessels;
+        break;
+      default:
+        type = empty;
+        break;
     }
+    options = type.map((el) => <option key={el}>{el}</option>);
+    if(annotations.has(props.circle_key)){annotations.get(props.circle_key).location = e.target.value}
+    else{annotations.set(props.circle_key, new annotation(comment, diagnosis, e.target.value))} 
   }
 
-  if (locations.has(props.circle_key)){
-    if (locations.get(props.circle_key) === "Disc") { 
-      type = disc; 
-    } else if (locations.get(props.circle_key) === "Macula") { 
-      type = macula; 
-    } else if (locations.get(props.circle_key) === "Vessels") { 
-      type = vessels; 
-    } else if (locations.get(props.circle_key) === "Iris") { 
+  function updateFields(val) { 
+    var attempt = annotations.get(props.circle_key);
+      if (attempt != null){
+        if(attempt.location != "") {setLocation(attempt.location)}
+        if(attempt.diagnosis != "") {setDiagnosis(attempt.diagnosis)}
+        setComment(attempt.comment);
+      }
+    if (attempt != null){
+      if (attempt.location === "Disc") { 
+        type = disc; 
+      } else if (attempt.location === "Macula") { 
+        type = macula; 
+      } else if (attempt.location === "Vessels") { 
+        type = vessels; 
+      } else if (attempt.location === "Iris") { 
+        type = iris;
+      }
+    } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
       type = iris;
+    } else {
+      type = null;
     }
-  } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
-    type = iris;
-    locations.set(props.circle_key, "Iris");
-  } else {
-    type = null;
-  }
+  
+    if (type) { 
+      options = type.map((el) => <option key={el}>{el}</option>); 
+    } else {
+      options = empty.map((el) => <option key={el}>{el}</option>); 
+    }
 
+    switch (val){
+      case "comment":
+        return comment;
+      case "diagnosis":
+        return diagnosis;
+      case "location":
+        return location;
+    }
 
-  if (type) { 
-    options = type.map((el) => <option key={el}>{el}</option>); 
-  } else {
-    locations.set(props.circle_key, "Select...")
-    options = empty.map((el) => <option key={el}>{el}</option>); 
   }
 
   return ( props.trigger) ? (
@@ -77,7 +121,7 @@ function DiagnosisPopup(props) {
       <div className="popup-inner">
         <h3>Location</h3>
         <div className= "location-dropdown">
-            <select className= "location-select" value = {locations.get(props.circle_key)} onChange={handleLocation}>
+            <select className= "location-select" value = {annotations.has(props.circle_key) ? annotations.get(props.circle_key).location : 'Select...'} onChange={handleLocation}>
                 <option>Select...</option>
                 <option>Disc</option>
                 <option>Macula</option>
@@ -87,42 +131,52 @@ function DiagnosisPopup(props) {
         </div>
         <h3>Diagnosis</h3>
         <div className= "dropdown">
-            <select className = "form-select" value = {diagnoses.get(props.circle_key)} onChange = {handleDiagnosis}>
+            <select className = "form-select" value = {updateFields("diagnosis")} onChange = {handleDiagnosis}>
               {options}
             </select>
         </div>
         <h3>Comments</h3>
-          <textarea name = "comment" type = "text" id = "comment" value = {comments.get(props.circle_key)} onChange={handleComment}></textarea>
+          <textarea name = "comment" type = "text" id = "comment" value = {updateFields("comment")} onChange={handleComment}></textarea>
         <br/>
         <br/>
         <button className="done-button" onClick= {() => {
+          let updateData = new Map(annotations);
+          updateData.set(props.circle_key, new annotation(comment, diagnosis, location));
+          setAnnontations(updateData);
+          console.log(updateData);
           props.setTrigger(false);
-          console.log(diagnoses);
-          props.onSave(comments, diagnoses, locations);
-          // if(props.circle_key + 1 == comments.length) {
-          // setComments(...comments, !!VALUE_IN_TEXTAREA!! )
+          //props.onSave(comments, diagnoses, locations);
           }
         }>Done</button>
         <button className="delete-button" onClick= {() => {
-          props.setTrigger(false); 
-          props.delete_circle(props.circle_key)
+          // props.setTrigger(false); 
+          // props.delete_circle(props.circle_key);
           
-          let updatedDiagnoses= new Map();
-          let updatedLocations= new Map();
-          let updatedComments= new Map();
-          for (let i = 0; i < props.circle_key; i++){
-            updatedDiagnoses.set(i, diagnoses.get(i));
-            updatedLocations.set(i, locations.get(i));
-            updatedComments.set(i, comments.get(i));
-          }
-          for (let i = props.circle_key; i < diagnoses.size - 1; i++){
-            updatedDiagnoses.set(i, diagnoses.get(i + 1));
-            updatedLocations.set(i, locations.get(i + 1));
-            updatedComments.set(i, comments.get(i + 1));
-          }
-          setDiagnoses(updatedDiagnoses);
-          setLocations(updatedLocations);
-          setComments(updatedComments);
+          // let updatedDiagnoses= new Map();
+          // let updatedLocations= new Map();
+          // let updatedComments= new Map();
+          // for (let i = 0; i < props.circle_key; i++){
+          //   updatedDiagnoses.set(i, diagnoses.get(i));
+          //   updatedLocations.set(i, locations.get(i));
+          //   updatedComments.set(i, comments.get(i));
+          // }
+          // for (let i = props.circle_key; i < diagnoses.size - 1; i++){
+          //   updatedDiagnoses.set(i, diagnoses.get(i + 1));
+          //   updatedLocations.set(i, locations.get(i + 1));
+          //   updatedComments.set(i, comments.get(i + 1));
+          // }
+          // setDiagnoses(updatedDiagnoses);
+          // setLocations(updatedLocations);
+          // setComments(updatedComments);
+          // let updatedImgComments = new Map(imgComments);
+          // let updatedImgDiagnoses = new Map(imgDiagnoses);
+          // let updatedImgLocations = new Map(imgLocations);
+          // updatedImgComments.set(image_type, updatedComments);
+          // updatedImgDiagnoses.set(image_type, updatedDiagnoses);
+          // updatedImgLocations.set(image_type, updatedLocations);
+          // setImgComments(updatedImgComments);
+          // setImgDiagnoses(updatedImgDiagnoses);
+          // setImgLocations(updatedImgLocations);
         }}>
             Delete
           </button>
