@@ -26,11 +26,11 @@ function DiagnosisPopup(props) {
   "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"];
   const empty = ["Select..."];
 
-  const [imgAnnotations, setImgAnnotations] = useState(new Map());
+  //const [imgAnnotations, setImgAnnotations] = useState(new Map());
   const [annotations, setAnnontations] = useState(new Map());
-  const [comment, setComment] = useState("");
-  const [diagnosis, setDiagnosis] = useState("Select...");
-  const [location, setLocation] = useState("Select...");
+  var comment = '';
+  var location = 'Select...'
+  var diagnosis = 'Select...'
   const irisRadius = 195;
   const irisCenter = 590;
   var image_type = "";
@@ -43,17 +43,30 @@ function DiagnosisPopup(props) {
   let options = ["Select..."];
 
   function handleComment(e) {
-    const newComment = e.target.value.slice(0);
-    setComment(newComment);
+    let tempMap = new Map(annotations);
+    let attempt = annotations.get(props.circle_key);
+    if(attempt != null){tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location))}
+    else{tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location))} 
+    setAnnontations(tempMap);
+    comment = e.target.value;
   }
 
   function handleDiagnosis(e) {
-    setDiagnosis(e.target.value);
+    let tempMap = new Map(annotations);
+    let attempt = annotations.get(props.circle_key);
+    if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location))}
+    else{tempMap.set(props.circle_key, new annotation(comment, e.target.value, location))}
+    setAnnontations(tempMap); 
+    diagnosis = e.target.value;
   }
 
   function handleLocation(e) {
-    const newLocation = e.target.value.slice(0);
-    setLocation(newLocation);
+    let tempMap = new Map(annotations);
+    let attempt = annotations.get(props.circle_key);
+    if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value))}
+    else{tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value))}
+    setAnnontations(tempMap);
+    location = e.target.value; 
     switch(e.target.value){
       case "Disc":
         type = disc;
@@ -72,48 +85,38 @@ function DiagnosisPopup(props) {
         break;
     }
     options = type.map((el) => <option key={el}>{el}</option>);
-    if(annotations.has(props.circle_key)){annotations.get(props.circle_key).location = e.target.value}
-    else{annotations.set(props.circle_key, new annotation(comment, diagnosis, e.target.value))} 
   }
 
-  function updateFields(val) { 
-    var attempt = annotations.get(props.circle_key);
-      if (attempt != null){
-        if(attempt.location != "") {setLocation(attempt.location)}
-        if(attempt.diagnosis != "") {setDiagnosis(attempt.diagnosis)}
-        setComment(attempt.comment);
-      }
-    if (attempt != null){
-      if (attempt.location === "Disc") { 
-        type = disc; 
-      } else if (attempt.location === "Macula") { 
-        type = macula; 
-      } else if (attempt.location === "Vessels") { 
-        type = vessels; 
-      } else if (attempt.location === "Iris") { 
-        type = iris;
-      }
-    } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
+  var attempt = annotations.get(props.circle_key);
+  if (attempt != null){
+    comment = attempt.comment;
+    diagnosis = attempt.diagnosis;
+    if (attempt.location === "Disc") {
+      location = "Disc"; 
+      type = disc; 
+    } else if (attempt.location === "Macula") {
+      location = "Macula"; 
+      type = macula; 
+    } else if (attempt.location === "Vessels") { 
+      location = "Vessels";
+      type = vessels; 
+    } else if (attempt.location === "Iris") { 
+      location = "Iris";
       type = iris;
-    } else {
-      type = null;
     }
-  
+  } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
+    let tempMap = new Map(annotations);
+    tempMap.set(props.circle_key, new annotation(comment, diagnosis, "Iris"));
+    setAnnontations(tempMap);
+    type = iris;
+    location = "Iris";
+  } else {
+    type = null;
+  }
     if (type) { 
-      options = type.map((el) => <option key={el}>{el}</option>); 
-    } else {
-      options = empty.map((el) => <option key={el}>{el}</option>); 
-    }
-
-    switch (val){
-      case "comment":
-        return comment;
-      case "diagnosis":
-        return diagnosis;
-      case "location":
-        return location;
-    }
-
+    options = type.map((el) => <option key={el}>{el}</option>); 
+  } else {
+    options = empty.map((el) => <option key={el}>{el}</option>); 
   }
 
   return ( props.trigger) ? (
@@ -131,59 +134,37 @@ function DiagnosisPopup(props) {
         </div>
         <h3>Diagnosis</h3>
         <div className= "dropdown">
-            <select className = "form-select" value = {updateFields("diagnosis")} onChange = {handleDiagnosis}>
+            <select className = "form-select" value = {annotations.has(props.circle_key) ? annotations.get(props.circle_key).diagnosis : 'Select...'} onChange = {handleDiagnosis}>
               {options}
             </select>
         </div>
         <h3>Comments</h3>
-          <textarea name = "comment" type = "text" id = "comment" value = {updateFields("comment")} onChange={handleComment}></textarea>
+          <textarea name = "comment" type = "text" id = "comment" value = {annotations.has(props.circle_key) ? annotations.get(props.circle_key).comment : ''} onChange={handleComment}></textarea>
         <br/>
         <br/>
         <button className="done-button" onClick= {() => {
-          let updateData = new Map(annotations);
-          updateData.set(props.circle_key, new annotation(comment, diagnosis, location));
-          setAnnontations(updateData);
-          console.log(updateData);
+          let tempMap = new Map(annotations);
+          let attempt = annotations.get(props.circle_key);
+          if(attempt == null){
+            tempMap.set(props.circle_key, new annotation(comment, diagnosis, location));
+            setAnnontations(tempMap);
+          }
           props.setTrigger(false);
+
+          // ################## BEN TO FIX (Reloading the PDF) ########################
           //props.onSave(comments, diagnoses, locations);
           }
         }>Done</button>
         <button className="delete-button" onClick= {() => {
-          // props.setTrigger(false); 
-          // props.delete_circle(props.circle_key);
-          
-          // let updatedDiagnoses= new Map();
-          // let updatedLocations= new Map();
-          // let updatedComments= new Map();
-          // for (let i = 0; i < props.circle_key; i++){
-          //   updatedDiagnoses.set(i, diagnoses.get(i));
-          //   updatedLocations.set(i, locations.get(i));
-          //   updatedComments.set(i, comments.get(i));
-          // }
-          // for (let i = props.circle_key; i < diagnoses.size - 1; i++){
-          //   updatedDiagnoses.set(i, diagnoses.get(i + 1));
-          //   updatedLocations.set(i, locations.get(i + 1));
-          //   updatedComments.set(i, comments.get(i + 1));
-          // }
-          // setDiagnoses(updatedDiagnoses);
-          // setLocations(updatedLocations);
-          // setComments(updatedComments);
-          // let updatedImgComments = new Map(imgComments);
-          // let updatedImgDiagnoses = new Map(imgDiagnoses);
-          // let updatedImgLocations = new Map(imgLocations);
-          // updatedImgComments.set(image_type, updatedComments);
-          // updatedImgDiagnoses.set(image_type, updatedDiagnoses);
-          // updatedImgLocations.set(image_type, updatedLocations);
-          // setImgComments(updatedImgComments);
-          // setImgDiagnoses(updatedImgDiagnoses);
-          // setImgLocations(updatedImgLocations);
-        }}>
-            Delete
-          </button>
-
+          let tempMap = new Map(annotations);
+          let attempt = annotations.get(props.circle_key);
+          if(attempt != null){tempMap.delete(props.circle_key)}
+          setAnnontations(tempMap);
+          props.setTrigger(false); 
+          props.delete_circle(props.circle_key);
+        }}>Delete</button>
       </div>
     </div>
   ) : ""
 }
-
 export default DiagnosisPopup
