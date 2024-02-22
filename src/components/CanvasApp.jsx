@@ -6,13 +6,12 @@ import { Stage, Layer, Text, Star, Circle} from 'react-konva';
 // import "../App.css";
 import React from 'react';
 let count;
+let highestID;
 
 let addNewLine = false;
   
 
 const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords })=>{
-    /* This is the old way that the annotations were stored,
-       now we are using an array of circles instead - Ben */
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const stageRef = React.useRef();
@@ -24,33 +23,8 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
       y: 50,
       lastLine: -1
     });
-    
-
-   //Ben's Code
-   // --------------------------------------------------
-    // const [circles, setCircles] = useState([]);
-    // const addCircle = (x, y) => {
-    //   const newCircle = {
-    //     x,
-    //     y,
-    //     color: lineColor,
-    //     size: brushSize,
-    //     opacity: brushOpacity,
-    //   };
-    //   setCircles([...circles, newCircle]);
-    // };
-
-    // const handleMouseDown = (e) => {
-    //   const stage = e.target.getStage();
-    //   const pointerPos = stage.getPointerPosition();
-    //   const { x, y } = pointerPos;
-    //   addCircle(x, y);
-    // };
-//End of Ben's Code
-// -------------------------------------------
-
-    /* Old way of adding a new circle to the list of lines*/
     useEffect(()=>{
+      highestID = 0;
       count = lines.length
       if (addNewLine==true){
         let tempState = {
@@ -95,47 +69,30 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         // console.log("reloading")
         addNewLine = true;
         const pos = e.target.getStage().getPointerPosition();
-        setLines([...lines, { id: count, points: [Xevent, Yevent], bColor: lineColor, bSize: brushSize, bOpacity: brushOpacity}]);
+        let maxValue = 0;
+        if (lines.length != 0) {maxValue = Math.max.apply(null, lines.map(function (o) { return o.id; }))};
+        setLines([...lines, { id: maxValue + 1, points: [Xevent, Yevent], bColor: lineColor, bSize: brushSize, bOpacity: brushOpacity}]);
         // addNewLine = true;
       };
 
       const deleteLine = (idToDelete) => {
-        console.log(lines)
-        console.log(idToDelete)
+        //console.log(lines)
+        //console.log(idToDelete)
         const updatedLines = lines.filter(line => line.id !== idToDelete);
-        console.log(updatedLines)
+        count = updatedLines.length + 1;
+        //console.log(updatedLines)
         // let update = lines.length-idToDelete;
         // new_lines=[]
         // console.log(updatedLines.length)
-        for (let i =idToDelete; i<updatedLines.length;i++){
-          updatedLines[i].id = updatedLines[i].id -1;
-        }
+        // for (let i =idToDelete; i<updatedLines.length;i++){
+        //   updatedLines[i].id = updatedLines[i].id -1;
+        // }
         setLines(updatedLines);
         // console.log(updatedLines)
       };
     
     
     return(
-      // Start of Ben's Code
-      //-------------------------------------------------
-    //   <Stage width={1280} height={1200} onMouseDown={handleMouseDown}>
-    //   <Layer>
-    //     {circles.map((circle, index) => (
-    //       <Circle
-    //         key={index}
-    //         x={circle.x}
-    //         y={circle.y}
-    //         radius={circle.size}
-    //         fill={circle.color}
-    //         opacity={circle.opacity}
-    //         shadowBlur = {5}
-    //       />
-    //     ))}
-    //   </Layer>
-    // </Stage>
-// End of Ben's Code
-//---------------------------------------------------
-        /* Previous way that the dots were drawn, using old line array*/
         <Stage
             // onMouseUp={endDrawing}
             onMouseUp={handleMouseUp}
@@ -161,7 +118,9 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
               shadowBlur = {5}
               opacity={line.bOpacity}
               draggable
-              onClick={()=>{popup(true, deleteLine, i)}}
+              onClick={()=>{
+                popup(true, deleteLine, line.id); 
+              }}
 
               onMouseDown={()=>{
                 // console.log("mouse down")
@@ -193,7 +152,6 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
                 setState(tempState);
               }}
               onDragEnd={(e) => {
-                // console.log("Drag End")
                 let tempState = {
                   id: -1,
                   isDragging: false,
@@ -203,7 +161,6 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
                 }
                 setState(tempState);
                 line.points = [tempState.x, tempState.y]
-                // console.log(tempState)
               
               }}
             />
