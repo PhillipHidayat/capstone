@@ -19,6 +19,7 @@ type EagerDiagnoses = {
   readonly Normal: boolean;
   readonly Rating?: number | null;
   readonly LocationDetails?: string | null;
+  readonly Key: number;
   readonly patientID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -37,6 +38,7 @@ type LazyDiagnoses = {
   readonly Normal: boolean;
   readonly Rating?: number | null;
   readonly LocationDetails?: string | null;
+  readonly Key: number;
   readonly patientID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
