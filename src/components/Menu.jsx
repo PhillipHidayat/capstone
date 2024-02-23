@@ -6,7 +6,7 @@ setLineOpacity, brushSize, brushOpacity }) => {
   return (
     <div className="Menu">
       <label>Brush Color </label>
-      <input
+      <input 
         type="color"
         onChange={(e) => {
           setLineColor(e.target.value);
