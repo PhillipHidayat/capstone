@@ -80,11 +80,9 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
       else if(image.includes("right")){ image_type= "right"; }
       let tempList = [];
       for(let i = 0; i < lines.length; i++) {
-        console.log(lines[i]);
         if(notes.has(lines[i].id) && image.includes(notes.get(lines[i].id).img)){tempList = [...tempList, lines[i]];}
         else if(!notes.has(lines[i].id)){tempList = [...tempList, lines[i]]; addAnnotation(lines[i].id, image_type)}
       }
-      //console.log(tempList);
       return tempList;
     }
     

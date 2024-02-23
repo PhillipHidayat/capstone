@@ -50,19 +50,7 @@ const [imagePath, setImagePath] = useState(lefteyeSource);
 const [annotations, setNotes] = useState();
 
 //Function used to define the HTML formatting for the PDF Preview
-const reloadPDF = (comments, diagnoses, locations) => {
-  if (!comments || !diagnoses || !locations) {
-    if(!comments){
-      console.error("Comments are undefined.");
-    }
-    if(!diagnoses){
-      console.error("Diagnoses are undefined.");
-    }
-    if(!locations){
-      console.error("Locations are undefined.");
-    }
-    return;
-  }
+const reloadPDF = (notes) => {
   var s = "<html>\n" +
   "<head>\n" + 
   "<style>\n" + 
@@ -83,35 +71,30 @@ const reloadPDF = (comments, diagnoses, locations) => {
     else{s +="\n<tr><td>" + category + "</td><td>";}
     if(category != "Select..."){
     s += "Diagnoses: "
-    locations.forEach((values, keys) => {
-      if(values == category){
-        if(diagnoses.has(keys)){
-          diagnosesAdded = true;
+    notes.forEach((values, keys) => {
+      if(values.location == category){
+        console.log(values.diagnosis);
+        if(values.diagnosis != "Select..." && values.diagnosis != ""){
           if(isFirst){
-            s+= " " + diagnoses.get(keys);
+            s += " " + values.diagnosis;
             isFirst = false;
-          }
-          else{
-          s += ", " + diagnoses.get(keys);
-          }
+          }else{s += ", " + values.diagnosis}
+          diagnosesAdded = true;
         }
-      }
-      });
+      }});
       if(!diagnosesAdded){s += " Normal"}
     }
     isFirst = true;
     if(category != "Select..."){s += "<br>Comments: ";}
     else{s += "Comments: ";}
-    locations.forEach((values, keys) => {
-      if(values == category){
-        if(comments.has(keys)){
-          if(isFirst){
-            s+= " " + comments.get(keys);
-            isFirst = false;
-          }
-          else{
-          s += ", " + comments.get(keys);
-          }
+    notes.forEach((values, keys) => {
+      if(values.location == category){
+        if(values.comment != ""){
+        console.log(values.comment);
+        if(isFirst){
+          s+= " " + values.comment;
+          isFirst = false;
+        }else{s += ", " + values.comment;}
         }
       }
       });
@@ -135,7 +118,7 @@ useEffect(() => {
 
 //Updates the PDF after the patient information has been saved
 useEffect(() => {
-  reloadPDF([], [], []);
+  reloadPDF(new Map());
 }, [patient]);
 
 async function fetchPatients(id) {

@@ -171,8 +171,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
           props.updatePoints(tempMap);
           props.setTrigger(false);
 
-          // ################## BEN TO FIX (Reloading the PDF) ########################
-          //props.onSave(comments, diagnoses, locations);
+          props.onSave(tempMap);
           }
         }>Done</button>
         <button className="delete-button" onClick= {() => {
