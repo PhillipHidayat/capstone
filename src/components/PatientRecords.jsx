@@ -112,37 +112,35 @@ function PatientRecords() {
   return (
     <div className="patient-list">
       <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} refreshPatientList={refreshPatientList}></CreatPatientPopup>
-        <Button onClick={()=>{
+        <Button style={{backgroundColor: 'white'}} onClick={()=>{
           setPopupVisible(true)
         }}>Add New Patient</Button>
-        <SearchField
-          placeholder='Search by First Name...'
-          label="search"
-          onChange={onChange}
-          onClear={onClear}
-          onSubmit={onSearch}
-          value={search}
-          // children={<SelectField
-          //             label = "Search By"
-          //             value = {searchBy}
-          //             onChange={(e) => setSearchBy(e.target.value)}
-          //           >
-          //             <option value="firstName">First Name</option>
-          //             <option value="lastName">Last Name</option>
-          //             <option value="age">Age</option>
-          //           </SelectField>}
-        />
-        <br />
-        <SelectField
-                      label = "Search By :"
-                      value = {searchBy}
-                      onChange={(e) => setSearchBy(e.target.value)}
-                    >
-                      <option value="firstName">First Name</option>
-                      <option value="lastName">Last Name</option>
-                      <option value="age">Age</option>
-                      <option value="provider">Provider</option>
-                    </SelectField>
+
+        <div className='search'>
+          <SearchField
+            placeholder={"Search by " + {searchBy}.searchBy}
+            label="search"
+            onChange={onChange}
+            onClear={onClear}
+            onSubmit={onSearch}
+            value={search}
+            marginTop = {20}
+            backgroundColor={'white'}
+          />
+          <SelectField
+                        label = "Search By :"
+                        value = {searchBy}
+                        marginTop = {20}
+                        onChange={(e) => setSearchBy(e.target.value)}
+                      >
+                        <option value="firstName">First Name</option>
+                        <option value="lastName">Last Name</option>
+                        <option value="age">Age</option>
+                        <option value="provider">Provider</option>                       
+                        
+          </SelectField>
+        </div>
+
         {/* <Button onClick={async ()=>{
           await DataStore.delete(Patient, Predicates.ALL);
         }}>Delete All Records</Button> */}
@@ -195,32 +193,32 @@ function PatientProfile(props,{patient}) {
       {/* <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
             props.setPatient(false);
         }}> x </Button> */}
-      <Grid templateColumns="1fr 1fr" templateRows="2rem">
-        <Text rowSpan={2} fontSize="2em" style={{borderBottom: ".5em black solid"}}>Patient Profile</Text>
+      <Grid fontSize="20px" templateColumns="1fr 1fr" templateRows="2rem">
+        <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center', paddingRight:"15rem"}}>Patient Profile</Text>
         <Text></Text>
         <Text></Text>
-        <Text fontSize="20px" paddingTop="10px">First Name: {patient.First_Name}</Text>
+        <Text paddingLeft="30rem" column={1} row={3} paddingTop="10px">First Name: {patient.First_Name}</Text>
         <Text></Text>
-        <Text fontSize="20px">Last Name: {patient.Last_Name}</Text>
+        <Text paddingLeft="30rem" column={1} row={4}>Last Name: {patient.Last_Name}</Text>
         <Text></Text>
-        <Text fontSize="20px">Age: {patient.Age}</Text>
+        <Text paddingLeft="30rem" column={1} row={5}>Age: {patient.Age}</Text>        
         <Text></Text>
-        <Text fontSize="20px">Provider: {patient.Provider}</Text>
+        <Text paddingLeft="30rem" column={1} row={6}>Date of Birth: {patient.Date_Of_Birth}</Text>
         <Text></Text>
-        <Text fontSize="20px">Address: {patient.Address}</Text>
+        <Text paddingLeft="30rem" column={1} row={7}>Sex: {patient.Sex}</Text>
+        <Text></Text>        
+        <Text paddingLeft="30rem" column={1} row={8}>Provider: {patient.Provider}</Text>
         <Text></Text>
-        <Text fontSize="20px">Date of Birth: {patient.Date_Of_Birth}</Text>
+        <Text column={2} row={4}>Phone: {patient.Phone}</Text>
         <Text></Text>
-        <Text fontSize="20px">Sex: {patient.Sex}</Text>
+        <Text column={2} row={5}>Email: {patient.Email}</Text>
         <Text></Text>
-        <Text fontSize="20px">Phone: {patient.Phone}</Text>
+        <Text column={2} row={6}>Address: {patient.Address}</Text>
         <Text></Text>
-        <Text fontSize="20px">Email: {patient.Email}</Text>
+        <Text column={2} row={8}>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
         <Text></Text>
-        <Text fontSize="20px">Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
-        <Text></Text>
-        <Button width="200px">Delete User</Button>
-        <Button width="200px" as="a" href={"/examination/"+patient.id}>Create Exam</Button>
+        <Button marginLeft="30rem" width="200px" marginTop={30}>Delete User</Button>
+        <Button width="200px" marginTop={30} as="a" href={"/examination/"+patient.id}>Create Exam</Button>
       </Grid>
       {/* Patient record details */}
     </div>

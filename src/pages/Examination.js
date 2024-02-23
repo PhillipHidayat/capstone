@@ -171,9 +171,13 @@ const addAnnotation = (id, sourceImg) =>{
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <Grid templateColumns="1fr 1fr" width="100%" paddingLeft="40px"><h2 float="left">Exam for Patient: {patient?.First_Name} {patient?.Last_Name}</h2></Grid>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
       onSave={reloadPDF} image={imagePath} updatePoints={setNotes} ref={childRef}></DiagnosisPopup>
+      <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient:</h2>
+      <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2>
+      {//<Grid templateColumns="1fr 1fr" width="100%" paddingLeft="40px"><h2 float="left">Exam for Patient: {patient?.First_Name} {patient?.Last_Name}</h2></Grid>
+}
+      <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key} onSave={reloadPDF}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div class="button-container">

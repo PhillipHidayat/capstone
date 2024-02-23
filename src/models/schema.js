@@ -59,6 +59,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "Key": {
+                    "name": "Key",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "patientID": {
                     "name": "patientID",
                     "isArray": false,
@@ -138,13 +145,6 @@ export const schema = {
                     "name": "Last_Name",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "Age": {
-                    "name": "Age",
-                    "isArray": false,
-                    "type": "Int",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -252,5 +252,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "b7847b24fecb3cada2e70398ebd7cb9f"
+    "version": "0c7b225b657b43227d2250de4858b795"
 };
