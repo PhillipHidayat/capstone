@@ -14,6 +14,7 @@ class annotation {
 }
 
 const DiagnosisPopup = forwardRef((props, ref) => {
+  console.log(props);
   const disc = ["Normal", "Absent spontaneous venous pulsation", "Atrophy", "Cotton wool spots", "Drusen", 
   "Edema", "Hemorrhage", "Hypoplasia", "Neovascularization", "Optic neuritis", "Pallor", 
   "Peripapillary atrophy", "Thin rim", "Tilted cup", "Tilted disc"]; 
