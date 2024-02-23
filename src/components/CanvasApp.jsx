@@ -2,16 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Text, Star, Circle} from 'react-konva';
-// import { useEffect, useRef, useState } from "react";
-// import "../App.css";
 import React from 'react';
 let count;
 let highestID;
-
 let addNewLine = false;
+
+// Define a class to represent your data
+class annotation {
+  constructor(comment, diagnosis, location, img) {
+    this.comment = comment;
+    this.diagnosis = diagnosis;
+    this.location = location;
+    this.img = img;
+  }
+}
   
 
-const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords })=>{
+const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords, notes, image, addAnnotation})=>{
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const stageRef = React.useRef();
@@ -38,67 +45,53 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         addNewLine = false
       }
     });
-    
-
-    // const canvas = document.querySelector("canvas");
-    // const canvasRef = useRef(null);
-    // const ctxRef = useRef(null);
-
   
     /* Event handling for moving a point, utilized the old line array*/
       const handleMouseUp = (e) => {
-        // state.isDragging=true;
-        // popup(true)
-        // console.log("Mouse Up")
         let Xevent = e.evt.offsetX;
         let Yevent = e.evt.offsetY;
         returnCoords(Xevent, Yevent);
-        // console.log(lines);
         for (let i=0; i< lines.length; i++){
             let line = lines[i];
-            // console.log(line);
             let x = line.points[0];
             let y = line.points[1];
-            // console.log(x,Xevent,y, Yevent);
             let total = Math.sqrt(Math.abs(x-Xevent)**2 +Math.abs(y-Yevent)**2);
-            // console.log(total);
             if(total<10 || state.isDragging==true){
                 return
             }
         }
-        // console.log("reloading")
         addNewLine = true;
         const pos = e.target.getStage().getPointerPosition();
         let maxValue = 0;
         if (lines.length != 0) {maxValue = Math.max.apply(null, lines.map(function (o) { return o.id; }))};
-        setLines([...lines, { id: maxValue + 1, points: [Xevent, Yevent], bColor: lineColor, bSize: brushSize, bOpacity: brushOpacity}]);
-        // addNewLine = true;
+        let newList = [...lines, { id: maxValue + 1, points: [Xevent, Yevent], bColor: lineColor, bSize: brushSize, bOpacity: brushOpacity}];
+        setLines(newList);
       };
 
       const deleteLine = (idToDelete) => {
-        //console.log(lines)
-        //console.log(idToDelete)
         const updatedLines = lines.filter(line => line.id !== idToDelete);
         count = updatedLines.length + 1;
-        //console.log(updatedLines)
-        // let update = lines.length-idToDelete;
-        // new_lines=[]
-        // console.log(updatedLines.length)
-        // for (let i =idToDelete; i<updatedLines.length;i++){
-        //   updatedLines[i].id = updatedLines[i].id -1;
-        // }
         setLines(updatedLines);
-        // console.log(updatedLines)
       };
+    function linesToDraw(){
+      let image_type = ""
+      if(image.includes("inner")){ image_type= "inner"; }
+      else if(image.includes("left")){ image_type= "left"; }
+      else if(image.includes("right")){ image_type= "right"; }
+      let tempList = [];
+      for(let i = 0; i < lines.length; i++) {
+        console.log(lines[i]);
+        if(notes.has(lines[i].id) && image.includes(notes.get(lines[i].id).img)){tempList = [...tempList, lines[i]];}
+        else if(!notes.has(lines[i].id)){tempList = [...tempList, lines[i]]; addAnnotation(lines[i].id, image_type)}
+      }
+      //console.log(tempList);
+      return tempList;
+    }
     
     
     return(
         <Stage
-            // onMouseUp={endDrawing}
             onMouseUp={handleMouseUp}
-            // oncontextmenu={()=>{console.log("hi")}}
-            // ref={canvasRef}
-            // style={{flex: 1}}
             width={width}
             height={height}
             ref={stageRef}
@@ -107,7 +100,7 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
           <Text
             
           />
-          {lines.map((line, i) => (
+          {linesToDraw().map((line, i) => (
             <Circle
               key={i}
               points={line.points}
@@ -123,7 +116,6 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
               }}
 
               onMouseDown={()=>{
-                // console.log("mouse down")
                 let tempState = {
                   id: i,
                   isDragging: false,
@@ -131,17 +123,11 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
                   y: state.y,
                   lastLine: line
                 }
-                // console.log(line);
                 setState(tempState);
-                // console.log(setObjectState);
                 setObjectState();
-                // setObjectState({
-                //   state: tempState
-                // });
               }}
               
               onDragStart={() => {
-                // console.log("drag started")
                 let tempState = {
                   id: i,
                   isDragging: true,
