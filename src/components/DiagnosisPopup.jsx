@@ -27,7 +27,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
   "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"];
   const empty = ["Select..."];
 
-  const [annotations, setAnnontations] = useState(new Map());
+  const [annotations, setAnnotations] = useState(new Map());
   var comment = '';
   var location = 'Select...';
   var diagnosis = 'Select...';
@@ -47,7 +47,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
     // Your code here
     let tempMap = new Map(annotations);
     tempMap.set(id, new annotation("", "Select...", "Select...", img));
-    setAnnontations(tempMap);
+    setAnnotations(tempMap);
     console.log('Child function called!');
   };
 
@@ -62,7 +62,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
     let attempt = annotations.get(props.circle_key);
     if(attempt != null){tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location, image_type))}
     else{tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location, image_type))} 
-    setAnnontations(tempMap);
+    setAnnotations(tempMap);
     props.updatePoints(tempMap);
     comment = e.target.value;
   }
@@ -72,7 +72,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
     let attempt = annotations.get(props.circle_key);
     if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location, image_type))}
     else{tempMap.set(props.circle_key, new annotation(comment, e.target.value, location, image_type))}
-    setAnnontations(tempMap); 
+    setAnnotations(tempMap); 
     props.updatePoints(tempMap);
     diagnosis = e.target.value;
   }
@@ -82,7 +82,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
     let attempt = annotations.get(props.circle_key);
     if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
     else{tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
-    setAnnontations(tempMap);
+    setAnnotations(tempMap);
     props.updatePoints(tempMap);
     location = e.target.value; 
     switch(e.target.value){
@@ -125,7 +125,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
   } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
     let tempMap = new Map(annotations);
     tempMap.set(props.circle_key, new annotation(comment, diagnosis, "Iris", image_type));
-    setAnnontations(tempMap);
+    setAnnotations(tempMap);
     props.updatePoints(tempMap);
     type = iris;
     location = "Iris";
@@ -166,7 +166,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
           let attempt = annotations.get(props.circle_key);
           if(attempt == null){
             tempMap.set(props.circle_key, new annotation(comment, diagnosis, location, image_type));
-            setAnnontations(tempMap);
+            setAnnotations(tempMap);
           }
           props.updatePoints(tempMap);
           props.setTrigger(false);
@@ -178,7 +178,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
           let tempMap = new Map(annotations);
           let attempt = annotations.get(props.circle_key);
           if(attempt != null){tempMap.delete(props.circle_key)}
-          setAnnontations(tempMap);
+          setAnnotations(tempMap);
           props.updatePoints(tempMap);
           props.onSave(tempMap);
           props.setTrigger(false); 
