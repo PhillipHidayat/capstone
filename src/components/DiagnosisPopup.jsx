@@ -180,6 +180,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
           if(attempt != null){tempMap.delete(props.circle_key)}
           setAnnontations(tempMap);
           props.updatePoints(tempMap);
+          props.onSave(tempMap);
           props.setTrigger(false); 
           props.delete_circle(props.circle_key);
         }}>Delete</button>
