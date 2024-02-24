@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Menu from "./components/Menu";
 import "./App.css";
-import imgSource from "./images/left-eye.png";
+import imgSource from "./images/left-eye.jpg";
 import redDotImage from "./images/redDot.jpg";
 import CanvasApp from "./components/CanvasApp";
 import * as React from 'react';
