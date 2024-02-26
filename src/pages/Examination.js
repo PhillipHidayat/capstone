@@ -49,6 +49,76 @@ const [patient, setPatient] = useState("");
 const [imagePath, setImagePath] = useState(lefteyeSource);
 const [annotations, setAnnotations] = useState();
 
+//Annotations Set Up and functions
+async function onSaveHandler(tempMap){
+  reloadPDF(tempMap)
+  // Save Diagnoses
+  console.log(tempMap)
+  return
+  tempMap.forEach(async (value, key)=>{
+    let diagnosis = {
+      Exam: "test",
+      Location: value,
+      patientID: patient.id,
+      Key: key
+    }
+    if (annotations.has(key)){
+      // this circle has a diagnoses aka is not normal
+      diagnosis.Diagnoses = diagnoses.get(key)
+      diagnosis.Normal = false
+    }else{
+      // this circle is normal
+      diagnosis.Diagnoses = "Normal"
+      diagnosis.Normal = true
+    }
+    if (comments.has(key)){
+      // diagnosis has comments
+      diagnosis.Notes = comments.get(key)
+    }
+    diagnosis = new Diagnoses(diagnosis)
+    const original = await DataStore.query(Diagnoses, (d)=> 
+    d.and(d=>[
+      d.Key.eq(key), // every diagnosis shouls have a unique key for each patient
+      d.patientID.eq(patient.id) // makes sure we are searching the correct patient
+    ]));
+    // console.log(original)
+    if (original.length != 0) {
+      // console.log("inside")
+      let actual = original[0]
+      // Checks if there is already an entry for the following and will update databse to reflect
+      const updatedPost = await DataStore.save(
+        Diagnoses.copyOf(actual, updated => {
+          updated.Exam = diagnosis.Exam;
+          updated.Location = diagnosis.Location;
+          updated.Diagnoses = diagnosis.Diagnoses;
+          updated.LocationDetails = diagnosis.LocationDetails;
+          updated.Normal = diagnosis.Normal;
+          updated.Notes = diagnosis.Notes;
+        })
+      );
+    }else{
+      // New Post
+      await DataStore.save(diagnosis)
+      .then(response => {
+        console.log(response);
+      })
+    }
+  });
+}
+async function loadDiagnosesForPatient(){
+  // await DataStore.clear();
+  let diagnoses = await DataStore.query(Diagnoses, d=> d.patientID.eq(patient.id))
+  console.log(diagnoses)
+}
+async function deleteDiagnoses(key){
+  let deleted = await DataStore.delete(Diagnoses, d => d.and(d=>[
+    d.Key.eq(key), // every diagnosis shouls have a unique key for each patient
+    d.patientID.eq(patient.id) // makes sure we are searching the correct patient
+  ]));
+  console.log(deleted)
+}
+
+
 //Function used to define the HTML formatting for the PDF Preview
 const reloadPDF = (notes) => {
   var s = "<html>\n" +
@@ -174,7 +244,7 @@ const addAnnotation = (id, sourceImg) =>{
       <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient:</h2>
       <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
-      onSave={reloadPDF} image={imagePath} updatePoints={setNotes} ref={childRef}></DiagnosisPopup>
+      onSave={onSaveHandler} image={imagePath} updatePoints={setNotes} ref={childRef}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div class="button-container">
