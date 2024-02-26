@@ -244,7 +244,7 @@ const addAnnotation = (id, sourceImg) =>{
       <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient:</h2>
       <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
-      onSave={onSaveHandler} image={imagePath} updatePoints={setNotes} ref={childRef}></DiagnosisPopup>
+      onSave={onSaveHandler} image={imagePath} updatePoints={setNotes} ref={childRef} onDelete={deleteDiagnoses}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div class="button-container">
