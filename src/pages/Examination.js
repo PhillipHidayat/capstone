@@ -12,7 +12,7 @@ import ReactMarkdown from 'react-markdown'
 import { Amplify, Storage } from 'aws-amplify';
 import { withAuthenticator, Button, Flex, Heading, Image, Text, Grid } from '@aws-amplify/ui-react';
 import { DataStore } from '@aws-amplify/datastore';
-import { Patient } from '../models'
+import { Diagnoses, Patient } from '../models'
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from '../aws-exports';
 import DroppableComponent from '../components/DroppableComponent';
@@ -51,30 +51,33 @@ const [annotations, setAnnotations] = useState();
 
 //Annotations Set Up and functions
 async function onSaveHandler(tempMap){
+  // console.log("called 1")
   reloadPDF(tempMap)
   // Save Diagnoses
+  // console.log("called 2")
   console.log(tempMap)
-  return
+  // return
   tempMap.forEach(async (value, key)=>{
+    // console.log(value)
+    // console.log(key)
     let diagnosis = {
       Exam: "test",
-      Location: value,
+      Location: value.location,
       patientID: patient.id,
       Key: key
     }
-    if (annotations.has(key)){
-      // this circle has a diagnoses aka is not normal
-      diagnosis.Diagnoses = diagnoses.get(key)
-      diagnosis.Normal = false
-    }else{
+    if (value.diagnosis == "Normal"){
       // this circle is normal
-      diagnosis.Diagnoses = "Normal"
       diagnosis.Normal = true
+    }else{
+      // this circle is not normal
+      diagnosis.Normal = false
     }
-    if (comments.has(key)){
-      // diagnosis has comments
-      diagnosis.Notes = comments.get(key)
-    }
+    diagnosis.Diagnoses = value.diagnosis
+
+    // diagnosis has comments
+    diagnosis.Notes = value.comment
+    
     diagnosis = new Diagnoses(diagnosis)
     const original = await DataStore.query(Diagnoses, (d)=> 
     d.and(d=>[
@@ -233,24 +236,27 @@ const handleCoords = (x, y) => {
 };
 
 const addAnnotation = (id, sourceImg) =>{
-  console.log(childRef);
+  // console.log(childRef);
+  // console.log(id)
+  // console.log(sourceImg)
   childRef.current.childFunction(id, sourceImg);
 }
 
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <h1>MedCapture</h1>s
+      <h1>MedCapture</h1>
       <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient:</h2>
       <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
-      onSave={onSaveHandler} image={imagePath} updatePoints={setNotes} ref={childRef} onDelete={deleteDiagnoses}></DiagnosisPopup>
+      onSave={onSaveHandler} image={imagePath} updatePoints={setNotes} ref={childRef} onDelete={deleteDiagnoses} reloadPDF={reloadPDF}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
-      <div class="button-container">
+      <div className="button-container">
       <button onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</button>
       <button onClick={() => {setImagePath(righteyeSource);}}>Right Eye</button>
       <button onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</button>
+      <Button onClick={loadDiagnosesForPatient}>Load Annotations</Button>
       </div>
       <div className="draw-area" >
         <div className="background-image" style={{

@@ -121,6 +121,7 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
                   y: state.y,
                   lastLine: line
                 }
+                // console.log(i)
                 setState(tempState);
                 setObjectState();
               }}

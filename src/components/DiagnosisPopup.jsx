@@ -14,7 +14,7 @@ class annotation {
 }
 
 const DiagnosisPopup = forwardRef((props, ref) => {
-  console.log(props);
+  // console.log(props);
   const disc = ["Normal", "Absent spontaneous venous pulsation", "Atrophy", "Cotton wool spots", "Drusen", 
   "Edema", "Hemorrhage", "Hypoplasia", "Neovascularization", "Optic neuritis", "Pallor", 
   "Peripapillary atrophy", "Thin rim", "Tilted cup", "Tilted disc"]; 
@@ -49,7 +49,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
     let tempMap = new Map(annotations);
     tempMap.set(id, new annotation("", "Select...", "Select...", img));
     setAnnotations(tempMap);
-    console.log('Child function called!');
+    // console.log('Child function called!');
   };
 
   // Expose the function to the parent component
@@ -80,7 +80,13 @@ const DiagnosisPopup = forwardRef((props, ref) => {
 
   function handleLocation(e) {
     let tempMap = new Map(annotations);
+    // console.log(annotations)
+    // console.log(props.circle_key)
     let attempt = annotations.get(props.circle_key);
+    // console.log(attempt)
+    if (attempt.diagnosis == "Select..."){
+      attempt.diagnosis="Normal"
+    }
     if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
     else{tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
     setAnnotations(tempMap);
@@ -165,6 +171,7 @@ const DiagnosisPopup = forwardRef((props, ref) => {
         <button className="done-button" onClick= {() => {
           let tempMap = new Map(annotations);
           let attempt = annotations.get(props.circle_key);
+          // console.log(attempt)
           if(attempt == null){
             tempMap.set(props.circle_key, new annotation(comment, diagnosis, location, image_type));
             setAnnotations(tempMap);
@@ -181,7 +188,8 @@ const DiagnosisPopup = forwardRef((props, ref) => {
           if(attempt != null){tempMap.delete(props.circle_key)}
           setAnnotations(tempMap);
           props.updatePoints(tempMap);
-          props.onSave(tempMap);
+          // props.onSave(tempMap);
+          props.reloadPDF(tempMap);
           props.setTrigger(false); 
           props.delete_circle(props.circle_key);
           props.onDelete(props.circle_key)

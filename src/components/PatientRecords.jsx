@@ -23,7 +23,7 @@ function PatientRecords() {
         for(let i=0; i<patients.length; i++){
           
           if (patients[i].createdAt!=null){
-            console.log(patients[i])
+            // console.log(patients[i])
             tempPatients.push(patients[i]);
           }
         }
@@ -36,7 +36,7 @@ function PatientRecords() {
     try {
       const posts = await DataStore.query(Patient);
       // console.log('Posts retrieved successfully!');
-      console.log(posts)
+      // console.log(posts)
       return posts
     } catch (error) {
       console.log('Error retrieving posts', error);
