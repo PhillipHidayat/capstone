@@ -246,8 +246,8 @@ const addAnnotation = (id, sourceImg) =>{
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <h1>MedCapture</h1>
-      <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient:</h2>
-      <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2>
+      <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient: {patient?.First_Name} {patient?.Last_Name}</h2>
+      {/* <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2> */}
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
       onSave={onSaveHandler} image={imagePath} updatePoints={setNotes} ref={childRef} onDelete={deleteDiagnoses} reloadPDF={reloadPDF}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
@@ -261,10 +261,10 @@ const addAnnotation = (id, sourceImg) =>{
       <div className="draw-area" >
         <div className="background-image" style={{
         backgroundImage: `url(${imagePath})`,
-        backgroundSize: '1280px 1000px',
-        height: '1000px'
+        backgroundSize: '1024px 834px',
+        height: '834px'
       }}>
-        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
+        <CanvasApp width={1024} height={834} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
         returnCoords = {handleCoords} notes={annotations != null ? annotations : new Map()} image={imagePath} addAnnotation={addAnnotation}/>
         </div>
       
