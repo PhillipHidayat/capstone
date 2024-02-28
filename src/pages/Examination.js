@@ -26,6 +26,15 @@ Amplify.configure(awsconfig);
 
 let i=0;
 
+class annotation {
+  constructor(comment, diagnosis, location, img) {
+    this.comment = comment;
+    this.diagnosis = diagnosis;
+    this.location = location;
+    this.img = img;
+  }
+}
+
 function Examination(props) {
   const childRef = useRef();
   const [reloadItems, setReloadItems] = useState(false);
@@ -33,6 +42,14 @@ function Examination(props) {
   const [objectState, setObjectState] = useState({
     selected: 0,
     mapping: 0
+  });
+  const [lines, setLines] = React.useState([]);
+  const [state, setState] = React.useState({
+    id: -1,
+    isDragging: false,
+    x: 50,
+    y: 50,
+    lastLine: -1
   });
   const [lineColor, setLineColor] = useState("#000000");
   const [brushSize, setLineWidth] = useState(10);
@@ -111,7 +128,9 @@ async function onSaveHandler(tempMap){
 async function loadDiagnosesForPatient(){
   // await DataStore.clear();
   let diagnoses = await DataStore.query(Diagnoses, d=> d.patientID.eq(patient.id))
+  console.log("LOADED DIAGNOSES")
   console.log(diagnoses)
+  handleLoad(diagnoses)
 }
 async function deleteDiagnoses(key){
   let deleted = await DataStore.delete(Diagnoses, d => d.and(d=>[
@@ -121,6 +140,23 @@ async function deleteDiagnoses(key){
   console.log(deleted)
 }
 
+const handleLoad = (diags) => {
+  console.log("handle load")
+  setAnnotations(new Map())
+  // setLines([])
+  let l = []
+  for (let i = 0; i < diags.length; i++) {
+    let d = diags[i]
+    annotations.set(d.Key, new annotation(d.Notes, d.Diagnoses, d.Location, "right"))
+    l.push({ id: d.Key, points: [50*i + 200, 60*i + 200], bColor: "#FF0000", bSize: 10, bOpacity: 1})
+  }
+  // annotations.set(0, new annotation("test", "Microaneurysms", "Macula", "right", 10, 1, "#FF0000"))
+  // setLines([{ id: 0, points: [554, 150], bColor: "#FF0000", bSize: 10, bOpacity: 1}])
+  // console.log("annotations set")
+  setLines(l)
+  console.log(annotations)
+  console.log(lines)
+};
 
 //Function used to define the HTML formatting for the PDF Preview
 const reloadPDF = (notes) => {
@@ -265,7 +301,7 @@ const addAnnotation = (id, sourceImg) =>{
         height: '834px'
       }}>
         <CanvasApp width={1024} height={834} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
-        returnCoords = {handleCoords} notes={annotations != null ? annotations : new Map()} image={imagePath} addAnnotation={addAnnotation}/>
+        returnCoords = {handleCoords} notes={annotations != null ? annotations : new Map()} image={imagePath} addAnnotation={addAnnotation} lines={lines} setLines={setLines} state={state} setState={setState}/>
         </div>
       
       </div>

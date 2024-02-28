@@ -18,18 +18,18 @@ class annotation {
 }
   
 
-const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords, notes, image, addAnnotation})=>{
+const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords, notes, image, addAnnotation, lines, setLines, state, setState})=>{
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const stageRef = React.useRef();
-    const [lines, setLines] = React.useState([]);
-    const [state, setState] = React.useState({
-      id: -1,
-      isDragging: false,
-      x: 50,
-      y: 50,
-      lastLine: -1
-    });
+    // const [lines, setLines] = React.useState([]);
+    // const [state, setState] = React.useState({
+    //   id: -1,
+    //   isDragging: false,
+    //   x: 50,
+    //   y: 50,
+    //   lastLine: -1
+    // });
     useEffect(()=>{
       highestID = 0;
       count = lines.length
@@ -79,6 +79,10 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
       else if(image.includes("left")){ image_type= "left"; }
       else if(image.includes("right")){ image_type= "right"; }
       let tempList = [];
+      // console.log('LINES')
+      // console.log(lines)
+      console.log("notes")
+      console.log(notes)
       for(let i = 0; i < lines.length; i++) {
         if(notes.has(lines[i].id) && image.includes(notes.get(lines[i].id).img)){tempList = [...tempList, lines[i]];}
         else if(!notes.has(lines[i].id)){tempList = [...tempList, lines[i]]; addAnnotation(lines[i].id, image_type)}
