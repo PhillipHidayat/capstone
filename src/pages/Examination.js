@@ -94,6 +94,17 @@ async function onSaveHandler(tempMap){
 
     // diagnosis has comments
     diagnosis.Notes = value.comment
+
+    let img = ""
+    if (imagePath.includes("left")) {
+      img = "left"
+    } else if (imagePath.includes("right")) {
+      img = "right"
+    } else if (imagePath.includes("inner")) {
+      img = "inner"
+    }
+
+    diagnosis.LocationDetails = {x: xCoord, y: yCoord, bSize: brushSize, bColor: lineColor, bOpacity: brushOpacity, img: img}
     
     diagnosis = new Diagnoses(diagnosis)
     const original = await DataStore.query(Diagnoses, (d)=> 
@@ -147,12 +158,10 @@ const handleLoad = (diags) => {
   let l = []
   for (let i = 0; i < diags.length; i++) {
     let d = diags[i]
-    annotations.set(d.Key, new annotation(d.Notes, d.Diagnoses, d.Location, "right"))
-    l.push({ id: d.Key, points: [50*i + 200, 60*i + 200], bColor: "#FF0000", bSize: 10, bOpacity: 1})
+    let ann = d.LocationDetails
+    annotations.set(d.Key, new annotation(d.Notes, d.Diagnoses, d.Location, ann.img))
+    l.push({ id: d.Key, points: [ann.x, ann.y], bColor: ann.bColor, bSize: ann.bSize, bOpacity: ann.bOpacity})
   }
-  // annotations.set(0, new annotation("test", "Microaneurysms", "Macula", "right", 10, 1, "#FF0000"))
-  // setLines([{ id: 0, points: [554, 150], bColor: "#FF0000", bSize: 10, bOpacity: 1}])
-  // console.log("annotations set")
   setLines(l)
   console.log(annotations)
   console.log(lines)
@@ -182,7 +191,7 @@ const reloadPDF = (notes) => {
     s += "Diagnoses: "
     notes.forEach((values, keys) => {
       if(values.location == category){
-        console.log(values.diagnosis);
+        // console.log(values.diagnosis);
         if(values.diagnosis != "Select..." && values.diagnosis != ""){
           if(isFirst){
             s += " " + values.diagnosis;
@@ -199,7 +208,7 @@ const reloadPDF = (notes) => {
     notes.forEach((values, keys) => {
       if(values.location == category){
         if(values.comment != ""){
-        console.log(values.comment);
+        // console.log(values.comment);
         if(isFirst){
           s+= " " + values.comment;
           isFirst = false;

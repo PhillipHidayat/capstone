@@ -81,8 +81,8 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
       let tempList = [];
       // console.log('LINES')
       // console.log(lines)
-      console.log("notes")
-      console.log(notes)
+      // console.log("notes")
+      // console.log(notes)
       for(let i = 0; i < lines.length; i++) {
         if(notes.has(lines[i].id) && image.includes(notes.get(lines[i].id).img)){tempList = [...tempList, lines[i]];}
         else if(!notes.has(lines[i].id)){tempList = [...tempList, lines[i]]; addAnnotation(lines[i].id, image_type)}
