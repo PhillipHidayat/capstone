@@ -1,6 +1,6 @@
 import React, { useState, useEffect }  from "react";
 import "./Navbar.css"
-import { Menu, MenuButton, MenuItem, Divider} from '@aws-amplify/ui-react';
+import { Text} from '@aws-amplify/ui-react';
 import { signOut } from 'aws-amplify/auth';
 import { getCurrentUser } from 'aws-amplify/auth';
 // import { signOut } from '@aws-amplify/auth';
@@ -23,25 +23,17 @@ function Navbar(props){
     // console.log(props)
     return (
         <div className="wrapper">
-            <nav className="nav">
-                <Menu className="menu"
-                    trigger={
-                    <MenuButton variation="primary" size="large">
-                        MedCapture
-                    </MenuButton>
-                    }
-                >   
-                    <MenuItem as="a" href="/" > Home </MenuItem>
-                    <Divider />
-                    <MenuItem as="a" href="/dashboard"> Dashboard </MenuItem>
-                    <Divider />
-                    <MenuItem as="a" href="/examination"> Examination </MenuItem>
-                    <Divider />
-                    <MenuItem as="a" href="#"> View PDF </MenuItem>
-                    <Divider />
-                    <MenuItem as="a" href="/records"> Patients </MenuItem>
+            <nav className="nav"> 
+                <div className="nav-item">
+                    <a  className="title" href="/" > <span className="med">Med</span>Capture </a>    
+                    <ul>
+                        <li>
+                            <a className="item" href="/records" > Patients </a>
+                        </li>
+                    </ul>                
                     
-                </Menu>
+                </div>    
+
                 <ul>
                     <li>
                         <a href="./">Hello {props.user?.email}</a>

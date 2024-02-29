@@ -8,7 +8,7 @@ import CanvasApp from "../components/CanvasApp";
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown'
 import { Amplify, Storage } from 'aws-amplify';
-import { withAuthenticator, Button, Flex, Heading, Image, Text, Grid } from '@aws-amplify/ui-react';
+import { withAuthenticator, Button, Flex, Heading, Image, Text, Grid, Accordion } from '@aws-amplify/ui-react';
 import { DataStore } from '@aws-amplify/datastore';
 import { Patient } from '../models'
 import '@aws-amplify/ui-react/styles.css';
@@ -183,8 +183,10 @@ const handleCoords = (x, y) => {
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <h2 style={{textAlign: "center", color:'black', marginBottom:"0.5rem"}}> Exam For Patient:</h2>
-      <h2 style={{textAlign: "center", color:'black', marginTop:"0"}}> {patient?.First_Name} {patient?.Last_Name}</h2>
+      <div className="box">
+        <h1 style={{textAlign: "center", color:'black', margin:"0rem"}}> Examination</h1>
+        <h2 style={{textAlign: "left", color:'black', marginTop:"0"}}> Patient: {patient?.First_Name} {patient?.Last_Name}</h2>
+      </div>
       {//<Grid templateColumns="1fr 1fr" width="100%" paddingLeft="40px"><h2 float="left">Exam for Patient: {patient?.First_Name} {patient?.Last_Name}</h2></Grid>
 }
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key} onSave={reloadPDF}></DiagnosisPopup>
@@ -208,11 +210,27 @@ const handleCoords = (x, y) => {
         </div>
       
       </div>
-      <div id="markdown-rectangle">
-          {
-          <embed src={`data:application/pdf;base64,${displayPdf}`} height= '100%' width='100%' />
-          }
-      </div>
+      <Accordion.Container margin="1rem">
+        <Accordion.Item
+          marginBottom="4px"
+          marginTop="4px"
+          borderRadius="1rem"
+        >
+          <Accordion.Trigger width={1276} style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}>
+            <Text fontSize={20} width="100%" textAlign="center">View PDF</Text>            
+            <Accordion.Icon/>
+          </Accordion.Trigger>
+          <Accordion.Content style={{display:"flex", justifyContent:"center", alignItems:"center", margin:"1rem"}}>
+            <div id="markdown-rectangle">
+              {
+              <embed src={`data:application/pdf;base64,${displayPdf}`} height= '100%' width='100%'/>
+              }
+            </div>
+          </Accordion.Content>
+
+        </Accordion.Item>
+      </Accordion.Container>
+      
     </div>
   );
 }
