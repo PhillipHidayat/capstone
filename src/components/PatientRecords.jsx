@@ -149,7 +149,7 @@ function PatientRecords() {
         <Grid style={{borderBottom: "3px solid black"}} paddingTop="20px" paddingBottom="5px" templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem">
               <Text fontSize="1.5em">First Name</Text>
               <Text fontSize="1.5em">Last Name</Text>
-              <Text fontSize="1.5em">Age</Text>
+              <Text fontSize="1.5em">DoB</Text>
               <Text fontSize="1.5em">Provider</Text>
         </Grid>
       
@@ -169,7 +169,7 @@ function PatientRecords() {
             <Grid templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem" width="100%" >
                   <Text fontSize="20" >{patient.First_Name}</Text>
                   <Text>{patient.Last_Name}</Text>
-                  <Text paddingLeft="12px">{patient.Age}</Text>
+                  <Text paddingLeft="12px">{patient.Date_Of_Birth}</Text>
                   <Text paddingLeft="25px">{patient.Provider}</Text>
                 </Grid>
               <Accordion.Icon />
@@ -206,8 +206,8 @@ function PatientProfile(props,{patient}) {
           <Text>First Name: {patient.First_Name}</Text>
           <Text></Text>
           <Text>Last Name: {patient.Last_Name}</Text>
-          <Text></Text>
-          <Text>Age: {patient.Age}</Text>        
+          {/* <Text></Text> */}
+          {/* <Text>Age: {patient.Age}</Text>         */}
           <Text></Text>
           <Text>Date of Birth: {patient.Date_Of_Birth}</Text>
           <Text></Text>

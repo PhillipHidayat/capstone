@@ -183,7 +183,7 @@ const handleCoords = (x, y) => {
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <div className="box">
+      <div className="titlebox">
         <h1 style={{textAlign: "center", color:'black', margin:"0rem"}}> Examination</h1>
         <h2 style={{textAlign: "left", color:'black', marginTop:"0"}}> Patient: {patient?.First_Name} {patient?.Last_Name}</h2>
       </div>
