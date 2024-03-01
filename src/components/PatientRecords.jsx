@@ -109,7 +109,24 @@ function PatientRecords() {
       })
   }
   
+  var patientAges = new Map()
+  for(var i=0; i<patientList.length;i++){
+    var patient = patientList[i]
+    var dob = new Date(patient.Date_Of_Birth);
+    //calculate month difference from current date in time
+    var month_diff = Date.now() - dob.getTime();
 
+    //convert the calculated difference in date format
+    // console.log(Date.UTC())
+    var age_dt = new Date(month_diff);
+
+    //extract year from date
+    var year = age_dt.getUTCFullYear();
+
+    //now calculate the age of the user
+    var age = Math.abs(year - 1970); 
+    patientAges[patient.id] = age
+  }
 
   return (
     <div className="patient-list">
@@ -128,6 +145,7 @@ function PatientRecords() {
               marginTop = {20}z
               backgroundColor={'white'}              
             />
+
 
           <SelectField 
             style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}
@@ -169,7 +187,7 @@ function PatientRecords() {
             <Grid templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem" width="100%" >
                   <Text fontSize="20" >{patient.First_Name}</Text>
                   <Text>{patient.Last_Name}</Text>
-                  <Text paddingLeft="12px">{patient.Age}</Text>
+                  <Text paddingLeft="12px">{patientAges[patient.id]}</Text>
                   <Text paddingLeft="25px">{patient.Provider}</Text>
                 </Grid>
               <Accordion.Icon />
@@ -190,6 +208,21 @@ function PatientProfile(props,{patient}) {
   // console.log(props)
   patient = props.patient
   // Show patient profile here 
+
+  var dob = new Date(patient.Date_Of_Birth);
+  //calculate month difference from current date in time
+  var month_diff = Date.now() - dob.getTime();
+
+  //convert the calculated difference in date format
+  // console.log(Date.UTC())
+  var age_dt = new Date(month_diff);
+
+  //extract year from date
+  var year = age_dt.getUTCFullYear();
+
+  //now calculate the age of the user
+  var age = Math.abs(year - 1970);
+
   return (
     <div>
       {/* <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
@@ -207,7 +240,7 @@ function PatientProfile(props,{patient}) {
           <Text></Text>
           <Text>Last Name: {patient.Last_Name}</Text>
           <Text></Text>
-          <Text>Age: {patient.Age}</Text>        
+          <Text>Age: {age}</Text>        
           <Text></Text>
           <Text>Date of Birth: {patient.Date_Of_Birth}</Text>
           <Text></Text>
