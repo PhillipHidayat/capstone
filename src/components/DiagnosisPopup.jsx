@@ -79,12 +79,13 @@ const DiagnosisPopup = forwardRef((props, ref) => {
   }
 
   function handleLocation(e) {
+    console.log("handleLocation")
     let tempMap = new Map(annotations);
     // console.log(annotations)
     // console.log(props.circle_key)
     let attempt = annotations.get(props.circle_key);
-    // console.log(attempt)
-    if (attempt.diagnosis == "Select..."){
+    console.log(attempt)
+    if (attempt != null && attempt.diagnosis == "Select..."){
       attempt.diagnosis="Normal"
     }
     if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}

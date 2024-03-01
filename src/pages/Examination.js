@@ -114,6 +114,8 @@ async function onSaveHandler(tempMap){
     ]));
     // console.log(original)
     if (original.length != 0) {
+      console.log('ORIGINAL')
+      console.log(original)
       // console.log("inside")
       let actual = original[0]
       // Checks if there is already an entry for the following and will update databse to reflect
@@ -122,7 +124,7 @@ async function onSaveHandler(tempMap){
           updated.Exam = diagnosis.Exam;
           updated.Location = diagnosis.Location;
           updated.Diagnoses = diagnosis.Diagnoses;
-          updated.LocationDetails = diagnosis.LocationDetails;
+          // updated.LocationDetails = diagnosis.LocationDetails;
           updated.Normal = diagnosis.Normal;
           updated.Notes = diagnosis.Notes;
         })
@@ -137,6 +139,7 @@ async function onSaveHandler(tempMap){
   });
 }
 async function loadDiagnosesForPatient(){
+  console.log("load diags")
   // await DataStore.clear();
   let diagnoses = await DataStore.query(Diagnoses, d=> d.patientID.eq(patient.id))
   console.log("LOADED DIAGNOSES")
@@ -157,6 +160,7 @@ const handleLoad = (diags) => {
   // setLines([])
   let l = []
   for (let i = 0; i < diags.length; i++) {
+    console.log(i)
     let d = diags[i]
     let ann = d.LocationDetails
     annotations.set(d.Key, new annotation(d.Notes, d.Diagnoses, d.Location, ann.img))
