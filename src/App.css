@@ -53,7 +53,7 @@ h1 {
 }
 
 #markdown-rectangle{
-  width: 1024px;
+  width: 1200px;
   height: 792px;
   background-color: white;
   outline: 5px;
@@ -61,20 +61,15 @@ h1 {
   outline-width: 5px;
   border: 5px solid black;
   box-shadow: 5px grey;
-  margin-top: 20px;
 }
 
-.button-container button {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  margin-right: 10px;
-  background-color: rgb(133, 221, 221);
-  color: white;
-  border-radius: 8px;
-  transition: background-color 0.1s;
-}
-
-.button-container button:active {
-  background-color: #4682B4;
-  /* You can add more styles for the active state as needed */
+.box{
+  background-color: rgb(248, 248, 248);
+  margin: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+	border-radius: 1rem;
+	width: calc(100% - 15rem);
+	box-shadow: 0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1);
 }

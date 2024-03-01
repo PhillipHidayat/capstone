@@ -16,7 +16,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     padding: 0 1rem;
 }
 
@@ -46,4 +46,25 @@ body {
 
 .menu {
     color: black;
+}
+
+.med {
+    color: rgb(139, 208, 248);
+}
+
+.title {
+    margin-bottom: 7px;
+    margin-left: 1rem;
+    font-size: 35px;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+}
+
+.item {
+    font-size: 20px;
 }
