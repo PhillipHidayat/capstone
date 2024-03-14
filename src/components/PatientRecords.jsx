@@ -6,6 +6,7 @@ import CreatPatientPopup from './CreatePatientPopup';
 import { SearchField } from '@aws-amplify/ui-react';
 import './PatientRecords.css'
 import { func } from 'prop-types';
+import { Link } from 'react-router-dom'
 
 function PatientRecords() {
   const [patientList, setPatientList] = useState([]);
@@ -229,8 +230,8 @@ function PatientProfile(props,{patient}) {
           <Text height={20}></Text>
           <Text></Text>
           <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
-          <Text></Text>        
-          <Button width="200px" marginTop={30} as="a" href={"/examination/"+patient.id}>Create Exam</Button>
+          <Text></Text>
+          <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
         </Grid>
       </Grid>
       </div>

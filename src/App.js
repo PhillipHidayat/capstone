@@ -19,6 +19,7 @@ import Examination from "./pages/Examination.js";
 import Dashboard from "./pages/Dashboard.js";
 import PatientRecords from "./components/PatientRecords.jsx";
 import { fetchUserAttributes } from 'aws-amplify/auth';
+import { Route, Routes} from 'react-router-dom'
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
@@ -92,33 +93,38 @@ function App({ signOut, user }: WithAuthenticatorProps) {
     setReloadObject(result);
   }
 
-  let component=<Home />
-  switch (window.location.pathname) {
-    case "/":
-      component = <Home />
-      break
-    case "/examination":
-      component = <Examination />
-      break
-    case "/records":
-      component = <PatientRecords />
-      break
-    case "/dashboard":
-      component = <Dashboard />
-      break
-  }
-  if (window.location.pathname.includes("/examination/")){
-    // console.log(window.location.pathname);
-    let patient = window.location.pathname.replace("/examination/",""); // essentially removes pre stuff to get patient id
-    component = <Examination patient={patient}/>
-  }
+  // let component=<Home />
+  // switch (window.location.pathname) {
+  //   case "/":
+  //     component = <Home />
+  //     break
+  //   case "/examination":
+  //     component = <Examination />
+  //     break
+  //   case "/records":
+  //     component = <PatientRecords />
+  //     break
+  //   case "/dashboard":
+  //     component = <Dashboard />
+  //     break
+  // }
+  // if (window.location.pathname.includes("/examination/")){
+  //   // console.log(window.location.pathname);
+  //   let patient = window.location.pathname.replace("/examination/",""); // essentially removes pre stuff to get patient id
+  //   component = <Examination patient={patient}/>
+  // }
+
 
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
       <Navbar signOut={signOut} user={attributes}/>
       <div className="Container" style={{width:'100%'}}>
-        {component}
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/records" element={<PatientRecords />} />
+          <Route path="/examination/:id" element={<Examination />} />
+        </Routes>
       </div>
     </div>
 

@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { registerLicense } from '@syncfusion/ej2-base';
+import { BrowserRouter } from 'react-router-dom';
 
 //AWS Amplify
 import { Amplify } from 'aws-amplify'
@@ -22,7 +23,9 @@ registerLicense('Mgo+DSMBaFt/QHRqVVhjVFpGaV5KQmFJfFBmRGldf1RzcUU3HVdTRHRcQlxiQH5
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App/>
+    <BrowserRouter>
+      <App/>
+    </BrowserRouter>    
   </React.StrictMode>
 );
 
