@@ -18,18 +18,8 @@ class annotation {
 }
   
 
-const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, brushOpacity, returnCoords, notes, image, addAnnotation, lines, setLines, state, setState})=>{
-    const canvasRef = useRef(null);
-    const ctxRef = useRef(null);
+const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, returnCoords, annotations, image, setAnnotations, lines, setLines, state, setState})=>{
     const stageRef = React.useRef();
-    // const [lines, setLines] = React.useState([]);
-    // const [state, setState] = React.useState({
-    //   id: -1,
-    //   isDragging: false,
-    //   x: 50,
-    //   y: 50,
-    //   lastLine: -1
-    // });
     useEffect(()=>{
       highestID = 0;
       count = lines.length
@@ -74,23 +64,20 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
         setLines(updatedLines);
       };
     function linesToDraw(){
-      let image_type = ""
+      let image_type = "";
       if(image.includes("inner")){ image_type= "inner"; }
       else if(image.includes("left")){ image_type= "left"; }
       else if(image.includes("right")){ image_type= "right"; }
       let tempList = [];
-      console.log('LINES')
-      console.log(lines)
-      console.log("notes")
-      console.log(notes)
       for(let i = 0; i < lines.length; i++) {
-        // console.log
-        if (notes.has(lines[i].id) && image.includes(notes.get(lines[i].id).img)) {
+        if (annotations.has(lines[i].id) && image.includes(annotations.get(lines[i].id).img)) {
           tempList = [...tempList, lines[i]];
         }
-        else if (!notes.has(lines[i].id)) {
-          tempList = [...tempList, lines[i]]; 
-          // addAnnotation(lines[i].id, image_type)
+        else if (!annotations.has(lines[i].id)) {
+          tempList = [...tempList, lines[i]];
+          let tempMap = new Map(annotations);
+          tempMap.set(lines[i].id, new annotation("", "Select...", "Select...", image_type));
+          setAnnotations(tempMap);
         }
       }
       return tempList;
@@ -133,7 +120,6 @@ const CanvasApp = ({width,height, popup, setObjectState, lineColor, brushSize, b
                 }
                 // console.log(i)
                 setState(tempState);
-                setObjectState();
               }}
               
               onDragStart={() => {
