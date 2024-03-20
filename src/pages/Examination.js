@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Menu from "../components/Menu";
 import "../App.css";
-import imgSource from "../images/left-eye.png";
+import lefteyeSource from "../images/left-eye.jpg";
+import righteyeSource from "../images/right-eye.jpg";
+import innereyeSource from "../images/inner-eye.jpg";
 import redDotImage from "../images/redDot.jpg";
 import CanvasApp from "../components/CanvasApp";
 import * as React from 'react';
@@ -21,16 +23,12 @@ import { useParams } from "react-router-dom";
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
-
-
-
 // DocumentEditorComponent.Inject(Print, SfdtExport, WordExport, TextExport, Selection, Search, Editor, ImageResizer, EditorHistory, ContextMenu, OptionsPane, HyperlinkDialog, TableDialog, BookmarkDialog, TableOfContentsDialog, PageSetupDialog, StyleDialog, ListDialog, ParagraphDialog, BulletsAndNumberingDialog, FontDialog, TablePropertiesDialog, BordersAndShadingDialog, TableOptionsDialog, CellOptionsDialog, StylesDialog);
 
 let i=0;
 
 function Examination(props) {
-  // console.log("exam: "+props.patient)
-  // const [component, setComponent] = useState(<Droppable></Droppable>)
+  const childRef = useRef();
   const [reloadItems, setReloadItems] = useState(false);
   const [reloadObject, setReloadObject] = useState();
   const [objectState, setObjectState] = useState({
@@ -53,19 +51,7 @@ const { id } = useParams() // get patient id from url
 // console.log(id)
 
 //Function used to define the HTML formatting for the PDF Preview
-const reloadPDF = (comments, diagnoses, locations) => {
-  if (!comments || !diagnoses || !locations) {
-    if(!comments){
-      console.error("Comments are undefined.");
-    }
-    if(!diagnoses){
-      console.error("Diagnoses are undefined.");
-    }
-    if(!locations){
-      console.error("Locations are undefined.");
-    }
-    return;
-  }
+const reloadPDF = (notes) => {
   var s = "<html>\n" +
   "<head>\n" + 
   "<style>\n" + 
@@ -86,35 +72,30 @@ const reloadPDF = (comments, diagnoses, locations) => {
     else{s +="\n<tr><td>" + category + "</td><td>";}
     if(category != "Select..."){
     s += "Diagnoses: "
-    locations.forEach((values, keys) => {
-      if(values == category){
-        if(diagnoses.has(keys)){
-          diagnosesAdded = true;
+    notes.forEach((values, keys) => {
+      if(values.location == category){
+        console.log(values.diagnosis);
+        if(values.diagnosis != "Select..." && values.diagnosis != ""){
           if(isFirst){
-            s+= " " + diagnoses.get(keys);
+            s += " " + values.diagnosis;
             isFirst = false;
-          }
-          else{
-          s += ", " + diagnoses.get(keys);
-          }
+          }else{s += ", " + values.diagnosis}
+          diagnosesAdded = true;
         }
-      }
-      });
+      }});
       if(!diagnosesAdded){s += " Normal"}
     }
     isFirst = true;
     if(category != "Select..."){s += "<br>Comments: ";}
     else{s += "Comments: ";}
-    locations.forEach((values, keys) => {
-      if(values == category){
-        if(comments.has(keys)){
-          if(isFirst){
-            s+= " " + comments.get(keys);
-            isFirst = false;
-          }
-          else{
-          s += ", " + comments.get(keys);
-          }
+    notes.forEach((values, keys) => {
+      if(values.location == category){
+        if(values.comment != ""){
+        console.log(values.comment);
+        if(isFirst){
+          s+= " " + values.comment;
+          isFirst = false;
+        }else{s += ", " + values.comment;}
         }
       }
       });
@@ -131,14 +112,14 @@ useEffect(() => {
   console.log("called");
   fetchPatients(id) 
     .then(pt => {
-      console.log(pt);
+      //console.log(pt);
       setPatient(pt);
     });
 }, [])
 
 //Updates the PDF after the patient information has been saved
 useEffect(() => {
-  reloadPDF([],[],[]);
+  reloadPDF(new Map());
 }, [patient]);
 
 async function fetchPatients(id) {
@@ -154,34 +135,38 @@ async function fetchPatients(id) {
   return []
 }
 
-  var method = setObjectState
-  if (i==0){
+var method = setObjectState
+if (i==0){
     method();
-    // console.log(method);
     i++
-  }
+}
   
 
 
-  const onDragEnd = (result)=> {
-    // dropped outside the list
-    setReloadItems(true);
-    setReloadObject(result);
+const onDragEnd = (result)=> {
+  setReloadItems(true);
+  setReloadObject(result);
 }
-// let deleteFunction = 0;
-// let key=0;
+
 const handleSetPopUp = (value,delete_function,key)=> {
-  // console.log(delete_function)
-  // console.log(key)
   set_delete_circle(()=>delete_function);
   setKey(key);
   setPopupVisible(value);
+}
+
+function setNotes(map){
+  setAnnotations(map);
 }
 
 const handleCoords = (x, y) => {
   setXCoord(x);
   setYCoord(y);
 };
+
+const addAnnotation = (id, sourceImg) =>{
+  console.log(childRef);
+  childRef.current.childFunction(id, sourceImg);
+}
 
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
@@ -195,21 +180,19 @@ const handleCoords = (x, y) => {
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key} onSave={reloadPDF}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
+      <div class="button-container">
+      <button onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</button>
+      <button onClick={() => {setImagePath(righteyeSource);}}>Right Eye</button>
+      <button onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</button>
+      </div>
       <div className="draw-area" >
         <div className="background-image" style={{
-        backgroundImage: `url(${imgSource})`,
+        backgroundImage: `url(${imagePath})`,
         backgroundSize: '1280px 1000px',
         height: '1000px'
       }}>
-        {/* <canvas
-          onMouseDown={startDrawing}
-          onMouseUp={endDrawing}
-          onMouseMove={draw}
-          ref={canvasRef}
-          width={`1280px`}
-          height={`1200px`}
-        />     */}
-        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} returnCoords = {handleCoords}/>
+        <CanvasApp width={1276} height={1000} popup = {handleSetPopUp} setObjectState={() => method} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
+        returnCoords = {handleCoords} notes={annotations != null ? annotations : new Map()} image={imagePath} addAnnotation={addAnnotation}/>
         </div>
       
       </div>
@@ -237,5 +220,4 @@ const handleCoords = (x, y) => {
     </div>
   );
 }
-// export default withAuthenticator(App);
 export default Examination;
