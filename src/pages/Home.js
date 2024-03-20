@@ -94,7 +94,9 @@ function Home() {
         <ul className="home_ul">
             <li><p><a href="https://docs.google.com/document/d/15tzGPQ0C6uMYiHRtsh6Ax90b55XYRaBd1A4t1XVZ7_M/edit?usp=sharing">Design Document</a></p></li>
         </ul>
+    </div>
 
+    <div className="box">        
         <h2>Outside Sponsor</h2>
         <ul className="home_ul">
             <li><p>B2B Competition</p></li>

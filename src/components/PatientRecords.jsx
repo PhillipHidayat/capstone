@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { DataStore, Predicates } from '@aws-amplify/datastore';
 import {Patient} from '../models'
-import { Button, Grid, Text, Accordion, SelectField } from "@aws-amplify/ui-react";
+import { Button, Grid, Text, Accordion, SelectField, ThemeProvider, Theme } from "@aws-amplify/ui-react";
 import CreatPatientPopup from './CreatePatientPopup';
 import { SearchField } from '@aws-amplify/ui-react';
 import './PatientRecords.css'
 import { func } from 'prop-types';
+import { Link } from 'react-router-dom'
 
 function PatientRecords() {
   const [patientList, setPatientList] = useState([]);
@@ -109,37 +110,39 @@ function PatientRecords() {
       })
   }
   
+
+
   return (
     <div className="patient-list">
       <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} refreshPatientList={refreshPatientList}></CreatPatientPopup>
-        <Button style={{backgroundColor: 'white'}} onClick={()=>{
+        <Button style={{backgroundColor:"white", borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}} onClick={()=>{
           setPopupVisible(true)
         }}>Add New Patient</Button>
+            <SearchField   
+              style={{borderRadius:"1rem 0 0 1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}        
+              placeholder={"Search by " + {searchBy}.searchBy}
+              label="search"
+              onChange={onChange}
+              onClear={onClear}
+              onSubmit={onSearch}
+              value={search}
+              marginTop = {20}z
+              backgroundColor={'white'}              
+            />
 
-        <div className='search'>
-          <SearchField
-            placeholder={"Search by " + {searchBy}.searchBy}
-            label="search"
-            onChange={onChange}
-            onClear={onClear}
-            onSubmit={onSearch}
-            value={search}
+          <SelectField 
+            style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}
+            label = "Search By :"
+            value = {searchBy}
             marginTop = {20}
-            backgroundColor={'white'}
-          />
-          <SelectField
-                        label = "Search By :"
-                        value = {searchBy}
-                        marginTop = {20}
-                        onChange={(e) => setSearchBy(e.target.value)}
-                      >
-                        <option value="firstName">First Name</option>
-                        <option value="lastName">Last Name</option>
-                        <option value="age">Age</option>
-                        <option value="provider">Provider</option>                       
+            onChange={(e) => setSearchBy(e.target.value)}
+          >
+            <option value="firstName">First Name</option>
+            <option value="lastName">Last Name</option>
+            <option value="age">Age</option>
+            <option value="provider">Provider</option>                       
                         
           </SelectField>
-        </div>
 
         {/* <Button onClick={async ()=>{
           await DataStore.delete(Patient, Predicates.ALL);
@@ -147,7 +150,7 @@ function PatientRecords() {
         <Grid style={{borderBottom: "3px solid black"}} paddingTop="20px" paddingBottom="5px" templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem">
               <Text fontSize="1.5em">First Name</Text>
               <Text fontSize="1.5em">Last Name</Text>
-              <Text fontSize="1.5em">Age</Text>
+              <Text fontSize="1.5em">DoB</Text>
               <Text fontSize="1.5em">Provider</Text>
         </Grid>
       
@@ -157,22 +160,22 @@ function PatientRecords() {
           value={patient.id} 
           marginBottom="4px"
           marginTop="4px"
-          borderRadius="3px"
+          borderRadius="1rem"
           key={patient.id} 
           onClick={()=>{
             setSelectedPatient(patient)
           }
           }>
-            <Accordion.Trigger>
-            <Grid templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem" width="100%">
-                  <Text fontSize="20">{patient.First_Name}</Text>
+            <Accordion.Trigger style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}>
+            <Grid templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem" width="100%" >
+                  <Text fontSize="20" >{patient.First_Name}</Text>
                   <Text>{patient.Last_Name}</Text>
-                  <Text paddingLeft="12px">{patient.Age}</Text>
+                  <Text paddingLeft="12px">{patient.Date_Of_Birth}</Text>
                   <Text paddingLeft="25px">{patient.Provider}</Text>
                 </Grid>
               <Accordion.Icon />
             </Accordion.Trigger>
-            <Accordion.Content>
+            <Accordion.Content >
               <PatientProfile patient={patient}/> 
             </Accordion.Content>
           </Accordion.Item>
@@ -193,33 +196,45 @@ function PatientProfile(props,{patient}) {
       {/* <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
             props.setPatient(false);
         }}> x </Button> */}
-      <Grid fontSize="20px" templateColumns="1fr 1fr" templateRows="2rem">
-        <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center', paddingRight:"15rem"}}>Patient Profile</Text>
-        <Text></Text>
-        <Text></Text>
-        <Text paddingLeft="30rem" column={1} row={3} paddingTop="10px">First Name: {patient.First_Name}</Text>
-        <Text></Text>
-        <Text paddingLeft="30rem" column={1} row={4}>Last Name: {patient.Last_Name}</Text>
-        <Text></Text>
-        <Text paddingLeft="30rem" column={1} row={5}>Age: {patient.Age}</Text>        
-        <Text></Text>
-        <Text paddingLeft="30rem" column={1} row={6}>Date of Birth: {patient.Date_Of_Birth}</Text>
-        <Text></Text>
-        <Text paddingLeft="30rem" column={1} row={7}>Sex: {patient.Sex}</Text>
-        <Text></Text>        
-        <Text paddingLeft="30rem" column={1} row={8}>Provider: {patient.Provider}</Text>
-        <Text></Text>
-        <Text column={2} row={4}>Phone: {patient.Phone}</Text>
-        <Text></Text>
-        <Text column={2} row={5}>Email: {patient.Email}</Text>
-        <Text></Text>
-        <Text column={2} row={6}>Address: {patient.Address}</Text>
-        <Text></Text>
-        <Text column={2} row={8}>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
-        <Text></Text>
-        <Button marginLeft="30rem" width="200px" marginTop={30}>Delete User</Button>
-        <Button width="200px" marginTop={30} as="a" href={"/examination/"+patient.id}>Create Exam</Button>
+       <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center'}}>Patient Profile</Text>
+        <div style={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%"}}>
+      <Grid fontSize="20px" templateColumns="1fr 1fr" templateRows="minmax(2rem,min-content)" columnGap={"5rem"}>
+        {/* <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center'}}>Patient Profile</Text>
+        <Text></Text> */}   
+        <Text column={1}></Text>
+        <Text column={2}></Text>
+        <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem"> 
+          <Text>First Name: {patient.First_Name}</Text>
+          <Text></Text>
+          <Text>Last Name: {patient.Last_Name}</Text>
+          {/* <Text></Text> */}
+          {/* <Text>Age: {patient.Age}</Text>         */}
+          <Text></Text>
+          <Text>Date of Birth: {patient.Date_Of_Birth}</Text>
+          <Text></Text>
+          <Text>Sex: {patient.Sex}</Text>
+          <Text></Text>        
+          <Text>Provider: {patient.Provider}</Text>
+          <Text></Text>
+          <Button width="200px" marginTop={30}>Delete User</Button>
+        </Grid>
+        <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem">   
+          <Text></Text>
+          <Text></Text>
+          <Text>Phone: {patient.Phone}</Text>
+          <Text></Text>
+          <Text>Email: {patient.Email}</Text>
+          <Text></Text>
+          <Text>Address: {patient.Address}</Text>
+          <Text></Text>
+          <Text height={20}></Text>
+          <Text></Text>
+          <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
+          <Text></Text>
+          <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
+        </Grid>
       </Grid>
+      </div>
       {/* Patient record details */}
     </div>
   );
