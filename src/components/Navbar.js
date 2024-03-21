@@ -3,6 +3,7 @@ import "./Navbar.css"
 import { Text} from '@aws-amplify/ui-react';
 import { signOut } from 'aws-amplify/auth';
 import { getCurrentUser } from 'aws-amplify/auth';
+import { Link } from 'react-router-dom' 
 // import { signOut } from '@aws-amplify/auth';
 async function currentAuthenticatedUser() {
     try {
@@ -25,10 +26,10 @@ function Navbar(props){
         <div className="wrapper">
             <nav className="nav"> 
                 <div className="nav-item">
-                    <a  className="title" href="/" > <span className="med">Med</span>Capture </a>    
+                    <Link  className="title" to="/" > <span className="med">Med</span>Capture </Link>    
                     <ul>
                         <li>
-                            <a className="item" href="/records" > Patients </a>
+                            <Link className="item" to="/records" > Patients </Link>
                         </li>
                     </ul>                
                     
@@ -36,7 +37,7 @@ function Navbar(props){
 
                 <ul>
                     <li>
-                        <a href="./">Hello {props.user?.email}</a>
+                        <Link to="./">Hello {props.user?.email}</Link>
                     </li>
                     <li>
                         <a onClick={(e)=>{

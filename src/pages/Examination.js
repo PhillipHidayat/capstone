@@ -14,6 +14,7 @@ import '@aws-amplify/ui-react/styles.css';
 import awsconfig from '../aws-exports';
 import DiagnosisPopup from "../components/DiagnosisPopup.jsx";
 import html2pdf from 'html2pdf.js';
+import { useParams } from "react-router-dom";
 
 Amplify.configure(awsconfig);
 

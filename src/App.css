@@ -54,7 +54,7 @@ h1 {
 
 #markdown-rectangle{
   width: 1200px;
-  height: 792px;
+  height: 1000px;
   background-color: white;
   outline: 5px;
   outline-color: black;
@@ -70,7 +70,7 @@ h1 {
   margin-bottom: 1rem;
   padding: 0.5rem;
 	border-radius: 1rem;
-	width: calc(100% - 15rem);
+	width: 1250px;
 	box-shadow: 0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1);
 }
 
