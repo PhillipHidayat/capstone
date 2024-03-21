@@ -55,6 +55,7 @@ function Examination(props) {
   const [displayPdf, setPDF] = useState("");
   const [patient, setPatient] = useState("");
   const [annotations, setAnnotations] = useState(new Map());
+  const { id } = useParams() // get patient id from url
 
 
   //Annotations Set Up and functions
@@ -108,8 +109,10 @@ function Examination(props) {
   
   async function loadDiagnosesForPatient(){
     let diagnoses = await DataStore.query(Diagnoses, d=> d.patientID.eq(patient.id));
+    console.log(diagnoses)
     handleLoad(diagnoses);
   }
+  
   
   async function deleteDiagnoses(key){
     let deleted = await DataStore.delete(Diagnoses, d => d.and(d=>[
@@ -186,8 +189,8 @@ function Examination(props) {
 
   useEffect(() => {
     // Fetch list of patients 
-    console.log(props)
-    fetchPatients(props.patient) 
+    console.log(id)
+    fetchPatients(id) 
       .then(pt => {
         setPatient(pt);
       });
