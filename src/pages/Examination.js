@@ -230,10 +230,10 @@ function Examination(props) {
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
-      <button onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</button>
-      <button onClick={() => {setImagePath(righteyeSource);}}>Right Eye</button>
-      <button onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</button>
-      <Button onClick={loadDiagnosesForPatient}>Load Annotations</Button>
+      <Button className="image_selection" onClick={() => {setImagePath(righteyeSource);}}>Right Eye</Button>
+      <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</Button>
+      <Button className="image_selection" onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</Button>
+      <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
       </div>
       <div className="draw-area" >
         <div className="background-image" style={{
