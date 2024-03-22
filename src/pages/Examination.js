@@ -132,6 +132,7 @@ function Examination(props) {
     }
     setLines(l);
     setAnnotations(tempMap);
+    reloadPDF(tempMap);
   };
 
   //Function used to define the HTML formatting for the PDF Preview
