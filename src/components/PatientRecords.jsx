@@ -46,15 +46,16 @@ function PatientRecords() {
   }
 
   async function refreshPatientList(){
-    fetchPatients() 
+    await fetchPatients() 
       .then(patients => {
+        // console.log(patients)
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
           
-          if (patients[i].createdAt!=null){
-            console.log(patients[i])
-            tempPatients.push(patients[i]);
-          }
+          // if (patients[i].createdAt!=null){
+            // console.log(patients[i])
+          tempPatients.push(patients[i]);
+          // }
         }
         setPatientList(tempPatients);
       })
@@ -168,7 +169,7 @@ function PatientRecords() {
         <Grid style={{borderBottom: "3px solid black"}} paddingTop="20px" paddingBottom="5px" templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem">
               <Text fontSize="1.5em">First Name</Text>
               <Text fontSize="1.5em">Last Name</Text>
-              <Text fontSize="1.5em">DoB</Text>
+              <Text fontSize="1.5em">Age</Text>
               <Text fontSize="1.5em">Provider</Text>
         </Grid>
       
@@ -205,6 +206,8 @@ function PatientRecords() {
 }
 
 function PatientProfile(props,{patient}) {
+  // function displayVal()
+
   // console.log(patient)
   // console.log(props)
   patient = props.patient
@@ -262,9 +265,9 @@ function PatientProfile(props,{patient}) {
           <Text></Text>
           <Text height={20}></Text>
           <Text></Text>
-          <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
+          <Text>Last Change: ({patient.updatedAt?.substring(5,7)},{patient.updatedAt?.substring(8,10)},{patient.updatedAt?.substring(0,4)})</Text>
           <Text></Text>
-          <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
+          <Link to={"/exams/"+patient.id}><Button width="200px" marginTop={30}>View Exams</Button></Link>          
         </Grid>
       </Grid>
       </div>

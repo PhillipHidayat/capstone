@@ -1,3 +1,13 @@
+type Exam @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Date: AWSDate!
+  patientID: ID! @index(name: "byPatient")
+  Diagnoses: [Diagnoses] @hasMany(indexName: "byExam", fields: ["id"])
+  IntakeForm: AWSJSON!
+  Summary: AWSJSON!
+  Technician: String
+}
+
 type Diagnoses @model @auth(rules: [{allow: public}]) {
   id: ID!
   Exam: String!
@@ -8,7 +18,7 @@ type Diagnoses @model @auth(rules: [{allow: public}]) {
   Rating: Int
   LocationDetails: AWSJSON
   Key: Int!
-  patientID: ID! @index(name: "byPatient")
+  examID: ID! @index(name: "byExam")
 }
 
 type Patient @model @auth(rules: [{allow: public}]) {
@@ -21,6 +31,6 @@ type Patient @model @auth(rules: [{allow: public}]) {
   Phone: AWSPhone!
   Email: AWSEmail!
   Provider: String!
-  Diagnoses: [Diagnoses] @hasMany(indexName: "byPatient", fields: ["id"])
+  Exams: [Exam] @hasMany(indexName: "byPatient", fields: ["id"])
 }
  

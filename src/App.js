@@ -20,6 +20,7 @@ import Dashboard from "./pages/Dashboard.js";
 import PatientRecords from "./components/PatientRecords.jsx";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { Route, Routes} from 'react-router-dom'
+import ExamRecords from "./components/exam records/ExamRecords.jsx";
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
@@ -51,6 +52,7 @@ function App({ signOut, user }: WithAuthenticatorProps) {
           <Route exact path="/" element={<Home />} />
           <Route path="/records" element={<PatientRecords />} />
           <Route path="/examination/:id" element={<Examination />} />
+          <Route path="/exams/:id" element={<ExamRecords />} />
         </Routes>
       </div>
     </div>

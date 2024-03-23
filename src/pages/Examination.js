@@ -190,7 +190,7 @@ function Examination(props) {
 
   useEffect(() => {
     // Fetch list of patients 
-    console.log(id)
+    // console.log(id)
     fetchPatients(id) 
       .then(pt => {
         setPatient(pt);
