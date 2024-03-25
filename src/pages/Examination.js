@@ -224,6 +224,13 @@ function Examination(props) {
     setYCoord(y);
   };
 
+  let button = null;
+  if (imagePath.includes("left")) {
+    button = <button class="btnRight" onClick={() => {setImagePath(righteyeSource);}}>{'Right'}</button>;
+  } else if(imagePath.includes("right")) {
+    button = <button class="btnLeft" onClick={() => {setImagePath(lefteyeSource);}}>{'Left'}</button>;
+  }
+
   return (
     <div className="App" >
       <div className="box">
@@ -236,8 +243,7 @@ function Examination(props) {
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
-      <Button className="image_selection" onClick={() => {setImagePath(righteyeSource);}}>Right Eye</Button>
-      <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</Button>
+      <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource);}}>Outer Eye</Button>
       <Button className="image_selection" onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</Button>
       <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
       </div>
@@ -250,7 +256,7 @@ function Examination(props) {
         <CanvasApp width={1024} height={834} popup = {handleSetPopUp} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
         returnCoords = {handleCoords} annotations={annotations} image={imagePath} setAnnotations={setAnnotations} lines={lines} setLines={setLines} state={state} setState={setState}/>
         </div>
-      
+        {button}
       </div>
       <Accordion.Container margin="1rem">
         <Accordion.Item
