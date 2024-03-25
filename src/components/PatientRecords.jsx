@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { DataStore, Predicates } from '@aws-amplify/datastore';
 import {Patient} from '../models'
 import { Button, Grid, Text, Accordion, SelectField, ThemeProvider, Theme } from "@aws-amplify/ui-react";
 import CreatPatientPopup from './CreatePatientPopup';
+import ErrorPopup from './ErrorPopup';
 import { SearchField } from '@aws-amplify/ui-react';
 import './PatientRecords.css'
 import { func } from 'prop-types';
@@ -14,6 +15,8 @@ function PatientRecords() {
   const [popupVisible, setPopupVisible] = useState(false)
   const [search, setSearch] = React.useState('');
   const [searchBy, setSearchBy] = React.useState("firstName");
+  const [errormsg, setError] = useState(null);
+  const [errorVisible, setErrorVisible] = useState(false);
 
   useEffect(() => {
     // Fetch list of patients 
@@ -36,8 +39,6 @@ function PatientRecords() {
     // API call to get patients
     try {
       const posts = await DataStore.query(Patient);
-      // console.log('Posts retrieved successfully!');
-      // console.log(posts)
       return posts
     } catch (error) {
       console.log('Error retrieving posts', error);
@@ -50,14 +51,18 @@ function PatientRecords() {
       .then(patients => {
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
-          
           if (patients[i].createdAt!=null){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
         }
         setPatientList(tempPatients);
       })
+  }
+
+  function addPatient(modelFields){
+    let tempPatients = [...patientList];
+    tempPatients.push(new Patient(modelFields))
+    setPatientList(tempPatients);
   }
 
   function handlePatientClick(patient) {
@@ -129,9 +134,15 @@ function PatientRecords() {
     patientAges[patient.id] = age
   }
 
+  function newError(msg){
+    setError(msg);
+    setErrorVisible(true);
+  }
+
   return (
     <div className="patient-list">
-      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} refreshPatientList={refreshPatientList}></CreatPatientPopup>
+      <ErrorPopup trigger= {errorVisible} setTrigger= {setErrorVisible} errormsg= {errormsg}></ErrorPopup>
+      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} addPT = {addPatient} newError={newError} refreshPatientList={refreshPatientList}></CreatPatientPopup>
         <Button style={{backgroundColor:"white", borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}} onClick={()=>{
           setPopupVisible(true)
         }}>Add New Patient</Button>
@@ -146,8 +157,6 @@ function PatientRecords() {
               marginTop = {20}z
               backgroundColor={'white'}              
             />
-
-
           <SelectField 
             style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}
             label = "Search By :"
@@ -199,7 +208,6 @@ function PatientRecords() {
           </Accordion.Item>
           ))}
         </Accordion.Container>
-
     </div>
   );
 }
@@ -262,7 +270,9 @@ function PatientProfile(props,{patient}) {
           <Text></Text>
           <Text height={20}></Text>
           <Text></Text>
-          <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
+          <Text>  Last Change: {patient?.updatedAt ? 
+  `       (${patient.updatedAt.substring(5, 7)},${patient.updatedAt.substring(8, 10)},${patient.updatedAt.substring(0, 4)})` : 
+  `       (${new Date().getMonth() + 1},${new Date().getDate()},${new Date().getFullYear()})`}</Text>
           <Text></Text>
           <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
         </Grid>

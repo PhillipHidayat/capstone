@@ -4,8 +4,6 @@ import { PatientCreateForm } from '../ui-components'
 import { Button } from "@aws-amplify/ui-react";
 
 function CreatPatientPopup(props) {
-  // console.log(props.delete_circle)
-  // console.log(props.circle_key)
   const overrides = {
     "PatientCreateForm":{
         "templateColumns": "1fr 1fr",
@@ -20,11 +18,12 @@ function CreatPatientPopup(props) {
       <div className="popup-inner">
         <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
             props.setTrigger(false);
+            props.refreshPatientList();
         }}> x </Button>
-        <PatientCreateForm overrides={overrides} onSuccess={()=>{
+        <PatientCreateForm overrides={overrides} onSuccess={(modelFields)=>{
             props.setTrigger(false);
-            props.refreshPatientList()
-        }}></PatientCreateForm>
+            props.addPT(modelFields);
+        }} onError={(modelFields, errormsg) =>{props.setTrigger(false); props.newError(errormsg);}}></PatientCreateForm>
       </div>
     </div>
   ) : ""
