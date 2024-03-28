@@ -61,12 +61,13 @@ function Examination(props) {
 
   //Annotations Set Up and functions
   async function onSaveHandler(tempMap){
-    reloadPDF(tempMap);
+    // reloadPDF(tempMap);
+    // console.log(tempMap)
     tempMap.forEach(async (value, key)=>{
       let diagnosis = {
         Exam: "test",
         Location: value.location,
-        patientID: patient.id,
+        examID: exam.id,
         Key: key
       };
 
@@ -86,7 +87,7 @@ function Examination(props) {
       const original = await DataStore.query(Diagnoses, (d)=> 
       d.and(d=>[
         d.Key.eq(key), // every diagnosis shouls have a unique key for each patient
-        d.patientID.eq(patient.id) // makes sure we are searching the correct patient
+        d.examID.eq(exam.id) // makes sure we are searching the correct patient
       ]));
       if (original.length != 0) {
         let actual = original[0];
@@ -109,7 +110,8 @@ function Examination(props) {
   }
   
   async function loadDiagnosesForPatient(){
-    let diagnoses = await DataStore.query(Diagnoses, d=> d.patientID.eq(patient.id));
+    let exam1 = await DataStore.query(Exam, exam.id) // so data is not stale
+    let diagnoses = await exam1.Diagnoses.toArray();
     console.log(diagnoses)
     handleLoad(diagnoses);
   }
@@ -118,7 +120,7 @@ function Examination(props) {
   async function deleteDiagnoses(key){
     let deleted = await DataStore.delete(Diagnoses, d => d.and(d=>[
       d.Key.eq(key), // every diagnosis shouls have a unique key for each patient
-      d.patientID.eq(patient.id) // makes sure we are searching the correct patient
+      d.examID.eq(exam.id) // makes sure we are searching the correct patient
     ]));
   }
 
@@ -133,7 +135,7 @@ function Examination(props) {
     }
     setLines(l);
     setAnnotations(tempMap);
-    reloadPDF(tempMap);
+    // reloadPDF(tempMap);
   };
 
   //Function used to define the HTML formatting for the PDF Preview
