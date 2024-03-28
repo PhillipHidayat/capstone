@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 
 function PatientRecords() {
   const [patientList, setPatientList] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  // const [selectedPatient, setSelectedPatient] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false)
   const [search, setSearch] = React.useState('');
   const [searchBy, setSearchBy] = React.useState("firstName");
@@ -61,10 +61,6 @@ function PatientRecords() {
       })
   }
 
-  function handlePatientClick(patient) {
-    // Fetch and show patient record
-    setSelectedPatient(patient);
-  }
 
   const onChange = (event) => {
     setSearch(event.target.value);
@@ -181,10 +177,7 @@ function PatientRecords() {
           marginTop="4px"
           borderRadius="1rem"
           key={patient.id} 
-          onClick={()=>{
-            setSelectedPatient(patient)
-          }
-          }>
+          >
             <Accordion.Trigger style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}>
             <Grid templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem" width="100%" >
                   <Text fontSize="20" >{patient.First_Name}</Text>
@@ -195,7 +188,7 @@ function PatientRecords() {
               <Accordion.Icon />
             </Accordion.Trigger>
             <Accordion.Content >
-              <PatientProfile patient={patient}/> 
+              <PatientProfile patient={patient} refreshPatientList={refreshPatientList}/> 
             </Accordion.Content>
           </Accordion.Item>
           ))}
@@ -252,7 +245,7 @@ function PatientProfile(props,{patient}) {
           <Text></Text>        
           <Text>Provider: {patient.Provider}</Text>
           <Text></Text>
-          <Button width="200px" marginTop={30}>Delete User</Button>
+          <Button width="200px" marginTop={30} onClick={async ()=>{await DataStore.delete(Patient,patient.id); await props.refreshPatientList()}}>Delete User</Button>
         </Grid>
         <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem">   
           <Text></Text>

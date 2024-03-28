@@ -35,11 +35,7 @@ function ExamRecords() {
       .then(exams => {
         let tempexams = []
         for(let i=0; i<exams.length; i++){
-          
-          if (exams[i].createdAt!=null){
-            // console.log(patients[i])
-            tempexams.push(exams[i]);
-          }
+          tempexams.push(exams[i]);
         }
         setExamList(tempexams);
       })
@@ -90,10 +86,10 @@ function ExamRecords() {
     // API call to get patients
     try {
       // console.log(patient)
-      const posts = await patient.Exams.toArray()
-      // console.log('Posts retrieved successfully!');
-      console.log(posts)
-      return posts
+      const pat = await DataStore.query(Patient, patient.id);
+      const exams = await pat.Exams.toArray()
+      console.log(exams)
+      return exams
     } catch (error) {
       console.log('Error retrieving posts', error);
     }
@@ -101,7 +97,7 @@ function ExamRecords() {
   }
 
   async function refreshExamList(){
-    fetchExams() 
+    await fetchExams() 
       .then(exams => {
         let tempExams = []
         for(let i=0; i<exams.length; i++){
@@ -112,6 +108,7 @@ function ExamRecords() {
           // }
         }
         setExamList(tempExams);
+        console.log(tempExams)
       })
   }
 
@@ -219,8 +216,8 @@ function ExamRecords() {
               <Accordion.Icon />
             </Accordion.Trigger>
             <Accordion.Content >
-              {/* <ExamProfile exam={exam}/>  */}
-              <Text>Hi</Text>
+              <ExamProfile exam={exam} refreshExamList={refreshExamList}/> 
+              {/* <Text>Hi</Text>  */}
             </Accordion.Content>
           </Accordion.Item>
           ))}
@@ -230,59 +227,39 @@ function ExamRecords() {
   );
 }
 
-// function ExamProfile(props,{exam}) {
-//   // console.log(patient)
-//   // console.log(props)
-//   exam = props.exam
-//   // Show patient profile here 
+function ExamProfile(props,{exam}) {
+  // console.log(patient)
+  // console.log(props)
+  exam = props.exam
+  // Show patient profile here 
 
-//   return (
-//     <div>
-//       {/* <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
-//             props.setPatient(false);
-//         }}> x </Button> */}
-//        <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center'}}>Patient Profile</Text>
-//         <div style={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%"}}>
-//       <Grid fontSize="20px" templateColumns="1fr 1fr" templateRows="minmax(2rem,min-content)" columnGap={"5rem"}>
-//         {/* <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center'}}>Patient Profile</Text>
-//         <Text></Text> */}   
-//         <Text column={1}></Text>
-//         <Text column={2}></Text>
-//         <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem"> 
-//           <Text>First Name: {patient.First_Name}</Text>
-//           <Text></Text>
-//           <Text>Last Name: {patient.Last_Name}</Text>
-//           <Text></Text>
-//           <Text>Age: {age}</Text>        
-//           <Text></Text>
-//           <Text>Date of Birth: {patient.Date_Of_Birth}</Text>
-//           <Text></Text>
-//           <Text>Sex: {patient.Sex}</Text>
-//           <Text></Text>        
-//           <Text>Provider: {patient.Provider}</Text>
-//           <Text></Text>
-//           <Button width="200px" marginTop={30}>Delete User</Button>
-//         </Grid>
-//         <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem">   
-//           <Text></Text>
-//           <Text></Text>
-//           <Text>Phone: {patient.Phone}</Text>
-//           <Text></Text>
-//           <Text>Email: {patient.Email}</Text>
-//           <Text></Text>
-//           <Text>Address: {patient.Address}</Text>
-//           <Text></Text>
-//           <Text height={20}></Text>
-//           <Text></Text>
-//           <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
-//           <Text></Text>
-//           <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
-//         </Grid>
-//       </Grid>
-//       </div>
-//       {/* Patient record details */}
-//     </div>
-//   );
-// }
+  return (
+    <div>
+      {/* <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
+            props.setPatient(false);
+        }}> x </Button> */}
+       <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center'}}>Exam Information</Text>
+        <div style={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%"}}>
+      <Grid fontSize="20px" templateColumns="1fr 1fr" templateRows="minmax(2rem,min-content)" columnGap={"5rem"}>
+        {/* <Text rowSpan={2} columnSpan={2} fontSize="2em" style={{borderBottom: "0.2em black solid", textAlign: 'center'}}>Patient Profile</Text>
+        <Text></Text> */}   
+        <Text column={1}></Text>
+        <Text column={2}></Text>
+        <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem"> 
+          <Text>Technician: {exam.Technician}</Text>
+          <Text></Text>
+          <Button width="200px" marginTop={30} onClick={async ()=>{await DataStore.delete(Exam, exam.id); await props.refreshExamList()}}>Delete Exam</Button>
+        </Grid>
+        <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem">   
+          <Text>Last Change: ({exam.updatedAt?.substring(5,7)},{exam.updatedAt?.substring(8,10)},{exam.updatedAt?.substring(0,4)})</Text>
+          <Text></Text>
+          <Link to={"/examination/"+exam.id}><Button width="200px" marginTop={30}>Update Exam</Button></Link>          
+        </Grid>
+      </Grid>
+      </div>
+      {/* Patient record details */}
+    </div>
+  );
+}
 
 export default ExamRecords;

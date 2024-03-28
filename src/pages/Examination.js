@@ -9,7 +9,7 @@ import * as React from 'react';
 import { Amplify, Storage } from 'aws-amplify';
 import { withAuthenticator, Button, Text, Accordion } from '@aws-amplify/ui-react';
 import { DataStore } from '@aws-amplify/datastore';
-import { Diagnoses, Patient } from '../models'
+import { Diagnoses, Patient, Exam } from '../models'
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from '../aws-exports';
 import DiagnosisPopup from "../components/DiagnosisPopup.jsx";
@@ -54,6 +54,7 @@ function Examination(props) {
   const [imagePath, setImagePath] = useState(lefteyeSource);
   const [displayPdf, setPDF] = useState("");
   const [patient, setPatient] = useState("");
+  const [exam, setExam] = useState("");
   const [annotations, setAnnotations] = useState(new Map());
   const { id } = useParams() // get patient id from url
 
@@ -191,21 +192,45 @@ function Examination(props) {
   useEffect(() => {
     // Fetch list of patients 
     // console.log(id)
-    fetchPatients(id) 
-      .then(pt => {
-        setPatient(pt);
+    fetchExam(id) 
+      .then(exam => {
+        // console.log(exam)
+        setExam(exam);
       });
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    // Fetch list of patients 
+    // console.log(id)
+    fetchPatients(exam.patientID) 
+      .then(patient => {
+        setPatient(patient);
+      });
+  }, [exam]);
 
   //Updates the PDF after the patient information has been saved
   useEffect(() => {
     reloadPDF(new Map());
   }, [patient]);
 
+  async function fetchExam(id) {
+    // API call to get patients
+    try {
+      const posts = await DataStore.query(Exam, id);
+      // console.log(posts)
+      return posts;
+    } catch (error) {
+      console.log('Error retrieving posts', error);
+    }
+    return [];
+  }
+
   async function fetchPatients(id) {
     // API call to get patients
     try {
+      // console.log(id)
       const posts = await DataStore.query(Patient, id);
+      // console.log(posts)
       return posts;
     } catch (error) {
       console.log('Error retrieving posts', error);
