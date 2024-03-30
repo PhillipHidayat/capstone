@@ -35,8 +35,10 @@ const DiagnosisPopup = (props) => {
   var image_type = "";
 
   if(props.image.includes("inner")){ image_type= "inner"; }
-  if(props.image.includes("left")){ image_type= "left"; }
-  if(props.image.includes("right")){ image_type= "right"; }
+  else if(props.image.includes("left-eye")){ image_type= "left-eye"; }
+  else if(props.image.includes("right-eye")){ image_type= "right-eye"; }
+  else if(props.image.includes("macula_left")){image_type = "macula_left";}
+  else if(props.image.includes("macula_right")){image_type = "macula_right";}
 
   let type = null;
   let options = ["Select..."];

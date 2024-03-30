@@ -66,8 +66,10 @@ const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, ret
     function linesToDraw(){
       let image_type = "";
       if(image.includes("inner")){ image_type= "inner"; }
-      else if(image.includes("left")){ image_type= "left"; }
-      else if(image.includes("right")){ image_type= "right"; }
+      else if(image.includes("left-eye")){ image_type= "left-eye"; }
+      else if(image.includes("right-eye")){ image_type= "right-eye"; }
+      else if(image.includes("macula_left")){image_type = "macula_left";}
+      else if(image.includes("macula_right")){image_type = "macula_right";}
       let tempList = [];
       for(let i = 0; i < lines.length; i++) {
         if (annotations.has(lines[i].id) && image.includes(annotations.get(lines[i].id).img)) {
@@ -83,6 +85,7 @@ const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, ret
       return tempList;
     }
     
+    console.log(width + "X" + height)
     
     return(
         <Stage

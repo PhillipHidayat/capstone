@@ -4,6 +4,8 @@ import "../App.css";
 import lefteyeSource from "../images/left-eye.jpg";
 import righteyeSource from "../images/right-eye.jpg";
 import innereyeSource from "../images/inner-eye.jpg";
+import maculaRight from "../images/macula_right.jpg";
+import maculaLeft from "../images/macula_left.jpg";
 import CanvasApp from "../components/CanvasApp";
 import * as React from 'react';
 import { Amplify, Storage } from 'aws-amplify';
@@ -41,6 +43,7 @@ function Examination(props) {
   const [lineColor, setLineColor] = useState("#000000");
   const [brushSize, setLineWidth] = useState(10);
   const [brushOpacity, setLineOpacity] = useState(1);
+  const [height, setHeight] = useState(834);
   
   //Properties that are sent to DiagnosisPopUp
   const [popupVisible, setPopupVisible] = useState(false)
@@ -73,11 +76,15 @@ function Examination(props) {
       diagnosis.Diagnoses = value.diagnosis;
       diagnosis.Notes = value.comment; // diagnosis has comments
 
-      let img = "left";
-      if (imagePath.includes("right")) {
-        img = "right";
+      let img = "left-eye";
+      if (imagePath.includes("right-eye")) {
+        img = "right-eye";
       }else if (imagePath.includes("inner")) {
         img = "inner";
+      }else if (imagePath.includes("macula_right")) {
+        img = "macula_right";
+      }else if (imagePath.includes("macula_left")) {
+        img = "macula_left"
       }
       diagnosis.LocationDetails = {x: xCoord, y: yCoord, bSize: brushSize, bColor: lineColor, bOpacity: brushOpacity, img: img};
     
@@ -225,10 +232,15 @@ function Examination(props) {
   };
 
   let button = null;
-  if (imagePath.includes("left")) {
+  if (imagePath.includes("left-eye")) {
     button = <button class="btnRight" onClick={() => {setImagePath(righteyeSource);}}>{'Right'}</button>;
-  } else if(imagePath.includes("right")) {
+  } else if(imagePath.includes("right-eye")) {
     button = <button class="btnLeft" onClick={() => {setImagePath(lefteyeSource);}}>{'Left'}</button>;
+  }
+  else if (imagePath.includes("macula_left")) {
+    button = <button class="btnRight" style={{height:'983px'}} onClick={() => {setImagePath(maculaRight);}}>{'Right'}</button>;
+  } else if(imagePath.includes("macula_right")) {
+    button = <button class="btnLeft" style={{height:'983px'}} onClick={() => {setImagePath(maculaLeft);}}>{'Left'}</button>;
   }
 
   return (
@@ -243,17 +255,18 @@ function Examination(props) {
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
-      <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource);}}>Outer Eye</Button>
-      <Button className="image_selection" onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</Button>
-      <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
+        <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource); setHeight(834);}}>Outer Eye</Button>
+        <Button className="image_selection" onClick={() => {setImagePath(innereyeSource); setHeight(834);}}>Side View</Button>
+        <Button className="image_selection" onClick={() => {setImagePath(maculaRight); setHeight(979);}}>Macula</Button>
+        <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
       </div>
       <div className="draw-area" >
         <div className="background-image" style={{
         backgroundImage: `url(${imagePath})`,
-        backgroundSize: '1024px 834px',
-        height: '834px'
+        backgroundSize:'1024px ' + height + 'px',
+        height: height + 'px'
       }}>
-        <CanvasApp width={1024} height={834} popup = {handleSetPopUp} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
+        <CanvasApp width={1024} height={height} popup = {handleSetPopUp} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
         returnCoords = {handleCoords} annotations={annotations} image={imagePath} setAnnotations={setAnnotations} lines={lines} setLines={setLines} state={state} setState={setState}/>
         </div>
         {button}
