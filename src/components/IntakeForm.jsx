@@ -54,6 +54,7 @@ function IntakeForm(props){
         setphccLeft(form["phccLeftKey"])
         setphccLeftplusmin(form["phccLeftplusminKey"])
         setphccRight(form["phccRightKey"])
+        setphccRightplusmin(form["phccRightplusminKey"])
         setnearscRight(form["nearscRightKey"])
         setnearscLeft(form["nearscLeftKey"])
         setnearccRight(form["nearccRightKey"])
