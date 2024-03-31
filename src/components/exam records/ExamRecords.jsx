@@ -253,7 +253,7 @@ function ExamProfile(props,{exam}) {
         <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem">   
           <Text>Last Change: ({exam.updatedAt?.substring(5,7)},{exam.updatedAt?.substring(8,10)},{exam.updatedAt?.substring(0,4)})</Text>
           <Text></Text>
-          <Link to={"/examination/"+exam.id}><Button width="200px" marginTop={30}>Update Exam</Button></Link>          
+          <Link to={"/intake/"+exam.id}><Button width="200px" marginTop={30}>Update Exam</Button></Link>          
         </Grid>
       </Grid>
       </div>
