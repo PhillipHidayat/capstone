@@ -123,7 +123,7 @@ function IntakeForm(props){
                 <TextAreaField value={method} onChange={(e) => setMethod(e.target.value)}></TextAreaField>
             </Grid>
 
-            <SelectField value={lense} onChange={(e) => console.log(e.target.value)}>
+            <SelectField value={lense} onChange={(e) => setLense(e.target.value)}>
                 <option value="Glasses">Glasses</option>
                 <option value="Contacts">Contacts</option>
             </SelectField>
