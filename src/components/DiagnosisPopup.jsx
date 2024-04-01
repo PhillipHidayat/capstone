@@ -163,15 +163,20 @@ const DiagnosisPopup = (props) => {
           props.setAnnotations(tempMap);
           props.setTrigger(false);
           props.onSave(tempMap);
+          if(props.pdfToggled) {
+            props.reloadPDF(tempMap);
           }
+        }
         }>Done</button>
         <button className="delete-button" onClick= {() => {
           let tempMap = new Map(props.annotations);
           let attempt = props.annotations.get(props.circle_key);
           if(attempt != null){tempMap.delete(props.circle_key)}
           props.setAnnotations(tempMap);
+          if(props.pdfToggled){
+            props.reloadPDF(tempMap);
+          }
           // props.onSave(tempMap);
-          props.reloadPDF(tempMap);
           props.setTrigger(false); 
           props.delete_circle(props.circle_key);
           props.onDelete(props.circle_key)

@@ -59,11 +59,11 @@ function Examination(props) {
   const [patient, setPatient] = useState("");
   const [annotations, setAnnotations] = useState(new Map());
   const { id } = useParams() // get patient id from url
+  const [pdfToggled, setToggle] = useState(false);
 
 
   //Annotations Set Up and functions
   async function onSaveHandler(tempMap){
-    reloadPDF(tempMap);
     tempMap.forEach(async (value, key)=>{
       let diagnosis = {
         Exam: "test",
@@ -139,7 +139,9 @@ function Examination(props) {
     }
     setLines(l);
     setAnnotations(tempMap);
-    reloadPDF(tempMap);
+    if(pdfToggled){
+      reloadPDF(tempMap);
+    }
   };
 
   //Function used to define the HTML formatting for the PDF Preview
@@ -255,14 +257,14 @@ function Examination(props) {
         <h2 style={{textAlign: "left", color:'black', marginTop:"0"}}> Patient: {patient?.First_Name} {patient?.Last_Name}</h2>
       </div>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
-      onSave={onSaveHandler} image={imagePath} onDelete={deleteDiagnoses} reloadPDF={reloadPDF} annotations={annotations}
+      onSave={onSaveHandler} image={imagePath} onDelete={deleteDiagnoses} reloadPDF={reloadPDF} pdfToggled={pdfToggled} annotations={annotations} 
       setAnnotations={setAnnotations}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
         <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource); setHeight(834);}}>Outer Eye</Button>
         <Button className="image_selection" onClick={() => {setImagePath(innereyeSource); setHeight(834);}}>Side View</Button>
-        <Button className="image_selection" onClick={() => {setImagePath(maculaRight); setHeight(979);}}>Macula</Button>
+        <Button className="image_selection" onClick={() => {setImagePath(maculaLeft); setHeight(979);}}>Macula</Button>
         <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
       </div>
       <div className="draw-area" >
@@ -282,7 +284,8 @@ function Examination(props) {
           marginTop="4px"
           borderRadius="1rem"
         >
-          <Accordion.Trigger width={1276} style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}>
+          <Accordion.Trigger width={1276} style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}} 
+          onClick={() => {if(!pdfToggled){reloadPDF(annotations)}; setToggle(!pdfToggled); }}>
             <Text fontSize={20} width="100%" textAlign="center">View PDF</Text>            
             <Accordion.Icon/>
           </Accordion.Trigger>
