@@ -192,7 +192,12 @@ function Examination(props) {
       s += "</td></tr>";
     });
     s += "\n</table>\n</body>\n</html>";
-    html2pdf().from(s).outputPdf().then(function(pdf){setPDF(btoa(pdf));});
+    html2pdf().from(s).outputPdf('bloburl').then(
+      function(pdf)
+      {
+        setPDF(pdf);
+      }
+    );
   }
 
   useEffect(() => {
@@ -284,7 +289,7 @@ function Examination(props) {
           <Accordion.Content style={{display:"flex", justifyContent:"center", alignItems:"center", margin:"1rem"}}>
             <div id="markdown-rectangle">
               {
-              <embed src={`data:application/pdf;base64,${displayPdf}`} height= '100%' width='100%'/>
+              <iframe src={displayPdf} height= '100%' width='100%' title="EXAM"/>
               }
             </div>
           </Accordion.Content>

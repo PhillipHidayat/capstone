@@ -85,8 +85,6 @@ const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, ret
       return tempList;
     }
     
-    console.log(width + "X" + height)
-    
     return(
         <Stage
             onMouseUp={handleMouseUp}
