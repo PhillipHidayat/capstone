@@ -157,7 +157,7 @@ function Examination(props) {
     "<br>Date of Birth: " + patient?.Date_Of_Birth +
     "<br>Phone Number: " + patient?.Phone + "</h3>\n<table class=\"center\"style=\"table-layout:fixed\"width=\"80%\" border=\"1\">";
 
-    var locationList = ["Iris", "Vessels", "Macula", "Disc", "Select..."];
+    var locationList = ["Iris", "Vessels", "Macula", "Disc", "Lens", "Lids/Lashes", "Anterior Chamber", "Vitreous", "Cornea", "Conjunctiva", "Select..."];
 
     locationList.forEach((category) => {
       var isFirst = true;
