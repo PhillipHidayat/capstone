@@ -34,9 +34,12 @@ const DiagnosisPopup = (props) => {
   const irisCenter = 590;
   var image_type = "";
 
-  if(props.image.includes("inner")){ image_type= "inner"; }
-  if(props.image.includes("left")){ image_type= "left"; }
-  if(props.image.includes("right")){ image_type= "right"; }
+  if(props.image.includes("inner")){ 
+    image_type= "inner"; }
+  if(props.image.includes("left")){ 
+    image_type= "left"; }
+  if(props.image.includes("right")){ 
+    image_type= "right"; }
 
   let type = null;
   let options = ["Select..."];
@@ -46,8 +49,10 @@ const DiagnosisPopup = (props) => {
   function handleComment(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
-    if(attempt != null){tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location, image_type))}
-    else{tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location, image_type))} 
+    if(attempt != null){
+      tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location, image_type))}
+    else{
+      tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location, image_type))} 
     //setAnnotations(tempMap);
     //props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
@@ -57,8 +62,10 @@ const DiagnosisPopup = (props) => {
   function handleDiagnosis(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
-    if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location, image_type))}
-    else{tempMap.set(props.circle_key, new annotation(comment, e.target.value, location, image_type))}
+    if(attempt != null){
+      tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location, image_type))}
+    else{
+      tempMap.set(props.circle_key, new annotation(comment, e.target.value, location, image_type))}
     //setAnnotations(tempMap); 
     // props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
@@ -68,9 +75,12 @@ const DiagnosisPopup = (props) => {
   function handleLocation(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
-    if (attempt != null && attempt.diagnosis == "Select..."){attempt.diagnosis="Normal";}
-    if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
-    else{tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
+    if (attempt != null && attempt.diagnosis == "Select..."){
+      attempt.diagnosis="Normal";}
+    if(attempt != null){
+      tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
+    else{
+      tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
     // setAnnotations(tempMap);
     // props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
@@ -134,7 +144,7 @@ const DiagnosisPopup = (props) => {
       <div className="popup-inner">
         <h3>Location</h3>
         <div className= "location-dropdown">
-            <select className= "location-select" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).location : 'Select...'} onChange={handleLocation}>
+            <select className= "location-select" data-testid="location-dropdown" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).location : 'Select...'} onChange={handleLocation}>
                 <option>Select...</option>
                 <option>Disc</option>
                 <option>Macula</option>
@@ -144,15 +154,15 @@ const DiagnosisPopup = (props) => {
         </div>
         <h3>Diagnosis</h3>
         <div className= "dropdown">
-            <select className = "form-select" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).diagnosis : 'Select...'} onChange = {handleDiagnosis}>
+            <select className = "form-select" data-testid="diagnosis-dropdown" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).diagnosis : 'Select...'} onChange = {handleDiagnosis}>
               {options}
             </select>
         </div>
         <h3>Comments</h3>
-          <textarea name = "comment" type = "text" id = "comment" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).comment : ''} onChange={handleComment}></textarea>
+        <textarea name = "comment" data-testid="comments" type = "text" id = "comment" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).comment : ''} onChange={handleComment}></textarea>
         <br/>
         <br/>
-        <button className="done-button" onClick= {() => {
+        <button className="done-button" data-testid="done-button" onClick= {() => {
           let tempMap = new Map(props.annotations);
           let attempt = props.annotations.get(props.circle_key);
           if(attempt == null){
@@ -163,10 +173,11 @@ const DiagnosisPopup = (props) => {
           props.onSave(tempMap);
           }
         }>Done</button>
-        <button className="delete-button" onClick= {() => {
+        <button className="delete-button" data-testid="delete-button"onClick= {() => {
           let tempMap = new Map(props.annotations);
           let attempt = props.annotations.get(props.circle_key);
-          if(attempt != null){tempMap.delete(props.circle_key)}
+          if(attempt != null){
+            tempMap.delete(props.circle_key)}
           props.setAnnotations(tempMap);
           // props.onSave(tempMap);
           props.reloadPDF(tempMap);
