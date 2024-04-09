@@ -103,6 +103,7 @@ describe('DiagnosisPopup Component Tests', () => {
 
         // test that annotation is added
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+        expect(onSaveMock).toHaveBeenCalledWith(anns);
     });
 
     // Test delete button
@@ -142,6 +143,11 @@ describe('DiagnosisPopup Component Tests', () => {
 
         // check that annotation is removed
         expect(setAnnotationsMock).toHaveBeenCalledWith(new Map());
+        expect(onDeleteMock).toHaveBeenCalledWith(1);
+        expect(delete_circleMock).toHaveBeenCalledWith(1);
+
+        // check that pdf is reloaded
+        expect(reloadPDFMock).toHaveBeenCalledWith(new Map());
     });
 
     // Test disc
