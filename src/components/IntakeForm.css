@@ -1,0 +1,19 @@
+.container {
+    margin-top: 2rem;
+    margin-left: 10rem;
+    margin-right: 10rem;
+    align-self: center;
+    padding: 2rem;
+    border-radius: 1rem;
+	width: calc(100% - 15rem);
+	box-shadow: 0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1);
+    min-width: min-content;
+}
+
+.container .amplify-textarea {
+    height: 50px;
+}
+
+.container .amplify-text {
+    font-weight: bold;
+}
