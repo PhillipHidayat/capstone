@@ -25,11 +25,11 @@ npm install
 ```
 4. Install AWS Amplify here https://docs.amplify.aws/ (Get started for free -> React -> Amplify CLI -> Install Amplify CLI)
 5. Follow the steps on getting started and signing into the amplify CLI. 
-6. run
+6. run the following command to spin up the required AWS resources (This will take some time).
 ```
 amplify push
 ```
-to spin up the required AWS resources (This will take some time).
+
 7. To run the application:
 ```
 npm start
