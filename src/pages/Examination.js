@@ -9,12 +9,13 @@ import * as React from 'react';
 import { Amplify, Storage } from 'aws-amplify';
 import { withAuthenticator, Button, Text, Accordion } from '@aws-amplify/ui-react';
 import { DataStore } from '@aws-amplify/datastore';
-import { Diagnoses, Patient, Exam } from '../models'
+import { Diagnoses, Patient, Exam , Shorthand} from '../models'
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from '../aws-exports';
 import DiagnosisPopup from "../components/DiagnosisPopup.jsx";
 import html2pdf from 'html2pdf.js';
 import { useParams } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 Amplify.configure(awsconfig);
 
@@ -110,8 +111,8 @@ function Examination(props) {
   }
   
   async function loadDiagnosesForPatient(){
-    let exam1 = await DataStore.query(Exam, exam.id) // so data is not stale
-    let diagnoses = await exam1.Diagnoses.toArray();
+    //let exam1 = await DataStore.query(Exam, exam.id) // so data is not stale
+    let diagnoses = await exam.Diagnoses?.toArray();
     console.log(diagnoses)
     handleLoad(diagnoses);
   }
@@ -127,7 +128,7 @@ function Examination(props) {
   const handleLoad = (diags) => {
     let l = [];
     let tempMap = new Map(annotations);
-    for (let i = 0; i < diags.length; i++) {
+    for (let i = 0; i < diags?.length; i++) {
       let d = diags[i];
       let ann = d.LocationDetails;
       tempMap.set(d.Key, new annotation(d.Notes, d.Diagnoses, d.Location, ann.img));
@@ -135,7 +136,7 @@ function Examination(props) {
     }
     setLines(l);
     setAnnotations(tempMap);
-    // reloadPDF(tempMap);
+    //reloadPDF(tempMap);
   };
 
   //Function used to define the HTML formatting for the PDF Preview
@@ -179,9 +180,9 @@ function Examination(props) {
         if(values.location == category){
           if(values.comment != ""){
           if(isFirst){
-            s+= " " + values.comment;
+            s+= " " + convertShorthand(values.comment);
             isFirst = false;
-          }else{s += ", " + values.comment;}
+          }else{s += ", " + convertShorthand(values.comment);}
           }
         }
         });
@@ -190,6 +191,23 @@ function Examination(props) {
     s += "\n</table>\n</body>\n</html>";
     html2pdf().from(s).outputPdf().then(function(pdf){setPDF(btoa(pdf));});
   }
+
+  function convertShorthand(note) {
+    let parts = note.split(" ");
+    var s = "";
+    for(let i = 0; i < parts.length; i++){
+      if(props.shorthand.has(parts[i].toLowerCase())){
+        s += props.shorthand.get(parts[i].toLowerCase()) + ' ';
+      } else {
+        s += parts[i] + ' ';
+      }
+    }
+    return s;
+  }
+
+  useEffect(() => {
+    loadDiagnosesForPatient();
+  }, [exam])
 
   useEffect(() => {
     // Fetch list of patients 
@@ -259,14 +277,14 @@ function Examination(props) {
       </div>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
       onSave={onSaveHandler} image={imagePath} onDelete={deleteDiagnoses} reloadPDF={reloadPDF} annotations={annotations}
-      setAnnotations={setAnnotations}></DiagnosisPopup>
+      setAnnotations={setAnnotations} shorthand={props.shorthand}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
       <Button className="image_selection" onClick={() => {setImagePath(righteyeSource);}}>Right Eye</Button>
       <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</Button>
       <Button className="image_selection" onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</Button>
-      <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
+      {/*<Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button> */}
       </div>
       <div className="draw-area" >
         <div className="background-image" style={{
@@ -279,6 +297,7 @@ function Examination(props) {
         </div>
       
       </div>
+      <Link to={"/summary/"+id}><Button width="200px" marginTop={30}>Save and Next</Button></Link> 
       <Accordion.Container margin="1rem">
         <Accordion.Item
           marginBottom="4px"

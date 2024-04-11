@@ -31,6 +31,9 @@ function Navbar(props){
                         <li>
                             <Link className="item" to="/records" > Patients </Link>
                         </li>
+                        <li>
+                            <a className="item" onClick={() =>props.setTrigger(true)}> Shorthand </a>
+                        </li>
                     </ul>                
                     
                 </div>    

@@ -28,6 +28,7 @@ const DiagnosisPopup = (props) => {
   const empty = ["Select..."];
 
   var comment = '';
+  let preview = '';
   var location = 'Select...';
   var diagnosis = 'Select...';
   const irisRadius = 195;
@@ -40,16 +41,25 @@ const DiagnosisPopup = (props) => {
 
   let type = null;
   let options = ["Select..."];
-  // props.setAnnotations()
-  // props.updatePoints(props.annotations);
+
+  function convertShorthand(note) {
+    let parts = note.split(" ");
+    var s = "";
+    for(let i = 0; i < parts.length; i++){
+      if(props.shorthand.has(parts[i].toLowerCase())){
+        s += props.shorthand.get(parts[i].toLowerCase()) + ' ';
+      } else {
+        s += parts[i] + ' ';
+      }
+    }
+    return s;
+  }
 
   function handleComment(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
     if(attempt != null){tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location, image_type))}
     else{tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location, image_type))} 
-    //setAnnotations(tempMap);
-    //props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
     comment = e.target.value;
   }
@@ -59,8 +69,6 @@ const DiagnosisPopup = (props) => {
     let attempt = props.annotations.get(props.circle_key);
     if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location, image_type))}
     else{tempMap.set(props.circle_key, new annotation(comment, e.target.value, location, image_type))}
-    //setAnnotations(tempMap); 
-    // props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
     diagnosis = e.target.value;
   }
@@ -71,8 +79,6 @@ const DiagnosisPopup = (props) => {
     if (attempt != null && attempt.diagnosis == "Select..."){attempt.diagnosis="Normal";}
     if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
     else{tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
-    // setAnnotations(tempMap);
-    // props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
     location = e.target.value; 
     switch(e.target.value){
@@ -115,8 +121,6 @@ const DiagnosisPopup = (props) => {
   } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
     let tempMap = new Map(props.annotations);
     tempMap.set(props.circle_key, new annotation(comment, diagnosis, "Iris", image_type));
-    // setAnnotations(tempMap);
-    // props.updatePoints(tempMap);
     props.setAnnotations(tempMap);
     type = iris;
     location = "Iris";
@@ -151,6 +155,8 @@ const DiagnosisPopup = (props) => {
         <h3>Comments</h3>
           <textarea name = "comment" type = "text" id = "comment" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).comment : ''} onChange={handleComment}></textarea>
         <br/>
+        <h3>Preview:</h3>
+        <textarea disabled value={convertShorthand(comment)}></textarea>
         <br/>
         <button className="done-button" onClick= {() => {
           let tempMap = new Map(props.annotations);
