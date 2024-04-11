@@ -4,6 +4,8 @@ import "../App.css";
 import lefteyeSource from "../images/left-eye.jpg";
 import righteyeSource from "../images/right-eye.jpg";
 import innereyeSource from "../images/inner-eye.jpg";
+import maculaRight from "../images/macula_right.jpg";
+import maculaLeft from "../images/macula_left.jpg";
 import CanvasApp from "../components/CanvasApp";
 import * as React from 'react';
 import { Amplify, Storage } from 'aws-amplify';
@@ -42,6 +44,7 @@ function Examination(props) {
   const [lineColor, setLineColor] = useState("#000000");
   const [brushSize, setLineWidth] = useState(10);
   const [brushOpacity, setLineOpacity] = useState(1);
+  const [height, setHeight] = useState(834);
   
   //Properties that are sent to DiagnosisPopUp
   const [popupVisible, setPopupVisible] = useState(false)
@@ -58,12 +61,11 @@ function Examination(props) {
   const [exam, setExam] = useState("");
   const [annotations, setAnnotations] = useState(new Map());
   const { id } = useParams() // get patient id from url
+  const [pdfToggled, setToggle] = useState(false);
 
 
   //Annotations Set Up and functions
   async function onSaveHandler(tempMap){
-    // reloadPDF(tempMap);
-    // console.log(tempMap)
     tempMap.forEach(async (value, key)=>{
       let diagnosis = {
         Exam: "test",
@@ -76,11 +78,15 @@ function Examination(props) {
       diagnosis.Diagnoses = value.diagnosis;
       diagnosis.Notes = value.comment; // diagnosis has comments
 
-      let img = "left";
-      if (imagePath.includes("right")) {
-        img = "right";
+      let img = "left-eye";
+      if (imagePath.includes("right-eye")) {
+        img = "right-eye";
       }else if (imagePath.includes("inner")) {
         img = "inner";
+      }else if (imagePath.includes("macula_right")) {
+        img = "macula_right";
+      }else if (imagePath.includes("macula_left")) {
+        img = "macula_left"
       }
       diagnosis.LocationDetails = {x: xCoord, y: yCoord, bSize: brushSize, bColor: lineColor, bOpacity: brushOpacity, img: img};
     
@@ -136,7 +142,9 @@ function Examination(props) {
     }
     setLines(l);
     setAnnotations(tempMap);
-    //reloadPDF(tempMap);
+    if(pdfToggled){
+      reloadPDF(tempMap);
+    }
   };
 
   //Function used to define the HTML formatting for the PDF Preview
@@ -152,7 +160,7 @@ function Examination(props) {
     "<br>Date of Birth: " + patient?.Date_Of_Birth +
     "<br>Phone Number: " + patient?.Phone + "</h3>\n<table class=\"center\"style=\"table-layout:fixed\"width=\"80%\" border=\"1\">";
 
-    var locationList = ["Iris", "Vessels", "Macula", "Disc", "Select..."];
+    var locationList = ["Iris", "Vessels", "Macula", "Disc", "Lens", "Lids/Lashes", "Anterior Chamber", "Vitreous", "Cornea", "Conjunctiva", "Select..."];
 
     locationList.forEach((category) => {
       var isFirst = true;
@@ -189,7 +197,12 @@ function Examination(props) {
       s += "</td></tr>";
     });
     s += "\n</table>\n</body>\n</html>";
-    html2pdf().from(s).outputPdf().then(function(pdf){setPDF(btoa(pdf));});
+    html2pdf().from(s).outputPdf('bloburl').then(
+      function(pdf)
+      {
+        setPDF(pdf);
+      }
+    );
   }
 
   function convertShorthand(note) {
@@ -269,6 +282,18 @@ function Examination(props) {
     setYCoord(y);
   };
 
+  let button = null;
+  if (imagePath.includes("left-eye")) {
+    button = <button class="btnRight" onClick={() => {setImagePath(righteyeSource);}}>{'Right'}</button>;
+  } else if(imagePath.includes("right-eye")) {
+    button = <button class="btnLeft" onClick={() => {setImagePath(lefteyeSource);}}>{'Left'}</button>;
+  }
+  else if (imagePath.includes("macula_left")) {
+    button = <button class="btnRight" style={{height:'983px'}} onClick={() => {setImagePath(maculaRight);}}>{'Right'}</button>;
+  } else if(imagePath.includes("macula_right")) {
+    button = <button class="btnLeft" style={{height:'983px'}} onClick={() => {setImagePath(maculaLeft);}}>{'Left'}</button>;
+  }
+
   return (
     <div className="App" >
       <div className="box">
@@ -276,26 +301,26 @@ function Examination(props) {
         <h2 style={{textAlign: "left", color:'black', marginTop:"0"}}> Patient: {patient?.First_Name} {patient?.Last_Name}</h2>
       </div>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
-      onSave={onSaveHandler} image={imagePath} onDelete={deleteDiagnoses} reloadPDF={reloadPDF} annotations={annotations}
-      setAnnotations={setAnnotations} shorthand={props.shorthand}></DiagnosisPopup>
+      onSave={onSaveHandler} image={imagePath} onDelete={deleteDiagnoses} reloadPDF={reloadPDF} pdfToggled={pdfToggled} annotations={annotations} 
+      setAnnotations={setAnnotations}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
-      <Button className="image_selection" onClick={() => {setImagePath(righteyeSource);}}>Right Eye</Button>
-      <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource);}}>Left Eye</Button>
-      <Button className="image_selection" onClick={() => {setImagePath(innereyeSource);}}>Inner Eye</Button>
-      {/*<Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button> */}
+        <Button className="image_selection" onClick={() => {setImagePath(lefteyeSource); setHeight(834);}}>Outer Eye</Button>
+        <Button className="image_selection" onClick={() => {setImagePath(innereyeSource); setHeight(834);}}>Side View</Button>
+        <Button className="image_selection" onClick={() => {setImagePath(maculaLeft); setHeight(979);}}>Macula</Button>
+        <Button className="image_selection" onClick={loadDiagnosesForPatient}>Load Annotations</Button>
       </div>
       <div className="draw-area" >
         <div className="background-image" style={{
         backgroundImage: `url(${imagePath})`,
-        backgroundSize: '1024px 834px',
-        height: '834px'
+        backgroundSize:'1024px ' + height + 'px',
+        height: height + 'px'
       }}>
-        <CanvasApp width={1024} height={834} popup = {handleSetPopUp} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
+        <CanvasApp width={1024} height={height} popup = {handleSetPopUp} lineColor={lineColor} brushSize={brushSize} brushOpacity={brushOpacity} 
         returnCoords = {handleCoords} annotations={annotations} image={imagePath} setAnnotations={setAnnotations} lines={lines} setLines={setLines} state={state} setState={setState}/>
         </div>
-      
+        {button}
       </div>
       <Link to={"/summary/"+id}><Button width="200px" marginTop={30}>Save and Next</Button></Link> 
       <Accordion.Container margin="1rem">
@@ -304,14 +329,15 @@ function Examination(props) {
           marginTop="4px"
           borderRadius="1rem"
         >
-          <Accordion.Trigger width={1276} style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}>
+          <Accordion.Trigger width={1276} style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}} 
+          onClick={() => {if(!pdfToggled){reloadPDF(annotations)}; setToggle(!pdfToggled); }}>
             <Text fontSize={20} width="100%" textAlign="center">View PDF</Text>            
             <Accordion.Icon/>
           </Accordion.Trigger>
           <Accordion.Content style={{display:"flex", justifyContent:"center", alignItems:"center", margin:"1rem"}}>
             <div id="markdown-rectangle">
               {
-              <embed src={`data:application/pdf;base64,${displayPdf}`} height= '100%' width='100%'/>
+              <iframe src={displayPdf} height= '100%' width='100%' title="EXAM"/>
               }
             </div>
           </Accordion.Content>

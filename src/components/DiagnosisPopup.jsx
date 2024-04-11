@@ -27,6 +27,20 @@ const DiagnosisPopup = (props) => {
   "Periph iridectomy", "Posterior synechiae", "Pseudoexfoliation", "Sphincter tear", "Transillumination defects"];
   const empty = ["Select..."];
 
+  //New Categories
+  const vitreous = ["Normal", "Asteroid Hyalosis", "Cells", "Central Vitreous Floaters", "Haze", "Hemmorrhage", "Membranes",
+  "Posterior Vitreous Detachment", "Shafer's Sign", "Vitreous Syneresis", "Weiss Ring"];
+  const lens = ["Normal", "AC IOL", "Ant cortical changes", "ASC", "Aphakia", "Cortical cataract", "Cortical spokes", "Mittendorf dot",
+  "Nuclear sclerosis", "Open posterior capsule", "Pigment deposits", "PCO", "PC IOL", "PSC", "Pseudoexfoliation", "Subluxed", "Vacuoles"];
+  const AC = ["Normal", "Cell", "Fibrin", "Flare", "Flat", "Gas Bubble", "Hyphema", "Narrow angle", "Shallow", "Tube", "Vitreous strands"];
+  const cornea = ["Normal", "Clear incision", "Debris in tear film", "Degeneration", "Dendrite", "Descemet's folds", "Dystrophy", "Edema", "Epithelial defect",
+  "Guttata", "Infiltrates", "Keratic precipitates", "Keratitis", "Krukenberg's spindle", "Neovascularization", "Opacity", "Keratoplasty", "PEE", "Scar", "Striae"];
+  const conjunctiva = ["Normal", "Bleb", "Chemosis", "Concretions", "Conjuctivochalasis", "Cyst", "Episcleritis", "Exudate", "Follicles", "GDD Implant", "Injection",
+  "Limbal flush", "Neoplasm", "Papilla", "Pigmentation", "Pinguecula", "Pterygium", "Scleritis", "Subconj hemmorrhage", "Trauma"];
+  const lids = ["Normal", "Blepharitis", "Chalazlon", "Collarettes", "Dermatochalasis UL", "Dermatochalasis LL", "Eccymosis", "Ectropion", "Entropion",
+  "Hordeolum", "Irregular lid margins", "Lid retraction", "Lid Thickening", "MGD", "Ptosis", "Scieral show", "Scurf", "Telangiectasia", 
+  "Trichiasis UL", "Trichiasis LL", "Xanthelasma"];
+
   var comment = '';
   let preview = '';
   var location = 'Select...';
@@ -35,9 +49,13 @@ const DiagnosisPopup = (props) => {
   const irisCenter = 590;
   var image_type = "";
 
-  if(props.image.includes("inner")){ image_type= "inner"; }
-  if(props.image.includes("left")){ image_type= "left"; }
-  if(props.image.includes("right")){ image_type= "right"; }
+  let imgOptions = ["Other"];
+
+  if(props.image.includes("inner")){ image_type= "inner"; imgOptions = ["Select...", "Lens", "Conjunctiva", "Anterior Chamber" , "Iris", "Vitreous" , "Other"];}
+  else if(props.image.includes("left-eye")){ image_type= "left-eye"; imgOptions = ["Select...", "Lens", "Lids/Lashes", "Anterior Chamber", "Iris", "Disc", "Conjunctiva", "Cornea", "Vitreous" ,"Other"];}
+  else if(props.image.includes("right-eye")){ image_type= "right-eye"; imgOptions = ["Select...", "Lens", "Lids/Lashes", "Anterior Chamber" ,"Iris", "Disc", "Conjunctiva", "Cornea", "Vitreous" ,"Other"];}
+  else if(props.image.includes("macula_left")){image_type = "macula_left"; imgOptions = ["Select...", "Macula", "Vessels", "Other"];}
+  else if(props.image.includes("macula_right")){image_type = "macula_right"; imgOptions = ["Select...", "Macula", "Vessels", "Other"];}
 
   let type = null;
   let options = ["Select..."];
@@ -94,6 +112,24 @@ const DiagnosisPopup = (props) => {
       case "Vessels":
         type = vessels;
         break;
+      case "Lens":
+        type = lens;
+        break;
+      case "Lids/Lashes":
+        type = lids;
+        break;
+      case "Anterior Chamber":
+        type = AC;
+        break;
+      case "Cornea":
+        type = cornea;
+        break;
+      case "Vitreous":
+        type = vitreous;
+        break;
+      case "Conjunctiva":
+        type = conjunctiva;
+        break;
       default:
         type = empty;
         break;
@@ -105,18 +141,50 @@ const DiagnosisPopup = (props) => {
   if (attempt != null){
     comment = attempt.comment;
     diagnosis = attempt.diagnosis;
-    if (attempt.location === "Disc") {
-      location = "Disc"; 
-      type = disc; 
-    } else if (attempt.location === "Macula") {
-      location = "Macula"; 
-      type = macula; 
-    } else if (attempt.location === "Vessels") { 
-      location = "Vessels";
-      type = vessels; 
-    } else if (attempt.location === "Iris") { 
-      location = "Iris";
-      type = iris;
+    switch(attempt.location){
+      case "Disc":
+        location = "Disc";
+        type = disc;
+        break;
+      case "Iris":
+        location = "Iris";
+        type = iris;
+        break;
+      case "Macula":
+        location = "Macula";
+        type = macula;
+        break;
+      case "Vessels":
+        location = "Vessels";
+        type = vessels;
+        break;
+      case "Lens":
+        location = "Lens";
+        type = lens;
+        break;
+      case "Lids/Lashes":
+        location = "Lids/Lashes";
+        type = lids;
+        break;
+      case "Anterior Chamber":
+        location = "Anterior Chamber";
+        type = AC;
+        break;
+      case "Cornea":
+        location = "Cornea";
+        type = cornea;
+        break;
+      case "Vitreous":
+        location = "Vitreous";
+        type = vitreous;
+        break;
+      case "Conjunctiva":
+        location = "Conjunctiva";
+        type = conjunctiva;
+        break;
+      default:
+        type = empty;
+        break;
     }
   } else if ((Math.pow(props.X - irisCenter, 2) + Math.pow(props.Y - irisCenter, 2)) <= Math.pow(irisRadius, 2)){
     let tempMap = new Map(props.annotations);
@@ -139,11 +207,7 @@ const DiagnosisPopup = (props) => {
         <h3>Location</h3>
         <div className= "location-dropdown">
             <select className= "location-select" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).location : 'Select...'} onChange={handleLocation}>
-                <option>Select...</option>
-                <option>Disc</option>
-                <option>Macula</option>
-                <option>Vessels</option>
-                <option>Iris</option>
+            {imgOptions.map((el) => <option key={el}>{el}</option>)}
             </select>
         </div>
         <h3>Diagnosis</h3>
@@ -167,15 +231,20 @@ const DiagnosisPopup = (props) => {
           props.setAnnotations(tempMap);
           props.setTrigger(false);
           props.onSave(tempMap);
+          if(props.pdfToggled) {
+            props.reloadPDF(tempMap);
           }
+        }
         }>Done</button>
         <button className="delete-button" onClick= {() => {
           let tempMap = new Map(props.annotations);
           let attempt = props.annotations.get(props.circle_key);
           if(attempt != null){tempMap.delete(props.circle_key)}
           props.setAnnotations(tempMap);
+          if(props.pdfToggled){
+            props.reloadPDF(tempMap);
+          }
           // props.onSave(tempMap);
-          props.reloadPDF(tempMap);
           props.setTrigger(false); 
           props.delete_circle(props.circle_key);
           props.onDelete(props.circle_key)

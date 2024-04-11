@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Text, Star, Circle} from 'react-konva';
 import React from 'react';
 let count;
-let highestID;
 let addNewLine = false;
 
 // Define a class to represent your data
@@ -21,7 +20,6 @@ class annotation {
 const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, returnCoords, annotations, image, setAnnotations, lines, setLines, state, setState})=>{
     const stageRef = React.useRef();
     useEffect(()=>{
-      highestID = 0;
       count = lines.length
       if (addNewLine==true){
         let tempState = {
@@ -66,8 +64,10 @@ const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, ret
     function linesToDraw(){
       let image_type = "";
       if(image.includes("inner")){ image_type= "inner"; }
-      else if(image.includes("left")){ image_type= "left"; }
-      else if(image.includes("right")){ image_type= "right"; }
+      else if(image.includes("left-eye")){ image_type= "left-eye"; }
+      else if(image.includes("right-eye")){ image_type= "right-eye"; }
+      else if(image.includes("macula_left")){image_type = "macula_left";}
+      else if(image.includes("macula_right")){image_type = "macula_right";}
       let tempList = [];
       for(let i = 0; i < lines.length; i++) {
         if (annotations.has(lines[i].id) && image.includes(annotations.get(lines[i].id).img)) {
@@ -82,7 +82,6 @@ const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, ret
       }
       return tempList;
     }
-    
     
     return(
         <Stage
@@ -102,7 +101,7 @@ const CanvasApp = ({width,height, popup, lineColor, brushSize, brushOpacity, ret
               x={line.points[0]}
               y={line.points[1]}
               radius={line.bSize} fill={state.isDragging && state.id ==i ? 'green' : line.bColor}
-              stroke = {state.lastLine.id == i ? 'yellow':'black'}
+              stroke = {state.id ==i ? 'yellow':'black'}
               shadowBlur = {5}
               opacity={line.bOpacity}
               draggable

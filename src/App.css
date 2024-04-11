@@ -39,6 +39,45 @@ h1 {
   position: relative;
   background-color: white;
 }
+
+/* Style the button and place it in the middle of the container/image */
+.draw-area .btnRight {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 12px;
+  padding: 410px 6px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.draw-area .btnRight:hover {
+  background-color: black;
+}
+
+.draw-area .btnLeft {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 12px;
+  padding: 410px 6px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.draw-area .btnLeft:hover {
+  background-color: black;
+}
   
 .Menu {
   width: 1024px;
