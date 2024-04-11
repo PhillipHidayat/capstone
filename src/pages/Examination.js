@@ -302,7 +302,7 @@ function Examination(props) {
       </div>
       <DiagnosisPopup X = {xCoord} Y = {yCoord} trigger= {popupVisible} setTrigger= {setPopupVisible} delete_circle={delete_circle} circle_key={key}
       onSave={onSaveHandler} image={imagePath} onDelete={deleteDiagnoses} reloadPDF={reloadPDF} pdfToggled={pdfToggled} annotations={annotations} 
-      setAnnotations={setAnnotations}></DiagnosisPopup>
+      setAnnotations={setAnnotations} shorthand={props.shorthand}></DiagnosisPopup>
       <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity}
       brushSize={brushSize} brushOpacity={brushOpacity} />
       <div className="button-container">
