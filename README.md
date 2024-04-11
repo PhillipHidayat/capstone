@@ -5,10 +5,14 @@
 MedCapture is a groundbreaking software system designed to empower medical professionals in their daily tasks. In the fast-paced world of healthcare, accurate documentation and effective communication are paramount. MedCapture addresses these critical needs by offering an intuitive touch interface that enables medical practitioners to efficiently identify, label, and highlight specific areas of concern during patient examinations.
 
 ## Deployement
-You can find us here: 
+You can find us here: https://nav-update.dr6qa5vtvriu2.amplifyapp.com/
+
+This prject was deployed using AWS Amplify. AWS Amplify offers a serverless platform for creating and deploying single page web applications. Our application was built using React for our front end web page as well as AWS for our back end resources. 
 
 
 ## Installation and Setup
+In addition to the steps below, you will need an AWS account with the proper IAM permissions and to access AWS Amplify otherwise you will not be able to generate a back end. 
+
 1. Clone the repository
 ```
 git clone https://capstone-cs.eng.utah.edu/medcapture/medcapture.git
@@ -20,7 +24,13 @@ cd medcapture
 npm install
 ```
 4. Install AWS Amplify here https://docs.amplify.aws/ (Get started for free -> React -> Amplify CLI -> Install Amplify CLI)
-5. To run the application:
+5. Follow the steps on getting started and signing into the amplify CLI. 
+6. run
+```
+amplify push
+```
+to spin up the required AWS resources (This will take some time).
+7. To run the application:
 ```
 npm start
 ```
