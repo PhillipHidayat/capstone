@@ -6,6 +6,76 @@ import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/
 
 
 
+type EagerShorthand = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Shorthand, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly User: string;
+  readonly key: string;
+  readonly value: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyShorthand = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Shorthand, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly User: string;
+  readonly key: string;
+  readonly value: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Shorthand = LazyLoading extends LazyLoadingDisabled ? EagerShorthand : LazyShorthand
+
+export declare const Shorthand: (new (init: ModelInit<Shorthand>) => Shorthand) & {
+  copyOf(source: Shorthand, mutator: (draft: MutableModel<Shorthand>) => MutableModel<Shorthand> | void): Shorthand;
+}
+
+type EagerExam = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Exam, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly Date: string;
+  readonly patientID: string;
+  readonly Diagnoses?: (Diagnoses | null)[] | null;
+  readonly IntakeForm: string;
+  readonly Summary: string;
+  readonly Technician?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyExam = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Exam, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly Date: string;
+  readonly patientID: string;
+  readonly Diagnoses: AsyncCollection<Diagnoses>;
+  readonly IntakeForm: string;
+  readonly Summary: string;
+  readonly Technician?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Exam = LazyLoading extends LazyLoadingDisabled ? EagerExam : LazyExam
+
+export declare const Exam: (new (init: ModelInit<Exam>) => Exam) & {
+  copyOf(source: Exam, mutator: (draft: MutableModel<Exam>) => MutableModel<Exam> | void): Exam;
+}
+
 type EagerDiagnoses = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Diagnoses, 'id'>;
@@ -20,7 +90,7 @@ type EagerDiagnoses = {
   readonly Rating?: number | null;
   readonly LocationDetails?: string | null;
   readonly Key: number;
-  readonly patientID: string;
+  readonly examID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -39,7 +109,7 @@ type LazyDiagnoses = {
   readonly Rating?: number | null;
   readonly LocationDetails?: string | null;
   readonly Key: number;
-  readonly patientID: string;
+  readonly examID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -64,7 +134,7 @@ type EagerPatient = {
   readonly Phone: string;
   readonly Email: string;
   readonly Provider: string;
-  readonly Diagnoses?: (Diagnoses | null)[] | null;
+  readonly Exams?: (Exam | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -83,7 +153,7 @@ type LazyPatient = {
   readonly Phone: string;
   readonly Email: string;
   readonly Provider: string;
-  readonly Diagnoses: AsyncCollection<Diagnoses>;
+  readonly Exams: AsyncCollection<Exam>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

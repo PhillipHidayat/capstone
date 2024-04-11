@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { DataStore, Predicates } from '@aws-amplify/datastore';
 import {Patient} from '../models'
 import { Button, Grid, Text, Accordion, SelectField, ThemeProvider, Theme } from "@aws-amplify/ui-react";
 import CreatPatientPopup from './CreatePatientPopup';
+import ErrorPopup from './ErrorPopup';
 import { SearchField } from '@aws-amplify/ui-react';
 import './PatientRecords.css'
 import { func } from 'prop-types';
@@ -10,21 +11,20 @@ import { Link } from 'react-router-dom'
 
 function PatientRecords() {
   const [patientList, setPatientList] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false)
   const [search, setSearch] = React.useState('');
   const [searchBy, setSearchBy] = React.useState("firstName");
+  const [errormsg, setError] = useState(null);
+  const [errorVisible, setErrorVisible] = useState(false);
 
   useEffect(() => {
     // Fetch list of patients 
-    // console.log("called")
     fetchPatients() 
       .then(patients => {
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
           
           if (patients[i].createdAt!=null){
-            // console.log(patients[i])
             tempPatients.push(patients[i]);
           }
         }
@@ -36,9 +36,7 @@ function PatientRecords() {
     // API call to get patients
     try {
       const posts = await DataStore.query(Patient);
-      // console.log('Posts retrieved successfully!');
-      // console.log(posts)
-      return posts
+      return posts;
     } catch (error) {
       console.log('Error retrieving posts', error);
     }
@@ -46,24 +44,20 @@ function PatientRecords() {
   }
 
   async function refreshPatientList(){
-    fetchPatients() 
+    await fetchPatients() 
       .then(patients => {
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
           
-          if (patients[i].createdAt!=null){
-            console.log(patients[i])
-            tempPatients.push(patients[i]);
-          }
+          // if (patients[i].createdAt!=null){
+            // console.log(patients[i])
+          tempPatients.push(patients[i]);
+          // }
         }
         setPatientList(tempPatients);
       })
   }
 
-  function handlePatientClick(patient) {
-    // Fetch and show patient record
-    setSelectedPatient(patient);
-  }
 
   const onChange = (event) => {
     setSearch(event.target.value);
@@ -75,34 +69,26 @@ function PatientRecords() {
     await refreshPatientList();
   };
   function onSearch(event){
-    // console.log(event)
-    // console.log(search)
     fetchPatients() 
       .then(patients => {
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
-          // console.log(patients[i].First_Name.toLowerCase())
-          // console.log(search.toLowerCase())
           if (patients[i].createdAt!=null && search==""){
             tempPatients.push(patients[i]);
           }
           // by first name
           else if (patients[i].createdAt!=null && patients[i].First_Name.toLowerCase().includes(search.toLowerCase()) && searchBy == "firstName"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
           // by last name
           else if (patients[i].createdAt!=null && patients[i].Last_Name.toLowerCase().includes(search.toLowerCase()) && searchBy == "lastName"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
           else if (patients[i].createdAt!=null && patients[i].Age==search && searchBy == "age"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
           // by provider
           else if (patients[i].createdAt!=null && patients[i].Provider.toLowerCase().includes(search.toLowerCase()) && searchBy == "provider"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
         }
@@ -129,9 +115,15 @@ function PatientRecords() {
     patientAges[patient.id] = age
   }
 
+  function newError(msg){
+    setError(msg);
+    setErrorVisible(true);
+  }
+
   return (
     <div className="patient-list">
-      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} refreshPatientList={refreshPatientList}></CreatPatientPopup>
+      <ErrorPopup trigger= {errorVisible} setTrigger= {setErrorVisible} errormsg= {errormsg}></ErrorPopup>
+      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} newError={newError} refreshPatientList={refreshPatientList}></CreatPatientPopup>
         <Button style={{backgroundColor:"white", borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}} onClick={()=>{
           setPopupVisible(true)
         }}>Add New Patient</Button>
@@ -146,8 +138,6 @@ function PatientRecords() {
               marginTop = {20}z
               backgroundColor={'white'}              
             />
-
-
           <SelectField 
             style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}
             label = "Search By :"
@@ -168,7 +158,7 @@ function PatientRecords() {
         <Grid style={{borderBottom: "3px solid black"}} paddingTop="20px" paddingBottom="5px" templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem">
               <Text fontSize="1.5em">First Name</Text>
               <Text fontSize="1.5em">Last Name</Text>
-              <Text fontSize="1.5em">DoB</Text>
+              <Text fontSize="1.5em">Age</Text>
               <Text fontSize="1.5em">Provider</Text>
         </Grid>
       
@@ -180,10 +170,7 @@ function PatientRecords() {
           marginTop="4px"
           borderRadius="1rem"
           key={patient.id} 
-          onClick={()=>{
-            setSelectedPatient(patient)
-          }
-          }>
+          >
             <Accordion.Trigger style={{borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}}>
             <Grid templateColumns="1fr 1fr 1fr 1fr" templateRows="2rem" width="100%" >
                   <Text fontSize="20" >{patient.First_Name}</Text>
@@ -194,19 +181,16 @@ function PatientRecords() {
               <Accordion.Icon />
             </Accordion.Trigger>
             <Accordion.Content >
-              <PatientProfile patient={patient}/> 
+              <PatientProfile patient={patient} refreshPatientList={refreshPatientList}/> 
             </Accordion.Content>
           </Accordion.Item>
           ))}
         </Accordion.Container>
-
     </div>
   );
 }
 
 function PatientProfile(props,{patient}) {
-  // console.log(patient)
-  // console.log(props)
   patient = props.patient
   // Show patient profile here 
 
@@ -215,7 +199,6 @@ function PatientProfile(props,{patient}) {
   var month_diff = Date.now() - dob.getTime();
 
   //convert the calculated difference in date format
-  // console.log(Date.UTC())
   var age_dt = new Date(month_diff);
 
   //extract year from date
@@ -249,7 +232,7 @@ function PatientProfile(props,{patient}) {
           <Text></Text>        
           <Text>Provider: {patient.Provider}</Text>
           <Text></Text>
-          <Button width="200px" marginTop={30}>Delete User</Button>
+          <Button width="200px" marginTop={30} onClick={async ()=>{await DataStore.delete(Patient,patient.id); await props.refreshPatientList()}}>Delete User</Button>
         </Grid>
         <Grid fontSize="20px" templateColumns="1fr" templateRows="2rem">   
           <Text></Text>
@@ -262,9 +245,9 @@ function PatientProfile(props,{patient}) {
           <Text></Text>
           <Text height={20}></Text>
           <Text></Text>
-          <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
+          <Text>Last Change: ({patient.updatedAt?.substring(5,7)},{patient.updatedAt?.substring(8,10)},{patient.updatedAt?.substring(0,4)})</Text>
           <Text></Text>
-          <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
+          <Link to={"/exams/"+patient.id}><Button width="200px" marginTop={30}>View Exams</Button></Link>          
         </Grid>
       </Grid>
       </div>

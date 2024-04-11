@@ -1,13 +1,13 @@
 import React from 'react'
 import './CreatePatientPopup.css'
-import { PatientCreateForm } from '../ui-components'
+import ShorthandCreate from './ShorthandCreate';
 import { Button } from "@aws-amplify/ui-react";
 
-function CreatPatientPopup(props) {
+function CreateShorthandPopup(props) {
   const overrides = {
-    "PatientCreateForm":{
+    "ShorthandCreateForm":{
         "templateColumns": "1fr 1fr",
-        "templateRows": "5rem 5rem 5rem 5rem 5rem"
+        "templateRows": "5rem 5rem"
     },
     "CTAFlex":{
         "columnSpan": "2"
@@ -18,15 +18,13 @@ function CreatPatientPopup(props) {
       <div className="popup-inner">
         <Button style={{float:'right', border:'none', borderRadius:'20px'}} onClick={()=>{
             props.setTrigger(false);
-            props.refreshPatientList();
         }}> x </Button>
-        <PatientCreateForm overrides={overrides} onSuccess={()=>{
+        <ShorthandCreate overrides={overrides} user={props.user} onSuccess={()=>{
             props.setTrigger(false);
-            props.refreshPatientList()
-        }} onError={(modelFields, errormsg) =>{props.setTrigger(false); props.newError(errormsg);}}></PatientCreateForm>
+        }}></ShorthandCreate>
       </div>
     </div>
   ) : ""
 }
 
-export default CreatPatientPopup
+export default CreateShorthandPopup
