@@ -42,6 +42,7 @@ const DiagnosisPopup = (props) => {
   "Trichiasis UL", "Trichiasis LL", "Xanthelasma"];
 
   var comment = '';
+  let preview = '';
   var location = 'Select...';
   var diagnosis = 'Select...';
   const irisRadius = 195;
@@ -58,6 +59,19 @@ const DiagnosisPopup = (props) => {
 
   let type = null;
   let options = ["Select..."];
+
+  function convertShorthand(note) {
+    let parts = note.split(" ");
+    var s = "";
+    for(let i = 0; i < parts.length; i++){
+      if(props.shorthand.has(parts[i].toLowerCase())){
+        s += props.shorthand.get(parts[i].toLowerCase()) + ' ';
+      } else {
+        s += parts[i] + ' ';
+      }
+    }
+    return s;
+  }
 
   function handleComment(e) {
     let tempMap = new Map(props.annotations);
@@ -205,6 +219,8 @@ const DiagnosisPopup = (props) => {
         <h3>Comments</h3>
           <textarea name = "comment" type = "text" id = "comment" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).comment : ''} onChange={handleComment}></textarea>
         <br/>
+        <h3>Preview:</h3>
+        <textarea disabled value={convertShorthand(comment)}></textarea>
         <br/>
         <button className="done-button" onClick= {() => {
           let tempMap = new Map(props.annotations);

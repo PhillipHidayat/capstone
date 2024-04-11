@@ -11,12 +11,13 @@ import * as React from 'react';
 import { Amplify, Storage } from 'aws-amplify';
 import { withAuthenticator, Button, Text, Accordion } from '@aws-amplify/ui-react';
 import { DataStore } from '@aws-amplify/datastore';
-import { Diagnoses, Patient } from '../models'
+import { Diagnoses, Patient, Exam , Shorthand} from '../models'
 import '@aws-amplify/ui-react/styles.css';
 import awsconfig from '../aws-exports';
 import DiagnosisPopup from "../components/DiagnosisPopup.jsx";
 import html2pdf from 'html2pdf.js';
 import { useParams } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 Amplify.configure(awsconfig);
 
@@ -57,6 +58,7 @@ function Examination(props) {
   const [imagePath, setImagePath] = useState(lefteyeSource);
   const [displayPdf, setPDF] = useState("");
   const [patient, setPatient] = useState("");
+  const [exam, setExam] = useState("");
   const [annotations, setAnnotations] = useState(new Map());
   const { id } = useParams() // get patient id from url
   const [pdfToggled, setToggle] = useState(false);
@@ -68,7 +70,7 @@ function Examination(props) {
       let diagnosis = {
         Exam: "test",
         Location: value.location,
-        patientID: patient.id,
+        examID: exam.id,
         Key: key
       };
 
@@ -92,7 +94,7 @@ function Examination(props) {
       const original = await DataStore.query(Diagnoses, (d)=> 
       d.and(d=>[
         d.Key.eq(key), // every diagnosis shouls have a unique key for each patient
-        d.patientID.eq(patient.id) // makes sure we are searching the correct patient
+        d.examID.eq(exam.id) // makes sure we are searching the correct patient
       ]));
       if (original.length != 0) {
         let actual = original[0];
@@ -115,7 +117,8 @@ function Examination(props) {
   }
   
   async function loadDiagnosesForPatient(){
-    let diagnoses = await DataStore.query(Diagnoses, d=> d.patientID.eq(patient.id));
+    //let exam1 = await DataStore.query(Exam, exam.id) // so data is not stale
+    let diagnoses = await exam.Diagnoses?.toArray();
     console.log(diagnoses)
     handleLoad(diagnoses);
   }
@@ -124,14 +127,14 @@ function Examination(props) {
   async function deleteDiagnoses(key){
     let deleted = await DataStore.delete(Diagnoses, d => d.and(d=>[
       d.Key.eq(key), // every diagnosis shouls have a unique key for each patient
-      d.patientID.eq(patient.id) // makes sure we are searching the correct patient
+      d.examID.eq(exam.id) // makes sure we are searching the correct patient
     ]));
   }
 
   const handleLoad = (diags) => {
     let l = [];
     let tempMap = new Map(annotations);
-    for (let i = 0; i < diags.length; i++) {
+    for (let i = 0; i < diags?.length; i++) {
       let d = diags[i];
       let ann = d.LocationDetails;
       tempMap.set(d.Key, new annotation(d.Notes, d.Diagnoses, d.Location, ann.img));
@@ -185,9 +188,9 @@ function Examination(props) {
         if(values.location == category){
           if(values.comment != ""){
           if(isFirst){
-            s+= " " + values.comment;
+            s+= " " + convertShorthand(values.comment);
             isFirst = false;
-          }else{s += ", " + values.comment;}
+          }else{s += ", " + convertShorthand(values.comment);}
           }
         }
         });
@@ -202,24 +205,65 @@ function Examination(props) {
     );
   }
 
+  function convertShorthand(note) {
+    let parts = note.split(" ");
+    var s = "";
+    for(let i = 0; i < parts.length; i++){
+      if(props.shorthand.has(parts[i].toLowerCase())){
+        s += props.shorthand.get(parts[i].toLowerCase()) + ' ';
+      } else {
+        s += parts[i] + ' ';
+      }
+    }
+    return s;
+  }
+
+  useEffect(() => {
+    loadDiagnosesForPatient();
+  }, [exam])
+
   useEffect(() => {
     // Fetch list of patients 
-    console.log(id)
-    fetchPatients(id) 
-      .then(pt => {
-        setPatient(pt);
+    // console.log(id)
+    fetchExam(id) 
+      .then(exam => {
+        // console.log(exam)
+        setExam(exam);
       });
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    // Fetch list of patients 
+    // console.log(id)
+    fetchPatients(exam.patientID) 
+      .then(patient => {
+        setPatient(patient);
+      });
+  }, [exam]);
 
   //Updates the PDF after the patient information has been saved
   useEffect(() => {
     reloadPDF(new Map());
   }, [patient]);
 
+  async function fetchExam(id) {
+    // API call to get patients
+    try {
+      const posts = await DataStore.query(Exam, id);
+      // console.log(posts)
+      return posts;
+    } catch (error) {
+      console.log('Error retrieving posts', error);
+    }
+    return [];
+  }
+
   async function fetchPatients(id) {
     // API call to get patients
     try {
+      // console.log(id)
       const posts = await DataStore.query(Patient, id);
+      // console.log(posts)
       return posts;
     } catch (error) {
       console.log('Error retrieving posts', error);
@@ -278,6 +322,7 @@ function Examination(props) {
         </div>
         {button}
       </div>
+      <Link to={"/summary/"+id}><Button width="200px" marginTop={30}>Save and Next</Button></Link> 
       <Accordion.Container margin="1rem">
         <Accordion.Item
           marginBottom="4px"
