@@ -20,9 +20,9 @@ function CreatPatientPopup(props) {
             props.setTrigger(false);
             props.refreshPatientList();
         }}> x </Button>
-        <PatientCreateForm overrides={overrides} onSuccess={(modelFields)=>{
+        <PatientCreateForm overrides={overrides} onSuccess={()=>{
             props.setTrigger(false);
-            props.addPT(modelFields);
+            props.refreshPatientList()
         }} onError={(modelFields, errormsg) =>{props.setTrigger(false); props.newError(errormsg);}}></PatientCreateForm>
       </div>
     </div>

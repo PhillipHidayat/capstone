@@ -59,12 +59,6 @@ function PatientRecords() {
       })
   }
 
-  function addPatient(modelFields){
-    let tempPatients = [...patientList];
-    tempPatients.push(new Patient(modelFields))
-    setPatientList(tempPatients);
-  }
-
   function handlePatientClick(patient) {
     // Fetch and show patient record
     setSelectedPatient(patient);
@@ -142,7 +136,7 @@ function PatientRecords() {
   return (
     <div className="patient-list">
       <ErrorPopup trigger= {errorVisible} setTrigger= {setErrorVisible} errormsg= {errormsg}></ErrorPopup>
-      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} addPT = {addPatient} newError={newError} refreshPatientList={refreshPatientList}></CreatPatientPopup>
+      <CreatPatientPopup trigger= {popupVisible} setTrigger= {setPopupVisible} newError={newError} refreshPatientList={refreshPatientList}></CreatPatientPopup>
         <Button style={{backgroundColor:"white", borderRadius:"1rem", boxShadow:"0.25rem 0.25rem 0.75rem rgb(0 0 0 / 0.1)"}} onClick={()=>{
           setPopupVisible(true)
         }}>Add New Patient</Button>
@@ -270,9 +264,7 @@ function PatientProfile(props,{patient}) {
           <Text></Text>
           <Text height={20}></Text>
           <Text></Text>
-          <Text>  Last Change: {patient?.updatedAt ? 
-  `       (${patient.updatedAt.substring(5, 7)},${patient.updatedAt.substring(8, 10)},${patient.updatedAt.substring(0, 4)})` : 
-  `       (${new Date().getMonth() + 1},${new Date().getDate()},${new Date().getFullYear()})`}</Text>
+          <Text>Last Change: ({patient.updatedAt.substring(5,7)},{patient.updatedAt.substring(8,10)},{patient.updatedAt.substring(0,4)})</Text>
           <Text></Text>
           <Link to={"/examination/"+patient.id}><Button width="200px" marginTop={30}>Create Exam</Button></Link>          
         </Grid>
