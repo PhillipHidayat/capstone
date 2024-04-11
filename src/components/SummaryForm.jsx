@@ -59,7 +59,7 @@ function SummaryForm(props){
                     >Back</Button>
                 </Link>
                 <Text columnSpan={3}></Text>
-                <Link to={"/records"}>
+                <Link to={"/exams/"+exam?.patientID}>
                     <Button onClick={async () => {
                         const updateExam = await DataStore.save(
                             Exam.copyOf(exam, updated => {
