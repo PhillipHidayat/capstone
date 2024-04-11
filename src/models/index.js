@@ -4,9 +4,10 @@ import { schema } from './schema';
 
 
 
-const { Exam, Diagnoses, Patient } = initSchema(schema);
+const { Shorthand, Exam, Diagnoses, Patient } = initSchema(schema);
 
 export {
+  Shorthand,
   Exam,
   Diagnoses,
   Patient

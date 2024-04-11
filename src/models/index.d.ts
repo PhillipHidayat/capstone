@@ -6,6 +6,38 @@ import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/
 
 
 
+type EagerShorthand = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Shorthand, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly User: string;
+  readonly key: string;
+  readonly value: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyShorthand = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Shorthand, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly User: string;
+  readonly key: string;
+  readonly value: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Shorthand = LazyLoading extends LazyLoadingDisabled ? EagerShorthand : LazyShorthand
+
+export declare const Shorthand: (new (init: ModelInit<Shorthand>) => Shorthand) & {
+  copyOf(source: Shorthand, mutator: (draft: MutableModel<Shorthand>) => MutableModel<Shorthand> | void): Shorthand;
+}
+
 type EagerExam = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Exam, 'id'>;

@@ -10,21 +10,18 @@ import { Link } from 'react-router-dom'
 
 function PatientRecords() {
   const [patientList, setPatientList] = useState([]);
-  // const [selectedPatient, setSelectedPatient] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false)
   const [search, setSearch] = React.useState('');
   const [searchBy, setSearchBy] = React.useState("firstName");
 
   useEffect(() => {
     // Fetch list of patients 
-    // console.log("called")
     fetchPatients() 
       .then(patients => {
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
           
           if (patients[i].createdAt!=null){
-            // console.log(patients[i])
             tempPatients.push(patients[i]);
           }
         }
@@ -36,9 +33,7 @@ function PatientRecords() {
     // API call to get patients
     try {
       const posts = await DataStore.query(Patient);
-      // console.log('Posts retrieved successfully!');
-      // console.log(posts)
-      return posts
+      return posts;
     } catch (error) {
       console.log('Error retrieving posts', error);
     }
@@ -48,7 +43,6 @@ function PatientRecords() {
   async function refreshPatientList(){
     await fetchPatients() 
       .then(patients => {
-        // console.log(patients)
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
           
@@ -72,34 +66,26 @@ function PatientRecords() {
     await refreshPatientList();
   };
   function onSearch(event){
-    // console.log(event)
-    // console.log(search)
     fetchPatients() 
       .then(patients => {
         let tempPatients = []
         for(let i=0; i<patients.length; i++){
-          // console.log(patients[i].First_Name.toLowerCase())
-          // console.log(search.toLowerCase())
           if (patients[i].createdAt!=null && search==""){
             tempPatients.push(patients[i]);
           }
           // by first name
           else if (patients[i].createdAt!=null && patients[i].First_Name.toLowerCase().includes(search.toLowerCase()) && searchBy == "firstName"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
           // by last name
           else if (patients[i].createdAt!=null && patients[i].Last_Name.toLowerCase().includes(search.toLowerCase()) && searchBy == "lastName"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
           else if (patients[i].createdAt!=null && patients[i].Age==search && searchBy == "age"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
           // by provider
           else if (patients[i].createdAt!=null && patients[i].Provider.toLowerCase().includes(search.toLowerCase()) && searchBy == "provider"){
-            console.log(patients[i])
             tempPatients.push(patients[i]);
           }
         }
@@ -199,10 +185,6 @@ function PatientRecords() {
 }
 
 function PatientProfile(props,{patient}) {
-  // function displayVal()
-
-  // console.log(patient)
-  // console.log(props)
   patient = props.patient
   // Show patient profile here 
 
@@ -211,7 +193,6 @@ function PatientProfile(props,{patient}) {
   var month_diff = Date.now() - dob.getTime();
 
   //convert the calculated difference in date format
-  // console.log(Date.UTC())
   var age_dt = new Date(month_diff);
 
   //extract year from date

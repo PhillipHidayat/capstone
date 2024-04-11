@@ -22,39 +22,83 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { Route, Routes} from 'react-router-dom'
 import ExamRecords from "./components/exam records/ExamRecords.jsx";
 import IntakeForm from "./components/IntakeForm.jsx";
+import CreateShorthandPopup from "./components/CreateShorthandPopup.jsx";
+import { DataStore } from '@aws-amplify/datastore';
+import { Shorthand } from './models'
+import ViewShorthandPopup from "./components/ViewShorthandPopup.jsx";
+import SummaryForm from "./components/SummaryForm.jsx";
 Amplify.configure(awsconfig);
 
 // enableRipple(true);
 
-async function handleFetchUserAttributes() {
-  try {
-    const userAttributes = await fetchUserAttributes();
-    return userAttributes
-  } catch (error) {
-    console.log(error);
-  }
-}
-let attributes = await handleFetchUserAttributes()
+
 
 // DocumentEditorComponent.Inject(Print, SfdtExport, WordExport, TextExport, Selection, Search, Editor, ImageResizer, EditorHistory, ContextMenu, OptionsPane, HyperlinkDialog, TableDialog, BookmarkDialog, TableOfContentsDialog, PageSetupDialog, StyleDialog, ListDialog, ParagraphDialog, BulletsAndNumberingDialog, FontDialog, TablePropertiesDialog, BordersAndShadingDialog, TableOptionsDialog, CellOptionsDialog, StylesDialog);
 
 let i=0;
 
 function App({ signOut, user }: WithAuthenticatorProps) {
-  
+  const [attributes, setAttributes] = useState(null);
+  useEffect(()=>{
+    fetchUserAttributes().then(p => {
+      setAttributes(p);
+    });
+  }, []);
 
+  const [createPopupvisible, setCreatePopup] = useState(false);
+  const [shorthandMap, setShorthand] = useState(new Map());
+  const [shorthandList, setList] = useState([]);
+  const [viewPopupVisible, setView] = useState(false);
+
+  async function fetchShorthand() {
+    try {
+      const posts = await DataStore.query(Shorthand, (c) => c.User.eq(attributes ? attributes.email : ''));
+      return posts;
+    } catch (error) {
+      console.log('Error retrieving posts', error);
+    }
+    return [];
+  }
+
+  useEffect(() => {
+    let tempMap = new Map();
+    console.log("FIRST LOAD")
+    fetchShorthand().then(posts => {
+      setList(posts);
+      console.log(posts);
+      for(let i = 0; i < posts.length; i++){
+        tempMap.set(posts[i].key, posts[i].value);
+      }
+      console.log(tempMap);
+      setShorthand(tempMap);
+    })
+  }, [attributes]);
+
+  useEffect(() => {
+    let tempMap = new Map();
+    fetchShorthand().then(posts => {
+      setList(posts);
+      for(let i = 0; i < posts.length; i++){
+        tempMap.set(posts[i].key, posts[i].value);
+      }
+      setShorthand(tempMap);
+    })
+  }, [viewPopupVisible, createPopupvisible]);
 
   return (
     //style={{backgroundImage: `url(${imgSource})`}}
     <div className="App" >
-      <Navbar signOut={signOut} user={attributes}/>
+      <Navbar signOut={signOut} user={attributes} setTrigger={setView}/>
+      <ViewShorthandPopup trigger={viewPopupVisible} setTrigger={setView} shorthandList={shorthandList} setCreate={setCreatePopup}></ViewShorthandPopup>
+      <CreateShorthandPopup trigger={createPopupvisible} setTrigger={setCreatePopup} user={attributes}></CreateShorthandPopup>
       <div className="Container" style={{width:'100%'}}>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route path="/records" element={<PatientRecords />} />
-          <Route path="/examination/:id" element={<Examination />} />
+          <Route path="/examination/:id" element={<Examination user={attributes} shorthand={shorthandMap}/>} />
           <Route path="/exams/:id" element={<ExamRecords />} />
           <Route path= "/intake/:id" element={<IntakeForm />} />
+          <Route path= "/summary/:id" element={<SummaryForm />} />
         </Routes>
       </div>
     </div>
