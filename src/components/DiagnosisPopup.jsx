@@ -42,7 +42,6 @@ const DiagnosisPopup = (props) => {
   "Trichiasis UL", "Trichiasis LL", "Xanthelasma"];
 
   var comment = '';
-  let preview = '';
   var location = 'Select...';
   var diagnosis = 'Select...';
   const irisRadius = 195;

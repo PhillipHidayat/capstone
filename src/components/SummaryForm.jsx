@@ -48,8 +48,17 @@ function SummaryForm(props){
                 <Text>Final Notes</Text>
                 <Text columnSpan={4}></Text>
                 <TextAreaField columnSpan={5} rowSpan={2} value={notes} onChange={(e) => setnotes(e.target.value)}></TextAreaField>
-                <Text columnSpan={4}></Text>
-
+                <Link to={"/examination/" + id}>
+                    <Button onClick={async () => {
+                        const updateExam = await DataStore.save(
+                            Exam.copyOf(exam, updated => {
+                                updated.Summary = JSON.stringify(json)
+                            })
+                        )
+                        }}                    
+                    >Back</Button>
+                </Link>
+                <Text columnSpan={3}></Text>
                 <Link to={"/records"}>
                     <Button onClick={async () => {
                         const updateExam = await DataStore.save(
