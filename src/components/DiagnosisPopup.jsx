@@ -50,11 +50,16 @@ const DiagnosisPopup = (props) => {
 
   let imgOptions = ["Other"];
 
-  if(props.image.includes("inner")){ image_type= "inner"; imgOptions = ["Select...", "Lens", "Conjunctiva", "Anterior Chamber" , "Iris", "Vitreous" , "Other"];}
-  else if(props.image.includes("left-eye")){ image_type= "left-eye"; imgOptions = ["Select...", "Lens", "Lids/Lashes", "Anterior Chamber", "Iris", "Disc", "Conjunctiva", "Cornea", "Vitreous" ,"Other"];}
-  else if(props.image.includes("right-eye")){ image_type= "right-eye"; imgOptions = ["Select...", "Lens", "Lids/Lashes", "Anterior Chamber" ,"Iris", "Disc", "Conjunctiva", "Cornea", "Vitreous" ,"Other"];}
-  else if(props.image.includes("macula_left")){image_type = "macula_left"; imgOptions = ["Select...", "Macula", "Vessels", "Other"];}
-  else if(props.image.includes("macula_right")){image_type = "macula_right"; imgOptions = ["Select...", "Macula", "Vessels", "Other"];}
+  if(props.image.includes("inner")){ 
+    image_type= "inner"; imgOptions = ["Select...", "Lens", "Conjunctiva", "Anterior Chamber" , "Iris", "Vitreous" , "Other"];}
+  else if(props.image.includes("left-eye")){ 
+    image_type= "left-eye"; imgOptions = ["Select...", "Lens", "Lids/Lashes", "Anterior Chamber", "Iris", "Disc", "Conjunctiva", "Cornea", "Vitreous" ,"Other"];}
+  else if(props.image.includes("right-eye")){ 
+    image_type= "right-eye"; imgOptions = ["Select...", "Lens", "Lids/Lashes", "Anterior Chamber" ,"Iris", "Disc", "Conjunctiva", "Cornea", "Vitreous" ,"Other"];}
+  else if(props.image.includes("macula_left")){
+    image_type = "macula_left"; imgOptions = ["Select...", "Macula", "Vessels", "Other"];}
+  else if(props.image.includes("macula_right")){
+    image_type = "macula_right"; imgOptions = ["Select...", "Macula", "Vessels", "Other"];}
 
   let type = null;
   let options = ["Select..."];
@@ -75,8 +80,10 @@ const DiagnosisPopup = (props) => {
   function handleComment(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
-    if(attempt != null){tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location, image_type))}
-    else{tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location, image_type))} 
+    if(attempt != null){
+      tempMap.set(props.circle_key, new annotation(e.target.value, attempt.diagnosis, attempt.location, image_type))}
+    else{
+      tempMap.set(props.circle_key, new annotation(e.target.value, diagnosis, location, image_type))} 
     props.setAnnotations(tempMap);
     comment = e.target.value;
   }
@@ -84,8 +91,10 @@ const DiagnosisPopup = (props) => {
   function handleDiagnosis(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
-    if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location, image_type))}
-    else{tempMap.set(props.circle_key, new annotation(comment, e.target.value, location, image_type))}
+    if(attempt != null){
+      tempMap.set(props.circle_key, new annotation(attempt.comment, e.target.value, attempt.location, image_type))}
+    else{
+      tempMap.set(props.circle_key, new annotation(comment, e.target.value, location, image_type))}
     props.setAnnotations(tempMap);
     diagnosis = e.target.value;
   }
@@ -93,9 +102,12 @@ const DiagnosisPopup = (props) => {
   function handleLocation(e) {
     let tempMap = new Map(props.annotations);
     let attempt = props.annotations.get(props.circle_key);
-    if (attempt != null && attempt.diagnosis == "Select..."){attempt.diagnosis="Normal";}
-    if(attempt != null){tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
-    else{tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
+    if (attempt != null && attempt.diagnosis == "Select..."){
+      attempt.diagnosis="Normal";}
+    if(attempt != null){
+      tempMap.set(props.circle_key, new annotation(attempt.comment, attempt.diagnosis, e.target.value, image_type))}
+    else{
+      tempMap.set(props.circle_key, new annotation(comment, diagnosis, e.target.value, image_type))}
     props.setAnnotations(tempMap);
     location = e.target.value; 
     switch(e.target.value){
@@ -205,7 +217,7 @@ const DiagnosisPopup = (props) => {
       <div className="popup-inner">
         <h3>Location</h3>
         <div className= "location-dropdown">
-            <select className= "location-select" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).location : 'Select...'} onChange={handleLocation}>
+            <select className= "location-select" data-testid="location-dropdown" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).location : 'Select...'} onChange={handleLocation}>
             {imgOptions.map((el) => <option key={el}>{el}</option>)}
             </select>
         </div>
@@ -219,7 +231,7 @@ const DiagnosisPopup = (props) => {
         <textarea name = "comment" data-testid="comments" type = "text" id = "comment" value = {props.annotations.has(props.circle_key) ? props.annotations.get(props.circle_key).comment : ''} onChange={handleComment}></textarea>
         <br/>
         <h3>Preview:</h3>
-        <textarea disabled value={convertShorthand(comment)}></textarea>
+        <textarea disabled data-testid="preview" value={convertShorthand(comment)}></textarea>
         <br/>
         <button className="done-button" data-testid="done-button" onClick= {() => {
           let tempMap = new Map(props.annotations);
@@ -235,7 +247,7 @@ const DiagnosisPopup = (props) => {
           }
         }
         }>Done</button>
-        <button className="delete-button" data-testid="delete-button"onClick= {() => {
+        <button className="delete-button" data-testid="delete-button" onClick= {() => {
           let tempMap = new Map(props.annotations);
           let attempt = props.annotations.get(props.circle_key);
           if(attempt != null){

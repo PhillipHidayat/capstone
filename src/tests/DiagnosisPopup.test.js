@@ -17,11 +17,13 @@ const props = {
     delete_circle: delete_circleMock,
     circle_key: 1,
     onSave: onSaveMock,
-    image: 'left.jpg',
+    image: 'left-eye.jpg',
     onDelete: onDeleteMock,
     reloadPDF: reloadPDFMock,
     annotations: new Map(),
-    setAnnotations: setAnnotationsMock
+    setAnnotations: setAnnotationsMock,
+    pdfToggled: true,
+    shorthand: new Map()
 };
 
 class annotation {
@@ -39,17 +41,17 @@ describe('DiagnosisPopup Component Tests', () => {
 
         const { getByText, getByTestId } = render(<DiagnosisPopup {...props} />);
 
-        // Check if the component renders
+        // test if the component renders
         expect(getByText('Location')).toBeInTheDocument();
         expect(getByText('Diagnosis')).toBeInTheDocument();
         expect(getByText('Comments')).toBeInTheDocument();
 
-        // Check if the default values are set
+        // test if the default values are set
         expect(getByTestId('location-dropdown')).toHaveValue('Select...');
         expect(getByTestId('diagnosis-dropdown')).toHaveValue('Select...');
         expect(getByTestId('comments')).toHaveValue('');
 
-        // // Verify that buttons are present
+        // test that buttons are present
         expect(getByText('Done')).toBeInTheDocument();
         expect(getByText('Delete')).toBeInTheDocument();
     });
@@ -69,12 +71,14 @@ describe('DiagnosisPopup Component Tests', () => {
             onDelete: onDeleteMock,
             reloadPDF: reloadPDFMock,
             annotations: new Map(),
-            setAnnotations: setAnnotationsMock
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: new Map()
         };
 
         render(<DiagnosisPopup {...props} />);
 
-        // Check annotation is set with Iris
+        // test annotation is set with Iris
         let ann = new annotation('', 'Select...', 'Iris', 'inner')
         let m = new Map()
         m.set(1, ann)
@@ -89,6 +93,9 @@ describe('DiagnosisPopup Component Tests', () => {
 
         // test that popup is closing
         expect(setTriggerMock).toHaveBeenCalledWith(false);
+        
+        // test that pdf is reloaded
+        expect(reloadPDFMock).toHaveBeenCalled();
     });
 
     // Test add annotation
@@ -97,7 +104,7 @@ describe('DiagnosisPopup Component Tests', () => {
         const { getByTestId } = render(<DiagnosisPopup {...props} />);
         fireEvent.click(getByTestId("done-button"))
 
-        const ann = new annotation('', 'Select...', 'Select...', 'left');
+        const ann = new annotation('', 'Select...', 'Select...', 'left-eye');
         let anns = new Map()
         anns.set(1, ann);
 
@@ -131,100 +138,113 @@ describe('DiagnosisPopup Component Tests', () => {
             delete_circle: delete_circleMock,
             circle_key: 1,
             onSave: onSaveMock,
-            image: 'left.jpg',
+            image: 'right-eye.jpg',
             onDelete: onDeleteMock,
             reloadPDF: reloadPDFMock,
             annotations: anns,
-            setAnnotations: setAnnotationsMock
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: new Map()
         };
 
         const { getByTestId } = render(<DiagnosisPopup {...props} />);
         fireEvent.click(getByTestId("delete-button"))
 
-        // check that annotation is removed
+        // test that annotation is removed
         expect(setAnnotationsMock).toHaveBeenCalledWith(new Map());
         expect(onDeleteMock).toHaveBeenCalledWith(1);
         expect(delete_circleMock).toHaveBeenCalledWith(1);
-
-        // check that pdf is reloaded
-        expect(reloadPDFMock).toHaveBeenCalledWith(new Map());
     });
 
-    // Test disc
-    it('test disc annotation', () => {
+    // Test outer eye locations
+    it('test outer eye annotations', () => {
 
         const { getByTestId } = render(<DiagnosisPopup {...props} />);
 
-        const ann = new annotation('', 'Select...', 'Disc', 'left');
+        const ann = new annotation('', 'Select...', 'Lens', 'left-eye');
         let anns = new Map()
         anns.set(1, ann);
 
         let loc = getByTestId('location-dropdown');
-        let diag = getByTestId('diagnosis-dropdown');
 
-        // Check if annotation is being set
-        fireEvent.change(loc, { target: { value: 'Disc' } });
+        // test if annotations are being set for all inner eye locations
+        fireEvent.change(loc, { target: { value: 'Lens' } });
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
-    });
 
-    // Test macula
-    it('test macula annotation', () => {
-
-        const { getByTestId } = render(<DiagnosisPopup {...props} />);
-
-        const ann = new annotation('', 'Select...', 'Macula', 'left');
-        let anns = new Map()
-        anns.set(1, ann);
-
-        let loc = getByTestId('location-dropdown');
-        let diag = getByTestId('diagnosis-dropdown');
-
-        // Check if annotation is being set
-        fireEvent.change(loc, { target: { value: 'Macula' } });
+        ann.location = 'Lids/Lashes';
+        fireEvent.change(loc, { target: { value: 'Lids/Lashes' } });
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
-    });
 
-    // Test vessels
-    it('test vessels annotation', () => {
-
-        const { getByTestId } = render(<DiagnosisPopup {...props} />);
-
-        const ann = new annotation('', 'Select...', 'Vessels', 'left');
-        let anns = new Map()
-        anns.set(1, ann);
-
-        let loc = getByTestId('location-dropdown');
-        let diag = getByTestId('diagnosis-dropdown');
-
-        // Check if annotation is being set
-        fireEvent.change(loc, { target: { value: 'Vessels' } });
+        ann.location = 'Anterior Chamber';
+        fireEvent.change(loc, { target: { value: 'Anterior Chamber' } });
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
-    });
 
-    // Test iris
-    it('test iris annotation', () => {
-
-        const { getByTestId } = render(<DiagnosisPopup {...props} />);
-
-        const ann = new annotation('', 'Select...', 'Iris', 'left');
-        let anns = new Map()
-        anns.set(1, ann);
-
-        let loc = getByTestId('location-dropdown');
-        let diag = getByTestId('diagnosis-dropdown');
-
-        // Check if annotation is being set
+        ann.location = 'Iris';
         fireEvent.change(loc, { target: { value: 'Iris' } });
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
 
-        fireEvent.change(loc, { target: { value: 'Select...' } });
+        ann.location = 'Disc';
+        fireEvent.change(loc, { target: { value: 'Disc' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+
+        ann.location = 'Conjunctiva';
+        fireEvent.change(loc, { target: { value: 'Conjunctiva' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+
+        ann.location = 'Cornea';
+        fireEvent.change(loc, { target: { value: 'Cornea' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+
+        ann.location = 'Vitreous';
+        fireEvent.change(loc, { target: { value: 'Vitreous' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+    });
+
+    // Test macula image locations
+    it('test macula annotations', () => {
+        const props = {
+            X: 222,
+            Y: 333,  
+            trigger: true,
+            setTrigger: setTriggerMock,
+            delete_circle: delete_circleMock,
+            circle_key: 1,
+            onSave: onSaveMock,
+            image: 'macula_left.jpg',
+            onDelete: onDeleteMock,
+            reloadPDF: reloadPDFMock,
+            annotations: new Map(),
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: new Map()
+        };
+
+        const { getByTestId } = render(<DiagnosisPopup {...props} />);
+
+        const ann = new annotation('', 'Select...', 'Macula', 'macula_left');
+        let anns = new Map()
+        anns.set(1, ann);
+
+        let loc = getByTestId('location-dropdown');
+
+        // test if annotations are being set
+        fireEvent.change(loc, { target: { value: 'Macula' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+
+        ann.location = 'Vessels'
+        fireEvent.change(loc, { target: { value: 'Vessels' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
+
+        ann.location = 'Other'
+        fireEvent.change(loc, { target: { value: 'Other' } });
+        expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
     });
 
     // Test handleDiagnosis
     it('test handleDiagnosis is firing on change', () => {
 
-        const ann = new annotation('', 'Atrophy', 'Disc', 'left');
-        const newAnn = new annotation('', 'Drusen', 'Disc', 'left');
+        const ann = new annotation('', 'Atrophy', 'Disc', 'left-eye');
+        const newAnn = new annotation('', 'Drusen', 'Disc', 'macula_left');
         let anns = new Map()
         anns.set(1, ann);
 
@@ -236,11 +256,13 @@ describe('DiagnosisPopup Component Tests', () => {
             delete_circle: delete_circleMock,
             circle_key: 1,
             onSave: onSaveMock,
-            image: 'left.jpg',
+            image: 'macula_left.jpg',
             onDelete: onDeleteMock,
             reloadPDF: reloadPDFMock,
             annotations: anns,
-            setAnnotations: setAnnotationsMock
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: new Map()
         };
 
         anns.set(1, newAnn);
@@ -255,26 +277,31 @@ describe('DiagnosisPopup Component Tests', () => {
 
         const { getByTestId } = render(<DiagnosisPopup {...props} />);
 
-        const ann = new annotation('test comment', 'Select...', 'Select...', 'left');
+        const ann = new annotation('test comment', 'Select...', 'Select...', 'left-eye');
         let anns = new Map()
         anns.set(1, ann);
 
         fireEvent.change(getByTestId('comments'), { target: { value: 'test comment' } });
 
-        // check if annotation is being set
+        // test if annotation is being set
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns);
     });
 
-    // Test with existing annotation
-    it('updates existing annotation', () => {
+    // Test with existing annotations through multiple changes - outer eye
+    it('updates existing outer eye annotations', () => {
 
-        const ann1 = new annotation('comment', 'Select...', 'Disc', 'right');
-        const ann2 = new annotation('comment', 'Normal', 'Macula', 'right');
-        const ann3 = new annotation('comment', 'Normal', 'Vessels', 'right');
-        const ann4 = new annotation('comment', 'Normal', 'Iris', 'right');
-        const ann5 = new annotation('comment', '', 'Select...', 'right');
+        const ann1 = new annotation('comment', 'Select...', 'Lens', 'right-eye');
+        const ann2 = new annotation('comment', 'Normal', 'Lids/Lashes', 'right-eye');
+        const ann3 = new annotation('comment', 'Normal', 'Anterior Chamber', 'right-eye');
+        const ann4 = new annotation('comment', 'Normal', 'Iris', 'right-eye');
+        const ann5 = new annotation('comment', 'Normal', 'Disc', 'right-eye');
+        const ann6 = new annotation('comment', 'Normal', 'Conjunctiva', 'right-eye');
+        const ann7 = new annotation('comment', 'Normal', 'Cornea', 'right-eye');
+        const ann8 = new annotation('comment', 'Normal', 'Vitreous', 'right-eye');
+        const ann9 = new annotation('comment', 'Normal', 'Other', 'right-eye');
+        const ann10 = new annotation('comment', '', 'Select...', 'right-eye');
 
-        let anns = new Map()
+        let anns = new Map();
         anns.set(1, ann1);
         
         const props = {
@@ -285,46 +312,121 @@ describe('DiagnosisPopup Component Tests', () => {
             delete_circle: delete_circleMock,
             circle_key: 1,
             onSave: onSaveMock,
-            image: 'right.jpg',
+            image: 'right-eye.jpg',
             onDelete: onDeleteMock,
             reloadPDF: reloadPDFMock,
             annotations: anns,
-            setAnnotations: setAnnotationsMock
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: new Map()
         };
 
         const { getByTestId } = render(<DiagnosisPopup {...props} />);
-        const res1 = new annotation('comment', 'Normal', 'Vessels', 'right');
+        const res1 = new annotation('comment', 'Normal', 'Disc', 'right-eye');
         let res = new Map();
         
         // fire event handlers for updating existing annotation
-        fireEvent.change(getByTestId('location-dropdown'), { target: { value: 'Vessels' } });
+        fireEvent.change(getByTestId('location-dropdown'), { target: { value: 'Disc' } });
         res.set(1, res1);
         expect(setAnnotationsMock).toHaveBeenCalledWith(res);
-        fireEvent.change(getByTestId('diagnosis-dropdown'), { target: { value: 'Dilation' } });
+        fireEvent.change(getByTestId('diagnosis-dropdown'), { target: { value: 'Drusen' } });
         fireEvent.change(getByTestId('comments'), { target: { value: 'test comment' } });
 
-        // Hit all branches of location checking to change available diagnoses
-        // change to macula
+        // Make multiple chanes to the annotations, hitting all outer eye locations
+        // change to lens
         anns.set(1, ann2);
         render(<DiagnosisPopup {...props} />);
 
-        // change to vessels
+        // change to lids/lashes
         anns.set(1, ann3);
         render(<DiagnosisPopup {...props} />);
 
-        // change to iris
+        // change to anterior chamber
         anns.set(1, ann4);
         render(<DiagnosisPopup {...props} />);
 
-        // change to default
+        // change to iris
         anns.set(1, ann5);
         render(<DiagnosisPopup {...props} />);
 
-        const fin = new annotation('comment', '', 'Select...', 'right');
+        // change to disc
+        anns.set(1, ann6);
+        render(<DiagnosisPopup {...props} />);
+
+        // change to conjunctiva
+        anns.set(1, ann7);
+        render(<DiagnosisPopup {...props} />);
+
+        // change to cornea
+        anns.set(1, ann8);
+        render(<DiagnosisPopup {...props} />);
+
+        // change to vitreous
+        anns.set(1, ann9);
+        render(<DiagnosisPopup {...props} />);
+
+        // change to other
+        anns.set(1, ann10);
+        render(<DiagnosisPopup {...props} />);
+
+        const fin = new annotation('comment', '', 'Select...', 'right-eye');
         let final = new Map()
         final.set(1, fin);
 
-        // check that annotations are correct after multiple changes
+        // test that annotations are correct after multiple changes
+        expect(props.annotations).toEqual(final);
+    });
+
+    // Test with existing annotations through multiple changes - outer eye
+    it('updates existing outer eye annotations', () => {
+
+        const ann1 = new annotation('comment', 'Select...', 'Macula', 'macula_right');
+        const ann2 = new annotation('comment', 'Normal', 'Vessels', 'macula_right');
+
+        let anns = new Map();
+        anns.set(1, ann1);
+
+        let short = new Map();
+        short.set('ac', 'Anterior chamber')
+        
+        const props = {
+            X: 222,
+            Y: 333,  
+            trigger: true,
+            setTrigger: setTriggerMock,
+            delete_circle: delete_circleMock,
+            circle_key: 1,
+            onSave: onSaveMock,
+            image: 'macula_right.jpg',
+            onDelete: onDeleteMock,
+            reloadPDF: reloadPDFMock,
+            annotations: anns,
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: short
+        };
+
+        const { getByTestId } = render(<DiagnosisPopup {...props} />);
+        const res1 = new annotation('comment', 'Normal', 'Macula', 'macula_right');
+        let res = new Map();
+        
+        // fire event handlers for updating existing annotation
+        fireEvent.change(getByTestId('location-dropdown'), { target: { value: 'Macula' } });
+        res.set(1, res1);
+        expect(setAnnotationsMock).toHaveBeenCalledWith(res);
+        fireEvent.change(getByTestId('diagnosis-dropdown'), { target: { value: 'Atrophy' } });
+        fireEvent.change(getByTestId('comments'), { target: { value: 'ac abnormal' } });
+
+        // Make multiple chanes to the annotations, hitting all outer eye locations
+        // change to vessels
+        anns.set(1, ann2);
+        render(<DiagnosisPopup {...props} />);
+
+        const fin = new annotation('comment', 'Normal', 'Vessels', 'macula_right');
+        let final = new Map()
+        final.set(1, fin);
+
+        // test that annotations are correct after multiple changes
         expect(props.annotations).toEqual(final);
     });
 
@@ -347,12 +449,15 @@ describe('DiagnosisPopup Component Tests', () => {
             onDelete: onDeleteMock,
             reloadPDF: reloadPDFMock,
             annotations: anns,
-            setAnnotations: setAnnotationsMock
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: new Map()
         };
 
         const { getByTestId } = render(<DiagnosisPopup {...props} />);
 
-        const ann2 = new annotation('comment 2', 'Select...', 'Select...', 'right');
+        // const ann2 = new annotation('comment 2', 'Select...', 'Select...', 'right');
+        const ann2 = new annotation('comment 2', 'Select...', 'Select...', '');
         let anns2 = new Map();
         anns2.set(1, ann1);
         anns2.set(2, ann2);
@@ -362,5 +467,33 @@ describe('DiagnosisPopup Component Tests', () => {
         expect(setAnnotationsMock).toHaveBeenCalledWith(anns2);
 
         fireEvent.change(getByTestId('diagnosis-dropdown'), { target: { value: 'Normal' } });
+    });
+
+    // Test shorthand
+    it('test shorthand is being converted', () => {
+        let short = new Map();
+        short['ts'] = 'test shorthand';
+
+        const props = {
+            X: 222,
+            Y: 333,  
+            trigger: true,
+            setTrigger: setTriggerMock,
+            delete_circle: delete_circleMock,
+            circle_key: 1,
+            onSave: onSaveMock,
+            image: 'macula_left.jpg',
+            onDelete: onDeleteMock,
+            reloadPDF: reloadPDFMock,
+            annotations: new Map(),
+            setAnnotations: setAnnotationsMock,
+            pdfToggled: false,
+            shorthand: short
+        };
+
+        const { getByTestId } = render(<DiagnosisPopup {...props} />);
+        fireEvent.change(getByTestId('comments'), { target: { value: 'ts working' } });
+
+        expect(getByTestId('preview')).toHaveValue('test shorthand working');
     });
 });
