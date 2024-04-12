@@ -1,0 +1,8 @@
+[init]
+	defaultBranch = none
+[fetch]
+	recurseSubmodules = false
+[transfer]
+	bundleURI = true
+[http "https://capstone-cs.eng.utah.edu"]
+	sslCAInfo = /mnt/c/Users/sprin/Desktop/Misc/aSkool/4500_Capstone/proj/medcapture/builds/5vUxcxE9U/0/medcapture/medcapture.tmp/CI_SERVER_TLS_CA_FILE

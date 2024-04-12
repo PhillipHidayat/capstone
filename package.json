@@ -6,8 +6,6 @@
     "@aws-amplify/ui-react": "^6.1.2",
     "@syncfusion/ej2-react-buttons": "^20.4.44",
     "@syncfusion/ej2-react-documenteditor": "^20.4.44",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "aws-amplify": "^6.0.13",
     "html2pdf.js": "^0.10.1",
@@ -26,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test:ci": "npm run test -- --testResultsProcessor=\"jest-junit\" --watchAll=false --ci --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +46,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.2",
+    "jest-junit": "^16.0.0",
     "source-map-loader": "^5.0.0"
   }
 }
