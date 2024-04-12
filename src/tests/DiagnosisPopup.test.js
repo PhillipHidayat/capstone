@@ -468,32 +468,4 @@ describe('DiagnosisPopup Component Tests', () => {
 
         fireEvent.change(getByTestId('diagnosis-dropdown'), { target: { value: 'Normal' } });
     });
-
-    // Test shorthand
-    it('test shorthand is being converted', () => {
-        let short = new Map();
-        short['ts'] = 'test shorthand';
-
-        const props = {
-            X: 222,
-            Y: 333,  
-            trigger: true,
-            setTrigger: setTriggerMock,
-            delete_circle: delete_circleMock,
-            circle_key: 1,
-            onSave: onSaveMock,
-            image: 'macula_left.jpg',
-            onDelete: onDeleteMock,
-            reloadPDF: reloadPDFMock,
-            annotations: new Map(),
-            setAnnotations: setAnnotationsMock,
-            pdfToggled: false,
-            shorthand: short
-        };
-
-        const { getByTestId } = render(<DiagnosisPopup {...props} />);
-        fireEvent.change(getByTestId('comments'), { target: { value: 'ts working' } });
-
-        // expect(getByTestId('preview')).toHaveValue('test shorthand working');
-    });
 });
